@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドゥカーレ・ガーデンホテル九十九里 様｜省エネ・創エネ ダブルプラン</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root{
+  --navy: #0f2d4a;
+  --navy-dark: #081d33;
+  --teal: #1e6a85;
+  --orange: #e07a3c;
+  --orange-light: #f4b88e;
+  --sand: #f5efe6;
+  --paper: #fbf8f2;
+  --ink: #1a1a1a;
+  --gray: #6b6b6b;
+  --line: #d8cdb8;
+  --red: #c2410c;
+}
+
+html, body{
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--ink);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  line-height: 1.6;
+  font-size: 11pt;
+  scroll-behavior: smooth;
+}
+
+/* === コントローラー === */
+.controller{
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15,45,74,0.97);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 100px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 13px;
+  max-width: 92vw;
+}
+.ctrl-btn{
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.ctrl-btn:hover{ background: #d06a2c; transform: scale(1.05); }
+.ctrl-btn.secondary{
+  background: rgba(255,255,255,0.12);
+  width: 38px; height: 38px;
+  font-size: 14px;
+}
+.ctrl-btn.secondary:hover{ background: rgba(255,255,255,0.2); }
+.ctrl-status{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 140px;
+}
+.ctrl-label{
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--orange-light);
+  text-transform: uppercase;
+}
+.ctrl-section{ font-size: 13px; font-weight: 700; }
+.ctrl-progress{
+  width: 100px;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.ctrl-progress-bar{
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--orange-light));
+  width: 0%;
+  transition: width 0.1s linear;
+}
+.speed-toggle{
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 12px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: inherit;
+}
+.speed-toggle:hover{ background: rgba(255,255,255,0.2); }
+
+/* === 字幕パネル === */
+.caption{
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 18px 28px;
+  border-radius: 12px;
+  z-index: 999;
+  max-width: min(700px, 90vw);
+  font-size: 16px;
+  line-height: 1.7;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  display: none;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.caption.show{ display: block; animation: fadeIn 0.4s; }
+.caption.hide{ animation: fadeOut 0.4s forwards; }
+@keyframes fadeIn{
+  from{ opacity:0; transform: translateX(-50%) translateY(10px); }
+  to{ opacity:1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes fadeOut{
+  from{ opacity:1; transform: translateX(-50%) translateY(0); }
+  to{ opacity:0; transform: translateX(-50%) translateY(10px); }
+}
+.caption .typed{
+  color: var(--orange-light);
+  font-weight: 600;
+}
+
+/* === スライド === */
+.slides{
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 24px 280px;
+}
+.slide{
+  background: var(--paper);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  transition: all 0.5s;
+  opacity: 0.35;
+  transform: scale(0.98);
+  cursor: pointer;
+}
+.slide.active{
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 16px 60px rgba(224,122,60,0.3), 0 0 0 2px var(--orange);
+}
+.slide-header{
+  background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+  color: #fff;
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.slide-num{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 11pt;
+  letter-spacing: 0.2em;
+  color: var(--orange-light);
+}
+.slide-tag{
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  background: rgba(255,255,255,0.15);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+.slide-body{ padding: 32px 36px; }
+
+/* === コンテンツ === */
+.hero-mini h1{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 26pt;
+  line-height: 1.35;
+  color: var(--navy);
+  margin-bottom: 14px;
+  font-weight: 800;
+}
+.hero-mini h1 em{
+  font-style: normal;
+  color: var(--orange);
+  border-bottom: 4px solid var(--orange);
+  padding-bottom: 2px;
+}
+.hero-mini .subline{
+  font-size: 12pt;
+  color: var(--gray);
+  line-height: 1.7;
+}
+.client-block{
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  color: #fff;
+  padding: 20px 24px;
+  border-left: 4px solid var(--orange);
+  margin-bottom: 24px;
+  border-radius: 4px;
+}
+.client-block .lbl{
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--orange-light);
+  margin-bottom: 6px;
+}
+.client-block .name{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 18pt;
+  font-weight: 700;
+}
+
+.subsidy-banner{
+  background: linear-gradient(95deg, #fff 0%, #fff8ee 100%);
+  border: 2px solid var(--orange);
+  border-radius: 8px;
+  padding: 24px 28px;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 24px;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(224,122,60,0.25);
+  margin-top: 18px;
+}
+.subsidy-banner::before{
+  content: "千葉県内事業者 限定";
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  padding: 5px 14px;
+  font-weight: 700;
+  border-radius: 100px;
+}
+.sub-icon{
+  background: var(--orange);
+  color: #fff;
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.sub-icon .pct{ font-size: 22pt; line-height: 1; }
+.sub-icon .lbl{ font-size: 9px; letter-spacing: 0.1em; margin-top: 3px; }
+.sub-text .top{ font-size: 10pt; color: var(--red); font-weight: 700; margin-bottom: 4px; }
+.sub-text .main{
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 700;
+  font-size: 14pt;
+  color: var(--navy);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.sub-text .main em{ font-style: normal; color: var(--red); }
+.sub-text .note{ font-size: 9pt; color: #777; line-height: 1.5; }
+.sub-cta{
+  background: var(--navy);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 11px;
+  text-align: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.sub-cta strong{
+  display: block;
+  font-size: 14pt;
+  color: var(--orange-light);
+  margin-top: 4px;
+  font-family: 'Shippori Mincho', serif;
+}
+
+.lead{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 16pt;
+  color: var(--navy);
+  margin-bottom: 24px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.risks-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.risk-card{
+  background: #fff;
+  border-left: 4px solid var(--red);
+  padding: 18px 20px;
+  border-radius: 4px;
+  position: relative;
+}
+.risk-card .num{
+  position: absolute;
+  top: 8px; right: 14px;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 22pt;
+  color: var(--red);
+  opacity: 0.2;
+  font-weight: 700;
+}
+.risk-card .ttl{
+  font-weight: 700;
+  font-size: 12pt;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.risk-card .desc{ font-size: 10pt; color: #444; line-height: 1.65; }
+.risk-card .desc strong{ color: var(--red); }
+.coastal-box{
+  margin-top: 20px;
+  padding: 20px 26px;
+  background: linear-gradient(105deg, var(--sand), #ffe8d4);
+  border: 2px dashed var(--orange);
+  border-radius: 8px;
+}
+.coastal-box .ttl{ font-weight: 700; font-size: 12pt; color: var(--navy); margin-bottom: 6px; }
+.coastal-box .ttl::before{ content: "⚠ "; color: var(--orange); font-size: 14pt; }
+.coastal-box .desc{ font-size: 10pt; line-height: 1.7; color: #444; }
+.coastal-box .desc strong{
+  color: var(--red);
+  background: linear-gradient(transparent 60%, #ffd9b8 60%);
+  padding: 0 3px;
+}
+
+.concept-flip{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+.flip-card{ padding: 20px 22px; border-radius: 6px; }
+.flip-before{ background: #efece4; color: #888; }
+.flip-after{ background: var(--navy); color: #fff; position: relative; overflow: hidden; }
+.flip-card .tag{ font-size: 10px; letter-spacing: 0.2em; margin-bottom: 8px; font-weight: 700; }
+.flip-before .tag{ color: #999; }
+.flip-after .tag{ color: var(--orange-light); }
+.flip-card .quote{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13pt;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.flip-card ul{ list-style: none; font-size: 10pt; line-height: 1.8; }
+.flip-card ul li::before{ content: "・"; }
+.flip-arrow{ display: flex; align-items: center; font-size: 32pt; color: var(--orange); font-weight: 700; }
+
+.package4{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.pkg-card{
+  background: #fff;
+  border-top: 5px solid var(--teal);
+  padding: 18px 20px;
+  border-radius: 4px;
+}
+.pkg-card.create{ border-top-color: var(--orange); }
+.pkg-card .role{
+  display: inline-block;
+  font-size: 10px;
+  padding: 3px 10px;
+  background: var(--teal);
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: 0.15em;
+  border-radius: 100px;
+}
+.pkg-card.create .role{ background: var(--orange); }
+.pkg-card .name{ font-weight: 700; font-size: 12pt; color: var(--navy); margin-bottom: 8px; }
+.pkg-card .desc{ font-size: 10pt; color: #444; line-height: 1.6; }
+.pkg-card .desc strong{ color: var(--orange); }
+.order-warn{
+  background: #fff8ee;
+  border: 2px solid var(--orange);
+  padding: 18px 22px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.order-warn .ttl{ font-weight: 700; font-size: 12pt; color: var(--navy); margin-bottom: 8px; }
+.order-warn .ttl::before{
+  content: "順序";
+  font-size: 9px;
+  background: var(--orange);
+  color: #fff;
+  padding: 3px 8px;
+  letter-spacing: 0.15em;
+  margin-right: 8px;
+  border-radius: 100px;
+}
+.order-warn .desc{ font-size: 10pt; line-height: 1.7; color: #444; }
+.order-warn .desc strong{ color: var(--red); }
+
+.merits{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.merit{
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 22px 20px 18px;
+  border-radius: 6px;
+  position: relative;
+}
+.merit .ico{
+  position: absolute;
+  top: -16px; left: 18px;
+  width: 36px; height: 36px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 700;
+  font-size: 14pt;
+}
+.merit .ttl{ margin-top: 14px; font-weight: 700; color: var(--navy); font-size: 12pt; margin-bottom: 8px; }
+.merit .desc{ font-size: 10pt; line-height: 1.65; color: #444; }
+.merit .desc strong{ color: var(--orange); }
+
+.roi-row{
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 18px;
+}
+.roi-chart{
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 22px;
+  border-radius: 6px;
+}
+.roi-chart .lbl{ font-size: 10px; color: var(--gray); letter-spacing: 0.15em; margin-bottom: 12px; }
+.bars{
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 130px;
+  border-bottom: 1px solid #ddd;
+  padding-top: 8px;
+}
+.bar{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+.bar .val{ font-size: 11pt; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.bar .stick{ width: 100%; border-radius: 4px 4px 0 0; }
+.bar.b1 .stick{ height: 5%; background: #ccc; }
+.bar.b1 .val{ color: #999; }
+.bar.b2 .stick{ height: 60%; background: var(--teal); }
+.bar.b3 .stick{ height: 84%; background: linear-gradient(180deg, var(--orange), var(--teal)); }
+.bar.b4 .stick{ height: 100%; background: linear-gradient(180deg, var(--orange), var(--red)); }
+.bar .name{ font-size: 9pt; color: var(--gray); margin-top: 8px; text-align: center; line-height: 1.3; }
+.roi-text{
+  background: var(--navy);
+  color: #fff;
+  padding: 24px;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.roi-text::before{
+  content: "";
+  position: absolute;
+  bottom: -30px; right: -30px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--orange), transparent 70%);
+  opacity: 0.4;
+}
+.roi-text .top{ font-size: 10px; letter-spacing: 0.25em; color: var(--orange-light); margin-bottom: 6px; }
+.roi-text .big{
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: 38pt;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.roi-text .big small{ font-family: 'Noto Sans JP'; font-size: 14pt; font-weight: 500; }
+.roi-text .desc{ font-size: 10pt; line-height: 1.6; position: relative; z-index: 2; }
+.roi-text .desc strong{ color: var(--orange-light); }
+
+.cta-block{
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff;
+  padding: 32px 36px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-block::before{
+  content: "";
+  position: absolute;
+  top: -50px; left: -50px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(224,122,60,0.4), transparent 70%);
+  border-radius: 50%;
+}
+.cta-inner{
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.cta-l .top{ font-size: 11px; letter-spacing: 0.25em; color: var(--orange-light); margin-bottom: 8px; }
+.cta-l .ttl{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 18pt;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.cta-l .desc{ font-size: 10pt; color: rgba(255,255,255,0.9); line-height: 1.65; }
+.cta-r{
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 18px;
+  border-radius: 6px;
+}
+.cta-r .lbl{ font-size: 10px; letter-spacing: 0.2em; color: var(--orange-light); font-weight: 700; margin-bottom: 10px; }
+.cta-r .item{ font-size: 10pt; line-height: 1.85; }
+.cta-r .item::before{ content: "✓ "; color: var(--orange); font-weight: 700; }
+
+.intro-screen{
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 24px;
+}
+.intro-screen.hidden{
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s;
+}
+.intro-card{
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 48px 56px;
+  border-radius: 12px;
+  max-width: 540px;
+  text-align: center;
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+.intro-card .label{
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--orange-light);
+  margin-bottom: 16px;
+}
+.intro-card h2{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 24pt;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+.intro-card .for{
+  font-size: 11pt;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 32px;
+  letter-spacing: 0.05em;
+}
+.intro-card .for strong{ color: var(--orange-light); font-weight: 600; }
+.intro-buttons{
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.intro-start{
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  padding: 16px 32px;
+  font-size: 14pt;
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 700;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+.intro-start:hover{
+  background: #d06a2c;
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(224,122,60,0.5);
+}
+.intro-skip{
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 16px 24px;
+  font-size: 11pt;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.intro-skip:hover{ color: #fff; border-color: #fff; }
+.intro-note{
+  font-size: 10pt;
+  color: rgba(255,255,255,0.5);
+  margin-top: 20px;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px){
+  .slides{ padding: 16px 12px 260px; }
+  .slide-body{ padding: 22px 18px; }
+  .hero-mini h1{ font-size: 19pt; }
+  .lead{ font-size: 13pt; }
+  .risks-grid, .package4, .merits, .roi-row, .cta-inner{ grid-template-columns: 1fr; }
+  .concept-flip{ grid-template-columns: 1fr; }
+  .flip-arrow{ justify-content: center; transform: rotate(90deg); padding: 4px 0; }
+  .subsidy-banner{ grid-template-columns: 1fr; text-align: center; }
+  .sub-icon{ margin: 0 auto; }
+  .controller{ padding: 10px 14px; gap: 8px; bottom: 12px; }
+  .ctrl-btn{ width: 40px; height: 40px; font-size: 16px; }
+  .ctrl-status{ min-width: 90px; }
+  .ctrl-section{ font-size: 11px; }
+  .ctrl-progress{ width: 60px; }
+  .speed-toggle{ font-size: 10px; padding: 5px 8px; }
+  .caption{ bottom: 90px; font-size: 14px; padding: 14px 20px; max-width: 94vw; }
+  .intro-card{ padding: 32px 24px; }
+  .intro-card h2{ font-size: 18pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- イントロ -->
+<div class="intro-screen" id="introScreen">
+  <div class="intro-card">
+    <div class="label">PROPOSAL ／ AUTO-PRESENTATION</div>
+    <h2>20年、九十九里の潮風から<br>建物の資産価値を守りませんか。</h2>
+    <div class="for">FOR <strong>ドゥカーレ・ガーデンホテル九十九里 様</strong></div>
+    <div class="intro-buttons">
+      <button class="intro-start" id="startBtn">▶ 自動再生で見る</button>
+      <button class="intro-skip" id="skipBtn">スキップ ／ 自分で見る</button>
+    </div>
+    <div class="intro-note">字幕付き自動進行プレゼンテーション（約3分）<br>右下のコントローラーでいつでも操作できます</div>
+  </div>
+</div>
+
+<!-- 字幕 -->
+<div class="caption" id="caption"></div>
+
+<!-- コントローラー -->
+<div class="controller" id="controller" style="display:none;">
+  <button class="ctrl-btn" id="playBtn" title="再生/一時停止">⏸</button>
+  <div class="ctrl-status">
+    <div class="ctrl-label" id="ctrlLabel">SECTION 1 / 8</div>
+    <div class="ctrl-section" id="ctrlSection">タイトル</div>
+    <div class="ctrl-progress"><div class="ctrl-progress-bar" id="progressBar"></div></div>
+  </div>
+  <button class="ctrl-btn secondary" id="prevBtn" title="前へ">◀</button>
+  <button class="ctrl-btn secondary" id="nextBtn" title="次へ">▶</button>
+  <button class="speed-toggle" id="speedBtn" title="再生速度">×1.0</button>
+</div>
+
+<!-- スライド本体 -->
+<div class="slides" id="slides">
+
+  <div class="slide" id="slide-0">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 01</div>
+      <div class="slide-tag">OPENING</div>
+    </div>
+    <div class="slide-body">
+      <div class="client-block">
+        <div class="lbl">PROPOSAL FOR</div>
+        <div class="name">ドゥカーレ・ガーデンホテル九十九里 様</div>
+      </div>
+      <div class="hero-mini">
+        <h1>20年、九十九里の<em>潮風</em>から<br>建物の<em>資産価値</em>を守りませんか。</h1>
+        <p class="subline">屋根・窓 遮熱断熱コーティング ＋ 太陽光・蓄電池<br>"省エネ" ではなく、"建物資産を守る経営判断" としてのご提案です。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide-1">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 02</div>
+      <div class="slide-tag">SUBSIDY ／ 緊急ご案内</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">まずお伝えしたい、このタイミングならではのチャンスです。</h3>
+      <div class="subsidy-banner">
+        <div class="sub-icon">
+          <div class="pct">1/2</div>
+          <div class="lbl">補助</div>
+        </div>
+        <div class="sub-text">
+          <div class="top">▶ このタイミングは逃せません</div>
+          <div class="main">千葉県 業務用設備等脱炭素化促進事業補助金<br><em>対象経費の最大1/2を補助（上限1,000万円）</em></div>
+          <div class="note">省エネ診断＋設備導入が対象。例年予算到達で早期受付終了。早期着手で採択確度UP。</div>
+        </div>
+        <div class="sub-cta">
+          補助金活用で
+          <strong>実質負担を半減</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide-2">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 03</div>
+      <div class="slide-tag">WHY NOW ／ 4つの経営リスク</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">海沿いリゾートだからこそ、4つの経営リスクが同時に進行しています。</h3>
+      <div class="risks-grid">
+        <div class="risk-card">
+          <div class="num">01</div>
+          <div class="ttl">塩害・潮風による劣化加速</div>
+          <div class="desc">海岸立地の建物は内陸の<strong>2〜3倍のスピードで屋根・外装が劣化</strong>。再塗装サイクルが短く、ランニングコストが膨らみます。</div>
+        </div>
+        <div class="risk-card">
+          <div class="num">02</div>
+          <div class="ttl">電気料金の構造的高騰</div>
+          <div class="desc">24時間稼働のホテルは電気代の影響を直撃。燃料調整費・再エネ賦課金は今後も右肩上がりです。</div>
+        </div>
+        <div class="risk-card">
+          <div class="num">03</div>
+          <div class="ttl">真夏の客室快適性 ／ 評価リスク</div>
+          <div class="desc">屋根温度上昇は最上階・トレーラー・グランピング棟の冷房負荷に直結。<strong>口コミ評価にも影響</strong>します。</div>
+        </div>
+        <div class="risk-card">
+          <div class="num">04</div>
+          <div class="ttl">停電＝営業停止のBCPリスク</div>
+          <div class="desc">食材冷蔵・ペット同伴客・宿泊中ゲスト対応など、<strong>停電は即ホテル機能不全</strong>。蓄電池の有無で初動が変わります。</div>
+        </div>
+      </div>
+      <div class="coastal-box">
+        <div class="ttl">九十九里立地の特殊性</div>
+        <div class="desc">海風（塩分を含む空気）は<strong>金属屋根・パネル・ガラス・空調室外機</strong>すべてを継続的に攻撃します。一般的な塗装の保証は5〜10年が限界。<strong>20年級の超耐候性コーティング</strong>を入れない限り、補修コストは下がりません。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide-3">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 04</div>
+      <div class="slide-tag">CONCEPT ／ 切り口を変える</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">「電気代を下げる話」ではなく「建物資産を守る話」です。</h3>
+      <div class="concept-flip">
+        <div class="flip-card flip-before">
+          <div class="tag">BEFORE｜よくある提案</div>
+          <div class="quote">「電気代下がりますよ」</div>
+          <ul>
+            <li>経費削減レベルの話</li>
+            <li>補助金頼み・価格勝負</li>
+            <li>20年先の建物像が無い</li>
+            <li>担当者で止まる提案</li>
+          </ul>
+        </div>
+        <div class="flip-arrow">→</div>
+        <div class="flip-card flip-after">
+          <div class="tag">AFTER｜本提案</div>
+          <div class="quote">「20年、資産価値を守りませんか」</div>
+          <ul>
+            <li>経営・投資判断の話</li>
+            <li>補助金なしでも成立</li>
+            <li>LCC（生涯コスト）視点</li>
+            <li>売却・M&A時の評価UP</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide-4">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 05</div>
+      <div class="slide-tag">PACKAGE ／ 4要素 × 順序</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">「守り」と「攻め」、4つの要素を正しい順番で組み上げます。</h3>
+      <div class="package4">
+        <div class="pkg-card">
+          <div class="role">守る</div>
+          <div class="name">屋根 遮熱・断熱コーティング</div>
+          <div class="desc">屋根温度上昇を抑えて空調負荷を軽減。<strong>20年超耐候・防水性能</strong>で塩害リスクを大幅低減。</div>
+        </div>
+        <div class="pkg-card">
+          <div class="role">守る</div>
+          <div class="name">窓ガラス 遮熱コーティング</div>
+          <div class="desc">日射熱の侵入をカット。客室・ロビー・レストラン和海の快適性を底上げ。</div>
+        </div>
+        <div class="pkg-card create">
+          <div class="role">攻める</div>
+          <div class="name">太陽光パネル</div>
+          <div class="desc">自家消費中心で電気代削減。CO2削減実績は<strong>ESG・SDGs訴求</strong>にも転用可能。</div>
+        </div>
+        <div class="pkg-card create">
+          <div class="role">攻める</div>
+          <div class="name">蓄電池</div>
+          <div class="desc">停電時もチェックイン・冷蔵・最低照明を維持。<strong>ホテルBCPの要</strong>。</div>
+        </div>
+      </div>
+      <div class="order-warn">
+        <div class="ttl">先に屋根を守ってから、太陽光を載せる</div>
+        <div class="desc">太陽光を先に設置すると、10年目の屋根補修時に<strong>パネルを剥がせず雨漏り・防水切れ</strong>に直結します。先に20年耐候の遮熱断熱コーティングを施工することで、太陽光は20年フル稼働、屋根は補修リスクなし。<strong>これが「資産価値を守る投資」になる順番</strong>です。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide-5">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 06</div>
+      <div class="slide-tag">HOTEL MERIT ／ 経営にこう効く</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">ホテル経営の「3つの軸」に同時に効きます。</h3>
+      <div class="merits">
+        <div class="merit">
+          <div class="ico">資</div>
+          <div class="ttl">資産価値の維持</div>
+          <div class="desc">塩害環境でも<strong>20年スパンで建物価値を維持</strong>。将来の売却・事業承継・M&A時の評価に直結します。</div>
+        </div>
+        <div class="merit">
+          <div class="ico">客</div>
+          <div class="ttl">顧客満足・口コミ向上</div>
+          <div class="desc">最上階・グランピング棟・トレーラーの<strong>夏場の暑さ問題を構造的に解決</strong>。レビュー評価の底上げに。</div>
+        </div>
+        <div class="merit">
+          <div class="ico">B</div>
+          <div class="ttl">BCP・停電対応</div>
+          <div class="desc">ペット連れ・高齢ゲストも安心。<strong>停電時も最低限の営業継続</strong>でホテルの信頼を守ります。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide-6">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 07</div>
+      <div class="slide-tag">IMPACT ／ 削減効果と投資回収</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">数字で見る効果：最大▲50%、回収10〜15年。</h3>
+      <div class="roi-row">
+        <div class="roi-chart">
+          <div class="lbl">電力消費 削減シミュレーション（参考値）</div>
+          <div class="bars">
+            <div class="bar b1"><div class="val">100%</div><div class="stick"></div><div class="name">現状</div></div>
+            <div class="bar b2"><div class="val">▲30%</div><div class="stick"></div><div class="name">屋根+窓</div></div>
+            <div class="bar b3"><div class="val">▲42%</div><div class="stick"></div><div class="name">+太陽光</div></div>
+            <div class="bar b4"><div class="val">▲50%</div><div class="stick"></div><div class="name">+蓄電池</div></div>
+          </div>
+        </div>
+        <div class="roi-text">
+          <div class="top">PAYBACK</div>
+          <div class="big">10〜15<small>年</small></div>
+          <div class="desc">補助金なし前提で月々の削減額が支払を相殺する設計。リース・金融スキームに乗せれば<strong>初期投資負担なし</strong>での導入も可能です。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide-7">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 08</div>
+      <div class="slide-tag">NEXT STEP ／ まずは無料診断から</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">判断はそのあとで構いません。まずは現状把握から。</h3>
+      <div class="cta-block">
+        <div class="cta-inner">
+          <div class="cta-l">
+            <div class="top">NEXT STEP</div>
+            <div class="ttl">まずは現地簡易調査と<br>シミュレーションから。</div>
+            <div class="desc">屋根面積・電気使用量・建物状態を確認させていただき、ドゥカーレ様専用の試算を無料でご提示します。判断はそのあとで構いません。</div>
+          </div>
+          <div class="cta-r">
+            <div class="lbl">無料でできること</div>
+            <div class="item">屋根・外装の現状診断</div>
+            <div class="item">塩害劣化シミュレーション</div>
+            <div class="item">電気代削減・回収試算</div>
+            <div class="item">補助金活用可能性チェック</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// 各セクションの字幕（短文に分けて、タイミング指定）
+// captions: 配列、各要素は [表示秒数, 字幕テキスト]
+const SECTIONS = [
+  {
+    title: "ご挨拶",
+    captions: [
+      [4.0, "ドゥカーレ・ガーデンホテル九十九里様"],
+      [4.0, "本日はお時間をいただき、ありがとうございます。"],
+      [4.5, "本日のご提案は、よくある電気代削減のお話ではございません。"],
+      [5.0, "これからの20年、九十九里の潮風から、ホテルの建物資産そのものを守る"],
+      [3.5, "経営判断としてのご提案です。"]
+    ]
+  },
+  {
+    title: "補助金",
+    captions: [
+      [4.0, "本題の前に、ぜひお伝えしたいことがございます。"],
+      [4.5, "現在、千葉県内の事業者様限定で"],
+      [4.5, "業務用設備等 脱炭素化促進事業補助金が公募されています。"],
+      [4.5, "対象経費の最大1/2、上限1,000万円が補助されます。"],
+      [4.5, "例年、予算到達で早期受付終了となる制度です。"],
+      [4.0, "つまり、早く動いた事業者様ほど採択確度が高くなります。"],
+      [3.5, "このタイミングを逃すと、来年度まで動けません。"]
+    ]
+  },
+  {
+    title: "リスク",
+    captions: [
+      [4.0, "なぜ、今、このご提案なのか。"],
+      [4.5, "海沿いのリゾートだからこそ、4つのリスクが同時に進行しています。"],
+      [4.5, "1つ目、塩害・潮風による劣化加速。"],
+      [4.0, "海岸立地は内陸の2〜3倍のスピードで劣化します。"],
+      [4.0, "2つ目、電気料金の構造的な高騰。"],
+      [4.5, "3つ目、真夏の客室の暑さは口コミ評価にも直結します。"],
+      [4.0, "4つ目、停電は即、ホテル機能の停止を意味します。"],
+      [4.5, "九十九里の海風は、屋根もパネルもガラスも継続的に攻撃します。"],
+      [4.0, "20年クラスのコーティングが、唯一の解決策です。"]
+    ]
+  },
+  {
+    title: "コンセプト",
+    captions: [
+      [3.5, "そこで、私たちは話の切り口を変えます。"],
+      [4.5, "「電気代を下げませんか」ではなく"],
+      [4.5, "「20年、建物の資産価値を守りませんか」というご提案です。"],
+      [4.0, "経費削減ではなく、経営判断・投資判断のお話です。"],
+      [4.0, "補助金が無くても成立する。"],
+      [4.0, "ライフサイクルコストで考える。"],
+      [4.5, "そして、売却や事業承継、M&A時の評価にも直結します。"]
+    ]
+  },
+  {
+    title: "パッケージ",
+    captions: [
+      [4.0, "具体的には、4つの要素を正しい順番で組み上げます。"],
+      [4.5, "「守り」が2つ。屋根の遮熱断熱と、窓ガラスの遮熱コーティング。"],
+      [4.0, "「攻め」が2つ。太陽光パネルと、蓄電池です。"],
+      [3.5, "ここで、最も大切なポイントがございます。"],
+      [3.0, "それは、順番です。"],
+      [5.0, "太陽光を先に設置すると、10年目の屋根補修時にパネルを剥がせず"],
+      [4.0, "雨漏りや防水切れに直結してしまいます。"],
+      [4.5, "先に20年耐候のコーティングで屋根を守る。"],
+      [3.5, "その上で、太陽光を載せる。"],
+      [4.5, "これが「資産価値を守る投資」になる順番です。"]
+    ]
+  },
+  {
+    title: "メリット",
+    captions: [
+      [4.0, "ホテル経営の3つの軸に、同時に効きます。"],
+      [3.5, "1つ目、資産価値の維持。"],
+      [4.5, "20年スパンで建物価値を維持し、事業承継・M&A評価に直結。"],
+      [3.5, "2つ目、顧客満足と口コミ向上。"],
+      [5.0, "最上階・グランピング棟・トレーラーの夏場の暑さを構造的に解決。"],
+      [3.5, "3つ目、BCP・停電対応。"],
+      [4.5, "停電時も最低限の営業継続で、ホテルの信頼を守ります。"]
+    ]
+  },
+  {
+    title: "効果と回収",
+    captions: [
+      [3.0, "数字で、ご覧ください。"],
+      [4.5, "屋根と窓のコーティングだけで、電力消費を約30%削減。"],
+      [3.5, "太陽光まで入れて、42%。"],
+      [4.0, "蓄電池までフル導入で、50%の削減が見込めます。"],
+      [4.5, "投資回収は、補助金なしで10〜15年の設計です。"],
+      [4.5, "月々の削減額が、月々のお支払いを相殺します。"],
+      [4.5, "リース・金融スキームで、初期投資負担なしの導入も可能。"],
+      [4.0, "千葉県の補助金が活用できれば、回収はさらに短縮されます。"]
+    ]
+  },
+  {
+    title: "クロージング",
+    captions: [
+      [4.0, "ご判断は、急がれなくて結構でございます。"],
+      [4.5, "まずは無料の現地簡易調査とシミュレーションから。"],
+      [3.5, "屋根の現状診断。"],
+      [3.5, "塩害劣化シミュレーション。"],
+      [3.5, "電気代削減と回収試算。"],
+      [3.5, "補助金活用の可能性チェック。"],
+      [4.0, "すべて、無料でご提示いたします。"],
+      [4.0, "本日は、貴重なお時間をいただきありがとうございました。"]
+    ]
+  }
+];
+
+let currentIndex = 0;
+let captionIndex = 0;
+let isPlaying = false;
+let speed = 1.0;
+let captionTimer = null;
+let captionStartTime = 0;
+let captionDuration = 0;
+let captionElapsed = 0;
+let progressTimer = null;
+
+const slides = document.querySelectorAll('.slide');
+const playBtn = document.getElementById('playBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const speedBtn = document.getElementById('speedBtn');
+const ctrlSection = document.getElementById('ctrlSection');
+const ctrlLabel = document.getElementById('ctrlLabel');
+const progressBar = document.getElementById('progressBar');
+const captionEl = document.getElementById('caption');
+const introScreen = document.getElementById('introScreen');
+const startBtn = document.getElementById('startBtn');
+const skipBtn = document.getElementById('skipBtn');
+const controller = document.getElementById('controller');
+
+function setActiveSlide(index) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === index));
+  const target = slides[index];
+  if (target) {
+    const rect = target.getBoundingClientRect();
+    const scrollTop = window.scrollY + rect.top - 80;
+    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+  }
+  ctrlLabel.textContent = `SECTION ${index + 1} / ${SECTIONS.length}`;
+  ctrlSection.textContent = SECTIONS[index].title;
+}
+
+function getSectionDuration(idx) {
+  return SECTIONS[idx].captions.reduce((sum, c) => sum + c[0], 0);
+}
+
+function getTotalDuration() {
+  return SECTIONS.reduce((sum, _, i) => sum + getSectionDuration(i), 0);
+}
+
+function getElapsedBeforeSection(idx) {
+  let s = 0;
+  for (let i = 0; i < idx; i++) s += getSectionDuration(i);
+  return s;
+}
+
+function showCaption(text) {
+  captionEl.textContent = text;
+  captionEl.classList.remove('hide');
+  captionEl.classList.add('show');
+}
+
+function hideCaption() {
+  captionEl.classList.remove('show');
+  captionEl.classList.add('hide');
+}
+
+function updateProgressBar() {
+  if (!isPlaying) return;
+  const total = getTotalDuration();
+  const sectionStart = getElapsedBeforeSection(currentIndex);
+  let captionOffset = 0;
+  for (let i = 0; i < captionIndex; i++) {
+    captionOffset += SECTIONS[currentIndex].captions[i][0];
+  }
+  const inCaption = (Date.now() - captionStartTime) / 1000 / speed;
+  const elapsed = sectionStart + captionOffset + inCaption;
+  const pct = Math.min(100, (elapsed / total) * 100);
+  progressBar.style.width = `${pct}%`;
+}
+
+function playCaptionAt(idx) {
+  if (!isPlaying) return;
+  const section = SECTIONS[currentIndex];
+  if (idx >= section.captions.length) {
+    // セクション終了 → 次へ
+    if (currentIndex < SECTIONS.length - 1) {
+      currentIndex++;
+      captionIndex = 0;
+      setActiveSlide(currentIndex);
+      playCaptionAt(0);
+    } else {
+      // 全部終了
+      isPlaying = false;
+      playBtn.textContent = '↻';
+      hideCaption();
+      progressBar.style.width = '100%';
+      clearInterval(progressTimer);
+    }
+    return;
+  }
+  captionIndex = idx;
+  const [duration, text] = section.captions[idx];
+  showCaption(text);
+  captionStartTime = Date.now();
+  captionDuration = duration;
+  captionTimer = setTimeout(() => {
+    playCaptionAt(idx + 1);
+  }, (duration * 1000) / speed);
+}
+
+function play() {
+  isPlaying = true;
+  playBtn.textContent = '⏸';
+  setActiveSlide(currentIndex);
+  playCaptionAt(captionIndex);
+  if (progressTimer) clearInterval(progressTimer);
+  progressTimer = setInterval(updateProgressBar, 100);
+}
+
+function pause() {
+  isPlaying = false;
+  playBtn.textContent = '▶';
+  if (captionTimer) clearTimeout(captionTimer);
+  if (progressTimer) clearInterval(progressTimer);
+}
+
+playBtn.addEventListener('click', () => {
+  if (playBtn.textContent === '↻') {
+    currentIndex = 0;
+    captionIndex = 0;
+    play();
+  } else if (isPlaying) {
+    pause();
+  } else {
+    play();
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  if (captionTimer) clearTimeout(captionTimer);
+  if (currentIndex > 0) currentIndex--;
+  captionIndex = 0;
+  setActiveSlide(currentIndex);
+  if (isPlaying) playCaptionAt(0);
+});
+
+nextBtn.addEventListener('click', () => {
+  if (captionTimer) clearTimeout(captionTimer);
+  if (currentIndex < SECTIONS.length - 1) currentIndex++;
+  captionIndex = 0;
+  setActiveSlide(currentIndex);
+  if (isPlaying) playCaptionAt(0);
+});
+
+const speeds = [0.85, 1.0, 1.15, 1.3, 1.5];
+let speedIdx = 1;
+speedBtn.addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  speed = speeds[speedIdx];
+  speedBtn.textContent = `×${speed.toFixed(2).replace(/0$/, '').replace(/\.$/, '')}`;
+  if (isPlaying) {
+    if (captionTimer) clearTimeout(captionTimer);
+    // 残り時間を再計算して再開
+    const elapsed = (Date.now() - captionStartTime) / 1000;
+    const remaining = (captionDuration - elapsed * speed) / speed;
+    if (remaining > 0) {
+      captionTimer = setTimeout(() => playCaptionAt(captionIndex + 1), remaining * 1000);
+    }
+  }
+});
+
+slides.forEach((s, i) => {
+  s.addEventListener('click', () => {
+    if (captionTimer) clearTimeout(captionTimer);
+    currentIndex = i;
+    captionIndex = 0;
+    setActiveSlide(currentIndex);
+    if (isPlaying) playCaptionAt(0);
+  });
+});
+
+startBtn.addEventListener('click', () => {
+  introScreen.classList.add('hidden');
+  controller.style.display = 'flex';
+  setTimeout(() => {
+    introScreen.style.display = 'none';
+    play();
+  }, 600);
+});
+
+skipBtn.addEventListener('click', () => {
+  introScreen.classList.add('hidden');
+  controller.style.display = 'flex';
+  setTimeout(() => {
+    introScreen.style.display = 'none';
+    setActiveSlide(0);
+  }, 600);
+});
+
+setActiveSlide(0);
+</script>
+
+</body>
+</html>
