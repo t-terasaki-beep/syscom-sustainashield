@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドゥカーレ・ガーデンホテル九十九里 様｜省エネ・創エネ ダブルプラン ナレーション版</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root{
+  --navy: #0f2d4a;
+  --navy-dark: #081d33;
+  --teal: #1e6a85;
+  --orange: #e07a3c;
+  --orange-light: #f4b88e;
+  --sand: #f5efe6;
+  --paper: #fbf8f2;
+  --ink: #1a1a1a;
+  --gray: #6b6b6b;
+  --line: #d8cdb8;
+  --red: #c2410c;
+}
+
+html, body{
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--ink);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  line-height: 1.6;
+  font-size: 11pt;
+  scroll-behavior: smooth;
+}
+
+/* === コントローラー === */
+.controller{
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15,45,74,0.97);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 100px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 13px;
+  max-width: 92vw;
+}
+.ctrl-btn{
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.ctrl-btn:hover{ background: #d06a2c; transform: scale(1.05); }
+.ctrl-btn.secondary{
+  background: rgba(255,255,255,0.12);
+  width: 38px; height: 38px;
+  font-size: 14px;
+}
+.ctrl-btn.secondary:hover{ background: rgba(255,255,255,0.2); }
+.ctrl-status{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 140px;
+}
+.ctrl-label{
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--orange-light);
+  text-transform: uppercase;
+}
+.ctrl-section{ font-size: 13px; font-weight: 700; }
+.ctrl-progress{
+  width: 100px;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.ctrl-progress-bar{
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--orange-light));
+  width: 0%;
+  transition: width 0.2s;
+}
+.speed-toggle{
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 12px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: inherit;
+}
+.speed-toggle:hover{ background: rgba(255,255,255,0.2); }
+
+/* === スライド === */
+.slides{
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 24px 140px;
+}
+.slide{
+  background: var(--paper);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  transition: all 0.5s;
+  opacity: 0.4;
+  transform: scale(0.98);
+  cursor: pointer;
+}
+.slide.active{
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 16px 60px rgba(224,122,60,0.3), 0 0 0 2px var(--orange);
+}
+.slide-header{
+  background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+  color: #fff;
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.slide-num{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 11pt;
+  letter-spacing: 0.2em;
+  color: var(--orange-light);
+}
+.slide-tag{
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  background: rgba(255,255,255,0.15);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+.slide-body{ padding: 32px 36px; }
+
+/* === 共通コンテンツ === */
+.hero-mini h1{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 26pt;
+  line-height: 1.35;
+  color: var(--navy);
+  margin-bottom: 14px;
+  font-weight: 800;
+}
+.hero-mini h1 em{
+  font-style: normal;
+  color: var(--orange);
+  border-bottom: 4px solid var(--orange);
+  padding-bottom: 2px;
+}
+.hero-mini .subline{
+  font-size: 12pt;
+  color: var(--gray);
+  line-height: 1.7;
+}
+.client-block{
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  color: #fff;
+  padding: 20px 24px;
+  border-left: 4px solid var(--orange);
+  margin-bottom: 24px;
+  border-radius: 4px;
+}
+.client-block .lbl{
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--orange-light);
+  margin-bottom: 6px;
+}
+.client-block .name{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 18pt;
+  font-weight: 700;
+}
+
+/* 補助金 */
+.subsidy-banner{
+  background: linear-gradient(95deg, #fff 0%, #fff8ee 100%);
+  border: 2px solid var(--orange);
+  border-radius: 8px;
+  padding: 24px 28px;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 24px;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(224,122,60,0.25);
+  margin-top: 18px;
+}
+.subsidy-banner::before{
+  content: "千葉県内事業者 限定";
+  position: absolute;
+  top: -12px;
+  left: 24px;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  padding: 5px 14px;
+  font-weight: 700;
+  border-radius: 100px;
+}
+.sub-icon{
+  background: var(--orange);
+  color: #fff;
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.sub-icon .pct{ font-size: 22pt; line-height: 1; }
+.sub-icon .lbl{ font-size: 9px; letter-spacing: 0.1em; margin-top: 3px; }
+.sub-text .top{ font-size: 10pt; color: var(--red); font-weight: 700; margin-bottom: 4px; }
+.sub-text .main{
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 700;
+  font-size: 14pt;
+  color: var(--navy);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.sub-text .main em{ font-style: normal; color: var(--red); }
+.sub-text .note{ font-size: 9pt; color: #777; line-height: 1.5; }
+.sub-cta{
+  background: var(--navy);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 11px;
+  text-align: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.sub-cta strong{
+  display: block;
+  font-size: 14pt;
+  color: var(--orange-light);
+  margin-top: 4px;
+  font-family: 'Shippori Mincho', serif;
+}
+
+/* リスク */
+.lead{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 16pt;
+  color: var(--navy);
+  margin-bottom: 24px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.risks-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.risk-card{
+  background: #fff;
+  border-left: 4px solid var(--red);
+  padding: 18px 20px;
+  border-radius: 4px;
+  position: relative;
+}
+.risk-card .num{
+  position: absolute;
+  top: 8px; right: 14px;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 22pt;
+  color: var(--red);
+  opacity: 0.2;
+  font-weight: 700;
+}
+.risk-card .ttl{
+  font-weight: 700;
+  font-size: 12pt;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.risk-card .desc{ font-size: 10pt; color: #444; line-height: 1.65; }
+.risk-card .desc strong{ color: var(--red); }
+.coastal-box{
+  margin-top: 20px;
+  padding: 20px 26px;
+  background: linear-gradient(105deg, var(--sand), #ffe8d4);
+  border: 2px dashed var(--orange);
+  border-radius: 8px;
+}
+.coastal-box .ttl{ font-weight: 700; font-size: 12pt; color: var(--navy); margin-bottom: 6px; }
+.coastal-box .ttl::before{ content: "⚠ "; color: var(--orange); font-size: 14pt; }
+.coastal-box .desc{ font-size: 10pt; line-height: 1.7; color: #444; }
+.coastal-box .desc strong{
+  color: var(--red);
+  background: linear-gradient(transparent 60%, #ffd9b8 60%);
+  padding: 0 3px;
+}
+
+/* CONCEPT */
+.concept-flip{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+.flip-card{ padding: 20px 22px; border-radius: 6px; }
+.flip-before{ background: #efece4; color: #888; }
+.flip-after{ background: var(--navy); color: #fff; position: relative; overflow: hidden; }
+.flip-card .tag{ font-size: 10px; letter-spacing: 0.2em; margin-bottom: 8px; font-weight: 700; }
+.flip-before .tag{ color: #999; }
+.flip-after .tag{ color: var(--orange-light); }
+.flip-card .quote{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 13pt;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.flip-card ul{ list-style: none; font-size: 10pt; line-height: 1.8; }
+.flip-card ul li::before{ content: "・"; }
+.flip-arrow{ display: flex; align-items: center; font-size: 32pt; color: var(--orange); font-weight: 700; }
+
+/* PACKAGE */
+.package4{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.pkg-card{
+  background: #fff;
+  border-top: 5px solid var(--teal);
+  padding: 18px 20px;
+  border-radius: 4px;
+}
+.pkg-card.create{ border-top-color: var(--orange); }
+.pkg-card .role{
+  display: inline-block;
+  font-size: 10px;
+  padding: 3px 10px;
+  background: var(--teal);
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: 0.15em;
+  border-radius: 100px;
+}
+.pkg-card.create .role{ background: var(--orange); }
+.pkg-card .name{ font-weight: 700; font-size: 12pt; color: var(--navy); margin-bottom: 8px; }
+.pkg-card .desc{ font-size: 10pt; color: #444; line-height: 1.6; }
+.pkg-card .desc strong{ color: var(--orange); }
+.order-warn{
+  background: #fff8ee;
+  border: 2px solid var(--orange);
+  padding: 18px 22px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.order-warn .ttl{ font-weight: 700; font-size: 12pt; color: var(--navy); margin-bottom: 8px; }
+.order-warn .ttl::before{
+  content: "順序";
+  font-size: 9px;
+  background: var(--orange);
+  color: #fff;
+  padding: 3px 8px;
+  letter-spacing: 0.15em;
+  margin-right: 8px;
+  border-radius: 100px;
+}
+.order-warn .desc{ font-size: 10pt; line-height: 1.7; color: #444; }
+.order-warn .desc strong{ color: var(--red); }
+
+/* MERIT */
+.merits{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.merit{
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 22px 20px 18px;
+  border-radius: 6px;
+  position: relative;
+}
+.merit .ico{
+  position: absolute;
+  top: -16px; left: 18px;
+  width: 36px; height: 36px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 700;
+  font-size: 14pt;
+}
+.merit .ttl{ margin-top: 14px; font-weight: 700; color: var(--navy); font-size: 12pt; margin-bottom: 8px; }
+.merit .desc{ font-size: 10pt; line-height: 1.65; color: #444; }
+.merit .desc strong{ color: var(--orange); }
+
+/* IMPACT */
+.roi-row{
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 18px;
+}
+.roi-chart{
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 22px;
+  border-radius: 6px;
+}
+.roi-chart .lbl{ font-size: 10px; color: var(--gray); letter-spacing: 0.15em; margin-bottom: 12px; }
+.bars{
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  height: 130px;
+  border-bottom: 1px solid #ddd;
+  padding-top: 8px;
+}
+.bar{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+.bar .val{ font-size: 11pt; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.bar .stick{ width: 100%; border-radius: 4px 4px 0 0; }
+.bar.b1 .stick{ height: 5%; background: #ccc; }
+.bar.b1 .val{ color: #999; }
+.bar.b2 .stick{ height: 60%; background: var(--teal); }
+.bar.b3 .stick{ height: 84%; background: linear-gradient(180deg, var(--orange), var(--teal)); }
+.bar.b4 .stick{ height: 100%; background: linear-gradient(180deg, var(--orange), var(--red)); }
+.bar .name{ font-size: 9pt; color: var(--gray); margin-top: 8px; text-align: center; line-height: 1.3; }
+.roi-text{
+  background: var(--navy);
+  color: #fff;
+  padding: 24px;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.roi-text::before{
+  content: "";
+  position: absolute;
+  bottom: -30px; right: -30px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--orange), transparent 70%);
+  opacity: 0.4;
+}
+.roi-text .top{ font-size: 10px; letter-spacing: 0.25em; color: var(--orange-light); margin-bottom: 6px; }
+.roi-text .big{
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 800;
+  font-size: 38pt;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.roi-text .big small{ font-family: 'Noto Sans JP'; font-size: 14pt; font-weight: 500; }
+.roi-text .desc{ font-size: 10pt; line-height: 1.6; position: relative; z-index: 2; }
+.roi-text .desc strong{ color: var(--orange-light); }
+
+/* CTA */
+.cta-block{
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff;
+  padding: 32px 36px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-block::before{
+  content: "";
+  position: absolute;
+  top: -50px; left: -50px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(224,122,60,0.4), transparent 70%);
+  border-radius: 50%;
+}
+.cta-inner{
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.cta-l .top{ font-size: 11px; letter-spacing: 0.25em; color: var(--orange-light); margin-bottom: 8px; }
+.cta-l .ttl{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 18pt;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.cta-l .desc{ font-size: 10pt; color: rgba(255,255,255,0.9); line-height: 1.65; }
+.cta-r{
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 18px;
+  border-radius: 6px;
+}
+.cta-r .lbl{ font-size: 10px; letter-spacing: 0.2em; color: var(--orange-light); font-weight: 700; margin-bottom: 10px; }
+.cta-r .item{ font-size: 10pt; line-height: 1.85; }
+.cta-r .item::before{ content: "✓ "; color: var(--orange); font-weight: 700; }
+
+/* イントロ */
+.intro-screen{
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 24px;
+}
+.intro-screen.hidden{
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s;
+}
+.intro-card{
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 48px 56px;
+  border-radius: 12px;
+  max-width: 540px;
+  text-align: center;
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+.intro-card .label{
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--orange-light);
+  margin-bottom: 16px;
+}
+.intro-card h2{
+  font-family: 'Shippori Mincho', serif;
+  font-size: 24pt;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+.intro-card .for{
+  font-size: 11pt;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 32px;
+  letter-spacing: 0.05em;
+}
+.intro-card .for strong{ color: var(--orange-light); font-weight: 600; }
+.intro-start{
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  padding: 16px 40px;
+  font-size: 14pt;
+  font-family: 'Shippori Mincho', serif;
+  font-weight: 700;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+.intro-start:hover{
+  background: #d06a2c;
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(224,122,60,0.5);
+}
+.intro-note{
+  font-size: 10pt;
+  color: rgba(255,255,255,0.5);
+  margin-top: 20px;
+  line-height: 1.7;
+}
+.intro-error{
+  background: rgba(194,65,12,0.2);
+  border: 1px solid var(--red);
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 24px;
+  font-size: 11pt;
+  color: #ffcaa7;
+  text-align: left;
+  line-height: 1.7;
+  display: none;
+}
+.intro-error.show{ display: block; }
+.intro-error code{
+  background: rgba(0,0,0,0.4);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 10pt;
+}
+
+/* レスポンシブ */
+@media (max-width: 700px){
+  .slides{ padding: 16px 12px 130px; }
+  .slide-body{ padding: 22px 18px; }
+  .hero-mini h1{ font-size: 19pt; }
+  .lead{ font-size: 13pt; }
+  .risks-grid, .package4, .merits, .roi-row, .cta-inner{ grid-template-columns: 1fr; }
+  .concept-flip{ grid-template-columns: 1fr; }
+  .flip-arrow{ justify-content: center; transform: rotate(90deg); padding: 4px 0; }
+  .subsidy-banner{ grid-template-columns: 1fr; text-align: center; }
+  .sub-icon{ margin: 0 auto; }
+  .controller{ padding: 10px 14px; gap: 10px; bottom: 12px; }
+  .ctrl-btn{ width: 40px; height: 40px; font-size: 16px; }
+  .ctrl-status{ min-width: 100px; }
+  .ctrl-section{ font-size: 11px; }
+  .ctrl-progress{ width: 70px; }
+  .speed-toggle{ font-size: 10px; padding: 5px 8px; }
+  .intro-card{ padding: 32px 24px; }
+  .intro-card h2{ font-size: 18pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- イントロ画面 -->
+<div class="intro-screen" id="introScreen">
+  <div class="intro-card">
+    <div class="label">PROPOSAL ／ AUDIO PRESENTATION</div>
+    <h2>20年、九十九里の潮風から<br>建物の資産価値を守りませんか。</h2>
+    <div class="for">FOR <strong>ドゥカーレ・ガーデンホテル九十九里 様</strong></div>
+    <button class="intro-start" id="startBtn">▶ ナレーションを再生</button>
+    <div class="intro-note">高品質AI音声でのご案内（約3分）<br>各パートは自動でスクロールします</div>
+    <div class="intro-error" id="introError">
+      <strong>⚠ 音声ファイルが見つかりません</strong><br>
+      このHTMLと同じフォルダに <code>audio/</code> フォルダを置き、<br>
+      その中に <code>01_opening.mp3</code> 〜 <code>08_closing.mp3</code> を入れてください。<br>
+      <small>※ 同梱の <code>generate_narration.py</code> を実行すると生成されます。</small>
+    </div>
+  </div>
+</div>
+
+<!-- コントローラー -->
+<div class="controller" id="controller" style="display:none;">
+  <button class="ctrl-btn" id="playBtn" title="再生/一時停止">⏸</button>
+  <div class="ctrl-status">
+    <div class="ctrl-label" id="ctrlLabel">SECTION 1 / 8</div>
+    <div class="ctrl-section" id="ctrlSection">タイトル</div>
+    <div class="ctrl-progress"><div class="ctrl-progress-bar" id="progressBar"></div></div>
+  </div>
+  <button class="ctrl-btn secondary" id="prevBtn" title="前へ">◀</button>
+  <button class="ctrl-btn secondary" id="nextBtn" title="次へ">▶</button>
+  <button class="speed-toggle" id="speedBtn" title="再生速度">×1.0</button>
+</div>
+
+<!-- 隠し audio 要素 -->
+<audio id="audioPlayer" preload="auto"></audio>
+
+<!-- スライド本体 -->
+<div class="slides" id="slides">
+
+  <!-- Slide 1: タイトル -->
+  <div class="slide" id="slide-0">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 01</div>
+      <div class="slide-tag">OPENING</div>
+    </div>
+    <div class="slide-body">
+      <div class="client-block">
+        <div class="lbl">PROPOSAL FOR</div>
+        <div class="name">ドゥカーレ・ガーデンホテル九十九里 様</div>
+      </div>
+      <div class="hero-mini">
+        <h1>20年、九十九里の<em>潮風</em>から<br>建物の<em>資産価値</em>を守りませんか。</h1>
+        <p class="subline">屋根・窓 遮熱断熱コーティング ＋ 太陽光・蓄電池<br>"省エネ" ではなく、"建物資産を守る経営判断" としてのご提案です。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 2: 補助金 -->
+  <div class="slide" id="slide-1">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 02</div>
+      <div class="slide-tag">SUBSIDY ／ 緊急ご案内</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">まずお伝えしたい、このタイミングならではのチャンスです。</h3>
+      <div class="subsidy-banner">
+        <div class="sub-icon">
+          <div class="pct">1/2</div>
+          <div class="lbl">補助</div>
+        </div>
+        <div class="sub-text">
+          <div class="top">▶ このタイミングは逃せません</div>
+          <div class="main">千葉県 業務用設備等脱炭素化促進事業補助金<br><em>対象経費の最大1/2を補助（上限1,000万円）</em></div>
+          <div class="note">省エネ診断＋設備導入が対象。例年予算到達で早期受付終了。早期着手で採択確度UP。</div>
+        </div>
+        <div class="sub-cta">
+          補助金活用で
+          <strong>実質負担を半減</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: WHY NOW -->
+  <div class="slide" id="slide-2">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 03</div>
+      <div class="slide-tag">WHY NOW ／ 4つの経営リスク</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">海沿いリゾートだからこそ、4つの経営リスクが同時に進行しています。</h3>
+      <div class="risks-grid">
+        <div class="risk-card">
+          <div class="num">01</div>
+          <div class="ttl">塩害・潮風による劣化加速</div>
+          <div class="desc">海岸立地の建物は内陸の<strong>2〜3倍のスピードで屋根・外装が劣化</strong>。再塗装サイクルが短く、ランニングコストが膨らみます。</div>
+        </div>
+        <div class="risk-card">
+          <div class="num">02</div>
+          <div class="ttl">電気料金の構造的高騰</div>
+          <div class="desc">24時間稼働のホテルは電気代の影響を直撃。燃料調整費・再エネ賦課金は今後も右肩上がりです。</div>
+        </div>
+        <div class="risk-card">
+          <div class="num">03</div>
+          <div class="ttl">真夏の客室快適性 ／ 評価リスク</div>
+          <div class="desc">屋根温度上昇は最上階・トレーラー・グランピング棟の冷房負荷に直結。<strong>口コミ評価にも影響</strong>します。</div>
+        </div>
+        <div class="risk-card">
+          <div class="num">04</div>
+          <div class="ttl">停電＝営業停止のBCPリスク</div>
+          <div class="desc">食材冷蔵・ペット同伴客・宿泊中ゲスト対応など、<strong>停電は即ホテル機能不全</strong>。蓄電池の有無で初動が変わります。</div>
+        </div>
+      </div>
+      <div class="coastal-box">
+        <div class="ttl">九十九里立地の特殊性</div>
+        <div class="desc">海風（塩分を含む空気）は<strong>金属屋根・パネル・ガラス・空調室外機</strong>すべてを継続的に攻撃します。一般的な塗装の保証は5〜10年が限界。<strong>20年級の超耐候性コーティング</strong>を入れない限り、補修コストは下がりません。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: CONCEPT -->
+  <div class="slide" id="slide-3">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 04</div>
+      <div class="slide-tag">CONCEPT ／ 切り口を変える</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">「電気代を下げる話」ではなく「建物資産を守る話」です。</h3>
+      <div class="concept-flip">
+        <div class="flip-card flip-before">
+          <div class="tag">BEFORE｜よくある提案</div>
+          <div class="quote">「電気代下がりますよ」</div>
+          <ul>
+            <li>経費削減レベルの話</li>
+            <li>補助金頼み・価格勝負</li>
+            <li>20年先の建物像が無い</li>
+            <li>担当者で止まる提案</li>
+          </ul>
+        </div>
+        <div class="flip-arrow">→</div>
+        <div class="flip-card flip-after">
+          <div class="tag">AFTER｜本提案</div>
+          <div class="quote">「20年、資産価値を守りませんか」</div>
+          <ul>
+            <li>経営・投資判断の話</li>
+            <li>補助金なしでも成立</li>
+            <li>LCC（生涯コスト）視点</li>
+            <li>売却・M&A時の評価UP</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: PACKAGE -->
+  <div class="slide" id="slide-4">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 05</div>
+      <div class="slide-tag">PACKAGE ／ 4要素 × 順序</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">「守り」と「攻め」、4つの要素を正しい順番で組み上げます。</h3>
+      <div class="package4">
+        <div class="pkg-card">
+          <div class="role">守る</div>
+          <div class="name">屋根 遮熱・断熱コーティング</div>
+          <div class="desc">屋根温度上昇を抑えて空調負荷を軽減。<strong>20年超耐候・防水性能</strong>で塩害リスクを大幅低減。</div>
+        </div>
+        <div class="pkg-card">
+          <div class="role">守る</div>
+          <div class="name">窓ガラス 遮熱コーティング</div>
+          <div class="desc">日射熱の侵入をカット。客室・ロビー・レストラン和海の快適性を底上げ。</div>
+        </div>
+        <div class="pkg-card create">
+          <div class="role">攻める</div>
+          <div class="name">太陽光パネル</div>
+          <div class="desc">自家消費中心で電気代削減。CO2削減実績は<strong>ESG・SDGs訴求</strong>にも転用可能。</div>
+        </div>
+        <div class="pkg-card create">
+          <div class="role">攻める</div>
+          <div class="name">蓄電池</div>
+          <div class="desc">停電時もチェックイン・冷蔵・最低照明を維持。<strong>ホテルBCPの要</strong>。</div>
+        </div>
+      </div>
+      <div class="order-warn">
+        <div class="ttl">先に屋根を守ってから、太陽光を載せる</div>
+        <div class="desc">太陽光を先に設置すると、10年目の屋根補修時に<strong>パネルを剥がせず雨漏り・防水切れ</strong>に直結します。先に20年耐候の遮熱断熱コーティングを施工することで、太陽光は20年フル稼働、屋根は補修リスクなし。<strong>これが「資産価値を守る投資」になる順番</strong>です。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: HOTEL MERIT -->
+  <div class="slide" id="slide-5">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 06</div>
+      <div class="slide-tag">HOTEL MERIT ／ 経営にこう効く</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">ホテル経営の「3つの軸」に同時に効きます。</h3>
+      <div class="merits">
+        <div class="merit">
+          <div class="ico">資</div>
+          <div class="ttl">資産価値の維持</div>
+          <div class="desc">塩害環境でも<strong>20年スパンで建物価値を維持</strong>。将来の売却・事業承継・M&A時の評価に直結します。</div>
+        </div>
+        <div class="merit">
+          <div class="ico">客</div>
+          <div class="ttl">顧客満足・口コミ向上</div>
+          <div class="desc">最上階・グランピング棟・トレーラーの<strong>夏場の暑さ問題を構造的に解決</strong>。レビュー評価の底上げに。</div>
+        </div>
+        <div class="merit">
+          <div class="ico">B</div>
+          <div class="ttl">BCP・停電対応</div>
+          <div class="desc">ペット連れ・高齢ゲストも安心。<strong>停電時も最低限の営業継続</strong>でホテルの信頼を守ります。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: IMPACT -->
+  <div class="slide" id="slide-6">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 07</div>
+      <div class="slide-tag">IMPACT ／ 削減効果と投資回収</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">数字で見る効果：最大▲50%、回収10〜15年。</h3>
+      <div class="roi-row">
+        <div class="roi-chart">
+          <div class="lbl">電力消費 削減シミュレーション（参考値）</div>
+          <div class="bars">
+            <div class="bar b1"><div class="val">100%</div><div class="stick"></div><div class="name">現状</div></div>
+            <div class="bar b2"><div class="val">▲30%</div><div class="stick"></div><div class="name">屋根+窓</div></div>
+            <div class="bar b3"><div class="val">▲42%</div><div class="stick"></div><div class="name">+太陽光</div></div>
+            <div class="bar b4"><div class="val">▲50%</div><div class="stick"></div><div class="name">+蓄電池</div></div>
+          </div>
+        </div>
+        <div class="roi-text">
+          <div class="top">PAYBACK</div>
+          <div class="big">10〜15<small>年</small></div>
+          <div class="desc">補助金なし前提で月々の削減額が支払を相殺する設計。リース・金融スキームに乗せれば<strong>初期投資負担なし</strong>での導入も可能です。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: NEXT STEP -->
+  <div class="slide" id="slide-7">
+    <div class="slide-header">
+      <div class="slide-num">SECTION 08</div>
+      <div class="slide-tag">NEXT STEP ／ まずは無料診断から</div>
+    </div>
+    <div class="slide-body">
+      <h3 class="lead">判断はそのあとで構いません。まずは現状把握から。</h3>
+      <div class="cta-block">
+        <div class="cta-inner">
+          <div class="cta-l">
+            <div class="top">NEXT STEP</div>
+            <div class="ttl">まずは現地簡易調査と<br>シミュレーションから。</div>
+            <div class="desc">屋根面積・電気使用量・建物状態を確認させていただき、ドゥカーレ様専用の試算を無料でご提示します。判断はそのあとで構いません。</div>
+          </div>
+          <div class="cta-r">
+            <div class="lbl">無料でできること</div>
+            <div class="item">屋根・外装の現状診断</div>
+            <div class="item">塩害劣化シミュレーション</div>
+            <div class="item">電気代削減・回収試算</div>
+            <div class="item">補助金活用可能性チェック</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// === セクションごとの音声ファイル ===
+const SECTIONS = [
+  { file: "audio/01_opening.mp3",  title: "ご挨拶" },
+  { file: "audio/02_subsidy.mp3",  title: "補助金" },
+  { file: "audio/03_risks.mp3",    title: "リスク" },
+  { file: "audio/04_concept.mp3",  title: "コンセプト" },
+  { file: "audio/05_package.mp3",  title: "パッケージ" },
+  { file: "audio/06_merit.mp3",    title: "メリット" },
+  { file: "audio/07_impact.mp3",   title: "効果と回収" },
+  { file: "audio/08_closing.mp3",  title: "クロージング" },
+];
+
+let currentIndex = 0;
+let isPlaying = false;
+let speed = 1.0;
+
+const slides = document.querySelectorAll('.slide');
+const audio = document.getElementById('audioPlayer');
+const playBtn = document.getElementById('playBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const speedBtn = document.getElementById('speedBtn');
+const ctrlSection = document.getElementById('ctrlSection');
+const ctrlLabel = document.getElementById('ctrlLabel');
+const progressBar = document.getElementById('progressBar');
+const introScreen = document.getElementById('introScreen');
+const introError = document.getElementById('introError');
+const startBtn = document.getElementById('startBtn');
+const controller = document.getElementById('controller');
+
+function setActiveSlide(index) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === index));
+  const target = slides[index];
+  if (target) {
+    const rect = target.getBoundingClientRect();
+    const scrollTop = window.scrollY + rect.top - 80;
+    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+  }
+  ctrlLabel.textContent = `SECTION ${index + 1} / ${SECTIONS.length}`;
+  ctrlSection.textContent = SECTIONS[index].title;
+}
+
+function updateProgress() {
+  if (audio.duration && !isNaN(audio.duration)) {
+    const sectionPct = (audio.currentTime / audio.duration);
+    const totalPct = ((currentIndex + sectionPct) / SECTIONS.length) * 100;
+    progressBar.style.width = `${totalPct}%`;
+  }
+}
+
+function playSection(index) {
+  audio.src = SECTIONS[index].file;
+  audio.playbackRate = speed;
+  audio.play().catch(err => {
+    console.error("再生失敗:", err);
+    introError.classList.add('show');
+    introScreen.classList.remove('hidden');
+    introScreen.style.display = 'flex';
+    controller.style.display = 'none';
+  });
+}
+
+function play() {
+  isPlaying = true;
+  playBtn.textContent = '⏸';
+  if (currentIndex >= SECTIONS.length) currentIndex = 0;
+  setActiveSlide(currentIndex);
+  playSection(currentIndex);
+}
+
+function pause() {
+  isPlaying = false;
+  audio.pause();
+  playBtn.textContent = '▶';
+}
+
+audio.addEventListener('ended', () => {
+  if (isPlaying && currentIndex < SECTIONS.length - 1) {
+    currentIndex++;
+    setActiveSlide(currentIndex);
+    playSection(currentIndex);
+  } else {
+    isPlaying = false;
+    playBtn.textContent = '↻';
+    progressBar.style.width = '100%';
+  }
+});
+
+audio.addEventListener('timeupdate', updateProgress);
+
+audio.addEventListener('error', () => {
+  introError.classList.add('show');
+  introScreen.classList.remove('hidden');
+  introScreen.style.display = 'flex';
+  controller.style.display = 'none';
+});
+
+playBtn.addEventListener('click', () => {
+  if (playBtn.textContent === '↻') {
+    currentIndex = 0;
+    play();
+  } else if (isPlaying) {
+    pause();
+  } else if (audio.src && audio.currentTime > 0) {
+    audio.play();
+    isPlaying = true;
+    playBtn.textContent = '⏸';
+  } else {
+    play();
+  }
+});
+
+prevBtn.addEventListener('click', () => {
+  if (currentIndex > 0) currentIndex--;
+  setActiveSlide(currentIndex);
+  if (isPlaying) playSection(currentIndex);
+  else { audio.src = SECTIONS[currentIndex].file; }
+});
+
+nextBtn.addEventListener('click', () => {
+  if (currentIndex < SECTIONS.length - 1) currentIndex++;
+  setActiveSlide(currentIndex);
+  if (isPlaying) playSection(currentIndex);
+  else { audio.src = SECTIONS[currentIndex].file; }
+});
+
+const speeds = [0.85, 1.0, 1.15, 1.3];
+let speedIdx = 1;
+speedBtn.addEventListener('click', () => {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  speed = speeds[speedIdx];
+  audio.playbackRate = speed;
+  speedBtn.textContent = `×${speed.toFixed(2).replace(/0$/, '')}`;
+});
+
+slides.forEach((s, i) => {
+  s.addEventListener('click', () => {
+    currentIndex = i;
+    setActiveSlide(currentIndex);
+    if (isPlaying) playSection(currentIndex);
+  });
+});
+
+startBtn.addEventListener('click', () => {
+  // ファイル存在チェック（最初のmp3を試しに読む）
+  audio.src = SECTIONS[0].file;
+  audio.load();
+
+  // 少し待ってから判定
+  const checkAndStart = () => {
+    if (audio.readyState >= 2) {
+      // 読み込みOK
+      introScreen.classList.add('hidden');
+      controller.style.display = 'flex';
+      setTimeout(() => {
+        introScreen.style.display = 'none';
+        play();
+      }, 600);
+    } else if (audio.error) {
+      // エラー
+      introError.classList.add('show');
+    } else {
+      // まだ読み込み中
+      setTimeout(checkAndStart, 300);
+    }
+  };
+  setTimeout(checkAndStart, 300);
+});
+
+setActiveSlide(0);
+
+window.addEventListener('beforeunload', () => audio.pause());
+</script>
+
+</body>
+</html>
