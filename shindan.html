@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>30秒で削減額がわかる！自動料金診断｜ライズウェイ｜千葉のプロパンガス</title>
+<meta name="description" content="千葉県内のプロパンガス料金、30秒・無料で削減額を診断。住居タイプ・世帯人数・現在の料金から最適プランを自動算出。LINE登録で正式見積もりも。" />
+<meta name="theme-color" content="#FFC107" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=RocknRoll+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  .diag-hero{background:linear-gradient(135deg,#0288D1,#01579B);color:#fff;padding:24px 20px 30px;text-align:center;position:relative;overflow:hidden}
+  .diag-hero::before,.diag-hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.15)}
+  .diag-hero::before{width:140px;height:140px;top:-50px;right:-30px}
+  .diag-hero::after{width:80px;height:80px;bottom:-30px;left:-20px}
+  .diag-hero > *{position:relative}
+  .diag-hero .badge-pop{display:inline-block;background:var(--r);color:#fff;font-size:11px;font-weight:900;padding:4px 12px;border-radius:999px;margin-bottom:8px;letter-spacing:.04em;animation:wob 1.6s ease-in-out infinite}
+  @keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+  .diag-hero h1{margin:0 0 6px;font-size:24px;font-weight:900;line-height:1.4}
+  .diag-hero h1 .num{color:var(--y);font-family:"RocknRoll One";font-size:1.4em}
+  .diag-hero p{margin:0;font-size:13px;color:#E1F5FE;font-weight:600}
+  .diag-hero .promises{display:flex;justify-content:center;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .diag-hero .promises span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+
+  /* Diagnose card */
+  .dx-card-full{background:#fff;border-radius:18px;margin:20px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,.1);border:2px solid #B3E5FC}
+  .dx-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .dx-progress .label{font-size:12px;font-weight:900;color:var(--bl2);letter-spacing:.06em;flex-shrink:0}
+  .dx-bar{flex:1;height:8px;background:#E0E0E0;border-radius:999px;overflow:hidden}
+  .dx-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--y),var(--r));width:14%;transition:width .4s ease}
+  .dx-step{display:none}
+  .dx-step.active{display:block;animation:fadeUp .4s ease}
+  @keyframes fadeUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+  .dx-step .qnum{display:inline-block;background:var(--r);color:#fff;font-family:"RocknRoll One";font-size:14px;padding:2px 12px;border-radius:999px;margin-bottom:6px}
+  .dx-step h2{margin:0 0 4px;font-size:18px;color:var(--bl2);font-weight:900;line-height:1.4}
+  .dx-step p.h{margin:0 0 14px;font-size:12.5px;color:var(--sub);line-height:1.6}
+  .dx-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .dx-options.cols-3{grid-template-columns:repeat(3,1fr)}
+  .dx-options.cols-1{grid-template-columns:1fr}
+  .dx-opt{background:#FFFAF0;border:2px solid var(--y2);border-radius:10px;padding:12px 8px;font-weight:700;color:var(--ink);font-size:13px;cursor:pointer;font-family:inherit;text-align:center;transition:all .15s ease}
+  .dx-opt:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1)}
+  .dx-opt.selected{background:var(--y);border-color:var(--r);color:var(--r2);transform:scale(1.03)}
+  .dx-opt .ico{font-size:22px;display:block;margin-bottom:2px}
+  .dx-opt small{display:block;font-size:10px;color:var(--sub);font-weight:500;margin-top:2px}
+
+  .dx-input{display:block;width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;background:#fff;font-weight:700}
+  .dx-input:focus{outline:0;border-color:var(--bl2);box-shadow:0 0 0 3px rgba(13,71,161,.15)}
+  .dx-input-yen{position:relative}
+  .dx-input-yen::after{content:"円";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-weight:700;color:var(--sub);pointer-events:none}
+  .dx-input-yen .dx-input{padding-right:40px;text-align:right}
+  .dx-skip{display:block;width:100%;text-align:center;background:transparent;border:0;color:var(--sub);font-weight:700;cursor:pointer;font-family:inherit;font-size:12px;margin-top:10px;padding:8px;text-decoration:underline}
+
+  .dx-actions{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed #EEE}
+  .dx-back{background:transparent;border:0;color:var(--sub);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+  .dx-next{background:var(--bl2);color:var(--y);border:0;padding:10px 18px;border-radius:8px;font-weight:900;font-size:13px;cursor:pointer;font-family:inherit;box-shadow:0 3px 0 var(--bl)}
+  .dx-next:disabled{background:#CCC;color:#888;cursor:not-allowed;box-shadow:0 3px 0 #999}
+  .dx-next:hover:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 var(--bl)}
+
+  /* Result */
+  .dx-result{display:none}
+  .dx-result.show{display:block;animation:fadeUp .5s ease}
+  .dx-result .pre{font-size:11px;color:var(--sub);margin:0;text-align:center;letter-spacing:.06em}
+  .dx-result h2{font-size:14px;color:var(--bl2);margin:4px 0 16px;font-weight:900;text-align:center;line-height:1.5}
+  .dx-result h2 small{display:block;font-size:11px;color:var(--sub);font-weight:600;margin-top:2px}
+  .savings-card{background:linear-gradient(135deg,var(--y3),var(--y));border:3px solid var(--r);border-radius:14px;padding:18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
+  .savings-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.5),transparent 60%);animation:rotShine 5s linear infinite}
+  @keyframes rotShine{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .savings-card > *{position:relative}
+  .savings-card .lbl{font-size:11px;font-weight:900;color:var(--bl2);letter-spacing:.08em}
+  .savings-card .yen{font-family:"RocknRoll One";font-size:54px;color:var(--r);line-height:1;margin:6px 0 0;-webkit-text-stroke:1.2px #fff}
+  .savings-card .yen .u{font-size:20px;color:var(--ink);margin-left:4px;-webkit-text-stroke:0;font-family:"Noto Sans JP";font-weight:900}
+  .savings-card .ms{font-size:13px;color:var(--ink);font-weight:700;margin-top:6px}
+  .savings-card .ms b{color:var(--r);font-size:1.15em}
+
+  .compare-bar{background:#fff;border:1px solid #EEE;border-radius:12px;padding:14px;margin-bottom:14px}
+  .compare-bar .ttl{font-size:12px;color:var(--sub);font-weight:700;margin-bottom:8px}
+  .bar-row{display:grid;grid-template-columns:60px 1fr 70px;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+  .bar-row .lbl{font-weight:700;color:var(--ink-2)}
+  .bar-row .bar{background:#F5F5F5;border-radius:999px;height:18px;position:relative;overflow:hidden}
+  .bar-row .bar i{display:block;height:100%;border-radius:999px}
+  .bar-row.now .bar i{background:linear-gradient(90deg,#FFCDD2,#E53935)}
+  .bar-row.next .bar i{background:linear-gradient(90deg,#A5D6A7,#06C755)}
+  .bar-row .val{text-align:right;font-weight:900;color:var(--bl2);font-family:"RocknRoll One"}
+
+  .dx-detail{background:#F8FCFE;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:var(--ink-2);margin-bottom:14px}
+  .dx-detail b{color:var(--bl2);font-weight:900}
+
+  .lead-form{background:#FFFAF0;border:2px solid var(--y);border-radius:14px;padding:16px;margin-bottom:14px}
+  .lead-form h3{margin:0 0 4px;color:var(--bl2);font-size:14px;font-weight:900}
+  .lead-form p{margin:0 0 10px;font-size:12px;color:var(--ink-2);line-height:1.6}
+  .lead-form .row{display:grid;gap:4px;margin-bottom:8px}
+  .lead-form label{font-size:11px;color:var(--bl2);font-weight:700}
+  .lead-form .privacy-mini{font-size:10px;color:var(--sub);margin-top:6px;text-align:center}
+  .lead-form .privacy-mini a{color:var(--bl2);text-decoration:underline}
+
+  .dx-restart{margin-top:8px;font-size:12px;color:var(--sub);background:transparent;border:0;cursor:pointer;font-family:inherit;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site-header">
+  <a href="index.html" class="brand" style="text-decoration:none">
+    <span class="mark">R</span>
+    <span>ライズウェイ<small>千葉のプロパンガス相談窓口</small></span>
+  </a>
+  <div class="actions">
+    <span class="area-tag">千葉県専門</span>
+    <button class="menu-btn" id="menuBtn" aria-label="メニュー" type="button"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="side-menu" id="sideMenu">
+  <div class="panel">
+    <div class="panel-head"><h3>メニュー</h3><button id="sideMenuClose" type="button">×</button></div>
+    <nav>
+      <a href="index.html"><span class="ic">🏠</span>トップ<span class="arr">›</span></a>
+      <a href="shindan.html" class="current"><span class="ic">📊</span>料金診断<span class="arr">›</span></a>
+      <a href="service.html"><span class="ic">⚙️</span>サービス紹介<span class="arr">›</span></a>
+      <a href="flow.html"><span class="ic">📋</span>切替の流れ<span class="arr">›</span></a>
+      <a href="voice.html"><span class="ic">💬</span>お客様の声<span class="arr">›</span></a>
+      <a href="column.html"><span class="ic">📚</span>節約の虎の巻<span class="arr">›</span></a>
+      <a href="faq.html"><span class="ic">❓</span>よくあるご質問<span class="arr">›</span></a>
+      <a href="company.html"><span class="ic">🏢</span>会社情報<span class="arr">›</span></a>
+      <a href="contact.html"><span class="ic">✉️</span>お問い合わせ<span class="arr">›</span></a>
+      <a href="privacy.html" style="font-size:12px;color:var(--sub)"><span class="ic" style="background:#EEE">📜</span>プライバシーポリシー<span class="arr">›</span></a>
+      <a href="tokushoho.html" style="font-size:12px;color:var(--sub)"><span class="ic" style="background:#EEE">📄</span>特定商取引法<span class="arr">›</span></a>
+    </nav>
+    <div class="panel-foot">
+      <a class="btn-line" href="contact.html"><span class="icn">L</span><span><span class="lbl-mini">＼ 30秒で完了 ／</span>LINEで無料診断</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="diag-hero">
+  <span class="badge-pop">⚡ 30秒で完了・無料</span>
+  <h1>あなたの<span class="num">削減額</span>、<br>その場でわかります</h1>
+  <p>7問のかんたん質問にお答えください</p>
+  <div class="promises">
+    <span>✓ 個人情報不要</span>
+    <span>✓ しつこい営業なし</span>
+    <span>✓ 完全無料</span>
+  </div>
+</div>
+
+<!-- Diagnose card -->
+<div class="dx-card-full" id="dxCard">
+  <div class="dx-progress">
+    <span class="label" id="dxStepLabel">Q1 / 7</span>
+    <div class="dx-bar"><i id="dxBar"></i></div>
+  </div>
+
+  <!-- Q1 住居タイプ -->
+  <div class="dx-step active" data-step="1">
+    <span class="qnum">Q1</span>
+    <h2>お住まいのタイプは？</h2>
+    <p class="h">削減できる幅が住まいによって変わります</p>
+    <div class="dx-options cols-3">
+      <button class="dx-opt" data-key="house" data-val="house"><span class="ico">🏠</span>戸建て<small>持ち家</small></button>
+      <button class="dx-opt" data-key="house" data-val="apt"><span class="ico">🏢</span>賃貸<small>アパート・マンション</small></button>
+      <button class="dx-opt" data-key="house" data-val="owner"><span class="ico">🔑</span>オーナー様<small>物件を所有</small></button>
+    </div>
+  </div>
+
+  <!-- Q2 ご家族 -->
+  <div class="dx-step" data-step="2">
+    <span class="qnum">Q2</span>
+    <h2>ご家族は何人ですか？</h2>
+    <p class="h">使用量の目安を推計するために伺います</p>
+    <div class="dx-options">
+      <button class="dx-opt" data-key="size" data-val="1"><span class="ico">👤</span>1人暮らし</button>
+      <button class="dx-opt" data-key="size" data-val="2"><span class="ico">👫</span>2人</button>
+      <button class="dx-opt" data-key="size" data-val="3"><span class="ico">👨‍👩‍👧</span>3〜4人</button>
+      <button class="dx-opt" data-key="size" data-val="5"><span class="ico">👨‍👩‍👧‍👦</span>5人以上 / 二世帯</button>
+    </div>
+  </div>
+
+  <!-- Q3 築年数 -->
+  <div class="dx-step" data-step="3">
+    <span class="qnum">Q3</span>
+    <h2>建物の築年数は？</h2>
+    <p class="h">給湯器の効率も削減効果に影響します</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="age" data-val="new">築 5 年以内</button>
+      <button class="dx-opt" data-key="age" data-val="mid">築 6 〜 15 年</button>
+      <button class="dx-opt" data-key="age" data-val="old">築 16 〜 30 年</button>
+      <button class="dx-opt" data-key="age" data-val="vold">築 30 年以上 / わからない</button>
+    </div>
+  </div>
+
+  <!-- Q4 月のガス代 -->
+  <div class="dx-step" data-step="4">
+    <span class="qnum">Q4</span>
+    <h2>直近のガス代はおおよそいくら？</h2>
+    <p class="h">分かる範囲で構いません。一番近い額を選んでください</p>
+    <div class="dx-options">
+      <button class="dx-opt" data-key="bill" data-val="3000">〜 3,000円</button>
+      <button class="dx-opt" data-key="bill" data-val="5000">3,000 〜 5,000円</button>
+      <button class="dx-opt" data-key="bill" data-val="8000">5,000 〜 8,000円</button>
+      <button class="dx-opt" data-key="bill" data-val="12000">8,000 〜 12,000円</button>
+      <button class="dx-opt" data-key="bill" data-val="16000">12,000 〜 16,000円</button>
+      <button class="dx-opt" data-key="bill" data-val="20000">16,000円 〜</button>
+    </div>
+    <button class="dx-skip" data-key="bill" data-val="unknown">→ よく分からないので「だいたい」で答える</button>
+  </div>
+
+  <!-- Q5 給湯設備 -->
+  <div class="dx-step" data-step="5">
+    <span class="qnum">Q5</span>
+    <h2>給湯器の種類はわかりますか？</h2>
+    <p class="h">古い給湯器ほど大きな改善余地があります</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="heater" data-val="ecojaws">エコジョーズ（高効率）</button>
+      <button class="dx-opt" data-key="heater" data-val="standard">通常の給湯器</button>
+      <button class="dx-opt" data-key="heater" data-val="old">かなり古い／不調がある</button>
+      <button class="dx-opt" data-key="heater" data-val="unknown">わからない</button>
+    </div>
+  </div>
+
+  <!-- Q6 エリア -->
+  <div class="dx-step" data-step="6">
+    <span class="qnum">Q6</span>
+    <h2>お住まいエリアは千葉県のどちら？</h2>
+    <p class="h">エリア別の相場と比較します</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="area" data-val="nw">北西部<small>船橋・市川・松戸・柏・浦安・習志野・八千代・鎌ケ谷</small></button>
+      <button class="dx-opt" data-key="area" data-val="ce">中央部<small>千葉市・市原・四街道・佐倉・八街・東金</small></button>
+      <button class="dx-opt" data-key="area" data-val="bs">房総・東部<small>木更津・茂原・成田・館山・銚子・勝浦 ほか</small></button>
+    </div>
+  </div>
+
+  <!-- Q7 お申込みご検討度 -->
+  <div class="dx-step" data-step="7">
+    <span class="qnum">Q7</span>
+    <h2>切替のご検討度は？</h2>
+    <p class="h">適切なご案内方法を判断するために伺います</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="intent" data-val="now">いますぐ切り替えたい</button>
+      <button class="dx-opt" data-key="intent" data-val="soon">数ヶ月以内には切り替えたい</button>
+      <button class="dx-opt" data-key="intent" data-val="later">情報収集中</button>
+      <button class="dx-opt" data-key="intent" data-val="just">削減額だけ知りたい</button>
+    </div>
+  </div>
+
+  <div class="dx-actions">
+    <button class="dx-back" id="dxBack" type="button">← 戻る</button>
+    <span style="font-size:11px;color:var(--sub)">タップで自動的に次へ</span>
+  </div>
+
+  <!-- ===== RESULT ===== -->
+  <div class="dx-result" id="dxResult">
+    <p class="pre">━━ 診断結果 ━━</p>
+    <h2 id="dxResultTitle">千葉県・北西部 / 戸建て / 3〜4人ご家族<small>の場合の削減シミュレーション</small></h2>
+
+    <div class="savings-card">
+      <div class="lbl">想定 年間削減額</div>
+      <div class="yen"><span id="dxYearly">0</span><span class="u">円</span></div>
+      <div class="ms">月あたり 約 <b id="dxMonthly">0</b> 円ダウン</div>
+    </div>
+
+    <div class="compare-bar">
+      <div class="ttl">月額ガス代の比較（試算）</div>
+      <div class="bar-row now">
+        <span class="lbl">現在</span>
+        <div class="bar"><i id="barNow"></i></div>
+        <span class="val"><span id="dxNow">0</span>円</span>
+      </div>
+      <div class="bar-row next">
+        <span class="lbl">切替後</span>
+        <div class="bar"><i id="barNext"></i></div>
+        <span class="val"><span id="dxNext">0</span>円</span>
+      </div>
+    </div>
+
+    <div class="dx-detail">
+      <b>📊 試算根拠</b><br>
+      <span id="dxDetail">あなたの条件をもとに、千葉県内の同タイプの世帯と比較しました。提携先のうち削減効果の大きいプランをベースに算出しています。</span>
+    </div>
+
+    <div class="lead-form">
+      <h3>📨 さらに詳しい正式見積もりをLINEで！</h3>
+      <p>検針票の写真を送るだけで、<strong>あなただけの正式見積</strong>を24時間以内にお返しします。</p>
+      <a class="btn-line" href="contact.html" style="margin-bottom:6px"><span class="icn">L</span><span><span class="lbl-mini">＼ 千葉県限定 ／</span>LINE登録で正式見積を受け取る</span></a>
+      <div class="privacy-mini">登録は無料・しつこい勧誘なし／<a href="privacy.html">プライバシーポリシー</a></div>
+    </div>
+
+    <div style="text-align:center">
+      <button class="dx-restart" id="dxRestart" type="button">↻ もう一度診断する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 補足情報 -->
+<section style="background:#FFFAF0;padding:30px 20px;margin-top:8px">
+  <div class="eyebrow">ABOUT THIS</div>
+  <h2 class="h2">この診断について</h2>
+  <p class="lead-c">7問・30秒で<strong>あなたのご家庭の想定削減額</strong>を概算します。</p>
+
+  <div class="card card-y" style="margin-bottom:14px">
+    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">📌 試算の精度について</h3>
+    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
+      本診断は<strong>千葉県内のエリア別相場・住居タイプ別の平均使用量・典型的な削減率</strong>から目安額を算出しています。実際の削減額は、ご使用量・契約プラン・物件条件・季節による変動を踏まえてLINEでの正式見積もりで確定します。
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">🔒 個人情報の取り扱い</h3>
+    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
+      診断のみであれば<strong>個人情報は一切不要</strong>です。お名前・住所・電話番号などをお預かりするのは、お見積もり依頼以降のみ。<a href="privacy.html">プライバシーポリシー</a>に基づき安全に管理します。
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">📞 営業電話・訪問は一切なし</h3>
+    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
+      ライズウェイは<strong>電話・訪問での執拗な勧誘を一切行いません</strong>。診断結果のお問い合わせは、お客様のペースでLINEまたはお問い合わせフォームからどうぞ。
+    </p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="grid">
+    <div>
+      <h4>ライズウェイ</h4>
+      <ul>
+        <li>千葉県（本社所在地はこちら）</li>
+        <li>事業内容：プロパンガス切替・給湯器、エコキュート交換 他</li>
+      </ul>
+    </div>
+    <div>
+      <h4>サイトマップ</h4>
+      <ul style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
+        <li><a href="index.html">トップ</a></li>
+        <li><a href="shindan.html">料金診断</a></li>
+        <li><a href="service.html">サービス</a></li>
+        <li><a href="flow.html">切替の流れ</a></li>
+        <li><a href="voice.html">お客様の声</a></li>
+        <li><a href="column.html">虎の巻</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="company.html">会社情報</a></li>
+        <li><a href="contact.html">お問い合わせ</a></li>
+        <li><a href="privacy.html">プライバシー</a></li>
+        <li><a href="tokushoho.html">特商法</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">© RISEWAY All rights reserved.</div>
+</footer>
+
+</div>
+
+<a class="float-line" href="contact.html">
+  <span class="icn">L</span>
+  <span class="lbl"><small>＼ 30秒で削減額がわかる ／</small><b>LINEで無料診断する</b></span>
+  <span class="arr">▶</span>
+</a>
+
+<script src="common.js"></script>
+<script>
+(function(){
+  var state = { house:null, size:null, age:null, bill:null, heater:null, area:null, intent:null };
+  var totalSteps = 7, currentStep = 1;
+  var bar = document.getElementById('dxBar');
+  var label = document.getElementById('dxStepLabel');
+  var backBtn = document.getElementById('dxBack');
+  var resultEl = document.getElementById('dxResult');
+  var restartBtn = document.getElementById('dxRestart');
+  var card = document.getElementById('dxCard');
+
+  function showStep(n){
+    document.querySelectorAll('.dx-step').forEach(function(el){
+      el.classList.toggle('active', parseInt(el.dataset.step,10) === n);
+    });
+    label.textContent = 'Q' + n + ' / ' + totalSteps;
+    bar.style.width = (n / totalSteps * 100) + '%';
+    backBtn.style.visibility = (n === 1) ? 'hidden' : 'visible';
+    resultEl.classList.remove('show');
+    document.querySelector('.dx-actions').style.display = '';
+  }
+  function selectOption(btn){
+    var key = btn.dataset.key, val = btn.dataset.val;
+    state[key] = val;
+    btn.parentElement.querySelectorAll('.dx-opt').forEach(function(b){b.classList.remove('selected')});
+    btn.classList.add('selected');
+    setTimeout(function(){
+      if(currentStep < totalSteps){ currentStep += 1; showStep(currentStep); }
+      else { renderResult(); }
+    }, 320);
+  }
+  document.querySelectorAll('.dx-opt').forEach(function(b){
+    b.addEventListener('click', function(){ selectOption(b); });
+  });
+  document.querySelectorAll('.dx-skip').forEach(function(b){
+    b.addEventListener('click', function(){ selectOption(b); });
+  });
+  backBtn.addEventListener('click', function(){
+    if(resultEl.classList.contains('show')){ resultEl.classList.remove('show'); showStep(currentStep); return; }
+    if(currentStep > 1){ currentStep -= 1; showStep(currentStep); }
+  });
+  restartBtn.addEventListener('click', function(){
+    state = { house:null, size:null, age:null, bill:null, heater:null, area:null, intent:null };
+    document.querySelectorAll('.dx-opt').forEach(function(b){b.classList.remove('selected')});
+    currentStep = 1; showStep(1);
+    card.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
+  function estM(s){ return ({'1':4500,'2':7200,'3':9800,'5':12500}[s])||9000; }
+  function rate(){
+    var r = 0.20;
+    // House type
+    if(state.house==='house') r = 0.22;
+    if(state.house==='apt')   r = 0.18;
+    if(state.house==='owner') r = 0.25;
+    // Family size
+    if(state.size==='5') r += 0.03;
+    if(state.size==='3') r += 0.01;
+    // Building age (older buildings have more savings room)
+    if(state.age==='old')  r += 0.01;
+    if(state.age==='vold') r += 0.02;
+    // Heater type
+    if(state.heater==='old')      r += 0.02;
+    if(state.heater==='standard') r += 0.01;
+    // Area
+    if(state.area==='nw') r += 0.01;
+    if(state.area==='bs') r += 0.02;
+    return Math.min(r, 0.35);
+  }
+  function fmt(n){ return n.toLocaleString('ja-JP'); }
+  function hl(h){return ({house:'戸建て',apt:'賃貸',owner:'オーナー様'}[h])||'';}
+  function sl(s){return ({'1':'おひとり暮らし','2':'2人ご家族','3':'3〜4人ご家族','5':'5人以上 / 二世帯'}[s])||'';}
+  function al(a){return ({nw:'北西部',ce:'中央部',bs:'房総・東部'}[a])||'';}
+
+  function animN(el,t){
+    var dur=1400,start=performance.now();
+    function tick(now){
+      var p=Math.min(1,(now-start)/dur);
+      var e=1-Math.pow(1-p,3);
+      el.textContent = fmt(Math.round(t*e));
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function renderResult(){
+    var monthly = (state.bill !== 'unknown' && state.bill) ? parseInt(state.bill,10) : estM(state.size);
+    var r = rate();
+    var nx = Math.round(monthly*(1-r)/100)*100;
+    var ms = monthly - nx;
+    var ys = ms*12;
+    if(state.house==='owner'){ ys = ys * 8; }
+
+    animN(document.getElementById('dxYearly'), Math.max(ys,0));
+    animN(document.getElementById('dxMonthly'), Math.max(ms,0));
+    document.getElementById('dxNow').textContent = fmt(monthly);
+    document.getElementById('dxNext').textContent = fmt(nx);
+    var maxBar = Math.max(monthly, nx, 1);
+    document.getElementById('barNow').style.width = (monthly/maxBar*100) + '%';
+    document.getElementById('barNext').style.width = (nx/maxBar*100) + '%';
+
+    var title = '千葉県・' + al(state.area) + ' / ' + hl(state.house) + ' / ' + sl(state.size);
+    if(state.house==='owner') title += '（1棟8戸換算）';
+    document.querySelector('#dxResultTitle').firstChild.textContent = title;
+
+    // Detail message
+    var detail = '<b>あなたの条件：</b>' + hl(state.house) + '、' + sl(state.size) + '、' + al(state.area) + '。<br>';
+    detail += '<b>削減率：</b>約 ' + Math.round(r*100) + '% （千葉県の同条件平均より算出）。<br>';
+    if(state.heater==='old' || state.age==='vold'){
+      detail += '<b>💡 ポイント：</b>給湯器の交換／エコキュート併用で<strong>さらに削減</strong>できる可能性があります。';
+    } else if(state.house==='owner'){
+      detail += '<b>💡 ポイント：</b>オーナー様向けは<strong>1棟8戸換算で年間'+fmt(ys)+'円</strong>のメリット試算です。';
+    } else {
+      detail += '<b>💡 ポイント：</b>正式見積もりでは、<strong>原料費調整制度・契約期間・違約金の有無</strong>もチェックします。';
+    }
+    document.getElementById('dxDetail').innerHTML = detail;
+
+    document.querySelectorAll('.dx-step').forEach(function(el){el.classList.remove('active')});
+    document.querySelector('.dx-actions').style.display='none';
+    bar.style.width='100%';
+    label.textContent='診断結果';
+    resultEl.classList.add('show');
+    setTimeout(function(){ card.scrollIntoView({behavior:'smooth',block:'start'}); }, 50);
+  }
+})();
+</script>
+</body>
+</html>

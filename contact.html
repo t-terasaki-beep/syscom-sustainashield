@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>お問い合わせ｜ライズウェイ｜千葉のプロパンガス相談窓口</title>
+<meta name="description" content="千葉県のプロパンガス・給湯器・エコキュートの無料相談窓口。LINE・お問い合わせフォームから30秒で診断可能。" />
+<meta name="theme-color" content="#FFC107" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=RocknRoll+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+
+</head>
+<body>
+<div class="wrap">
+
+<header class="site-header">
+  <a href="index.html" class="brand" style="text-decoration:none">
+    <span class="mark">R</span>
+    <span>ライズウェイ<small>千葉のプロパンガス相談窓口</small></span>
+  </a>
+  <div class="actions">
+    <span class="area-tag">千葉県専門</span>
+    <button class="menu-btn" id="menuBtn" aria-label="メニュー" type="button"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="side-menu" id="sideMenu">
+  <div class="panel">
+    <div class="panel-head"><h3>メニュー</h3><button id="sideMenuClose" type="button">×</button></div>
+    <nav>
+      <a href="index.html"><span class="ic">🏠</span>トップ<span class="arr">›</span></a>
+      <a href="shindan.html"><span class="ic">📊</span>料金診断<span class="arr">›</span></a>
+      <a href="service.html"><span class="ic">⚙️</span>サービス紹介<span class="arr">›</span></a>
+      <a href="flow.html"><span class="ic">📋</span>切替の流れ<span class="arr">›</span></a>
+      <a href="voice.html"><span class="ic">💬</span>お客様の声<span class="arr">›</span></a>
+      <a href="column.html"><span class="ic">📚</span>節約の虎の巻<span class="arr">›</span></a>
+      <a href="faq.html"><span class="ic">❓</span>よくあるご質問<span class="arr">›</span></a>
+      <a href="company.html"><span class="ic">🏢</span>会社情報<span class="arr">›</span></a>
+      <a href="contact.html" class="current"><span class="ic">✉️</span>お問い合わせ<span class="arr">›</span></a>
+      <a href="privacy.html" style="font-size:12px;color:var(--sub)"><span class="ic" style="background:#EEE">📜</span>プライバシーポリシー<span class="arr">›</span></a>
+      <a href="tokushoho.html" style="font-size:12px;color:var(--sub)"><span class="ic" style="background:#EEE">📄</span>特定商取引法<span class="arr">›</span></a>
+    </nav>
+    <div class="panel-foot">
+      <a class="btn-line" href="contact.html"><span class="icn">L</span><span><span class="lbl-mini">＼ 30秒で完了 ／</span>LINEで無料診断</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="page-hero">
+  <div class="breadcrumb"><a href="index.html">ホーム</a> ＞ お問い合わせ</div>
+  <h1>お問い合わせ</h1>
+  <p>まずはLINEで、お気軽にどうぞ。</p>
+</div>
+
+<style>
+  .contact-hero{background:linear-gradient(135deg,#06C755,#04A647);color:#fff;padding:24px 20px;text-align:center;border-radius:14px;margin-bottom:18px;position:relative;overflow:hidden}
+  .contact-hero::before{content:"";position:absolute;inset:-30px;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.3),transparent 60%);animation:rot 8s linear infinite}
+  @keyframes rot{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .contact-hero > *{position:relative}
+  .contact-hero h2{margin:0 0 6px;font-size:20px;font-weight:900}
+  .contact-hero p{margin:0 0 14px;font-size:13px;opacity:.95}
+  .qr-box{background:#fff;color:var(--ink);border-radius:12px;padding:16px;margin:0 auto;max-width:240px}
+  .qr-box .qr{width:160px;height:160px;background:#EEE;margin:0 auto 8px;border-radius:8px;display:grid;place-items:center;color:var(--sub);font-size:11px;text-align:center}
+  .qr-box .lbl{font-size:11px;color:var(--ink-2);font-weight:700}
+  .qr-box .id{font-size:13px;color:var(--bl2);font-weight:900;margin-top:2px}
+  .alt-box{background:#FAFAFA;border-radius:14px;padding:18px;border:1px solid #EEE;margin-top:16px}
+  .alt-box h3{margin:0 0 10px;font-size:15px;color:var(--bl2);font-weight:900}
+  .form{display:grid;gap:12px}
+  .form .row{display:grid;gap:4px}
+  .form label{font-size:12px;color:var(--bl2);font-weight:700}
+  .form label .req{color:var(--r);margin-left:4px}
+  .form input,.form select,.form textarea{
+    padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;background:#fff;
+  }
+  .form input:focus,.form select:focus,.form textarea:focus{outline:0;border-color:var(--bl2);box-shadow:0 0 0 3px rgba(13,71,161,.15)}
+  .form textarea{min-height:96px;resize:vertical}
+  .form .submit-btn{
+    background:linear-gradient(180deg,var(--bl-l),var(--bl2));color:#fff;font-weight:900;font-size:15px;
+    padding:14px;border-radius:10px;border:0;cursor:pointer;font-family:inherit;
+    box-shadow:0 4px 0 var(--bl2);
+  }
+  .form .submit-btn:hover{transform:translateY(2px);box-shadow:0 2px 0 var(--bl2)}
+  .form .privacy-note{font-size:11px;color:var(--sub);text-align:center}
+</style>
+<section>
+  <div class="eyebrow">CONTACT</div>
+  <h2 class="h2">お問い合わせ／<span class="em">無料診断</span></h2>
+  <p class="lead-c">LINEがいちばん早くて、ラクです。<br>もちろんフォームでもOKです。</p>
+
+  <div class="contact-hero">
+    <h2>＼ 30秒で削減額がわかる ／</h2>
+    <p>LINEで友だち追加だけ。<br>個人情報は一切不要・しつこい勧誘も一切なし。</p>
+    <div class="qr-box">
+      <div class="qr">
+        <div>QRコード<br>（LINE公式アカウント<br>URL設定後に表示）</div>
+      </div>
+      <div class="lbl">LINE ID</div>
+      <div class="id">@riseway-chiba</div>
+    </div>
+    <a class="btn-line" href="#" onclick="alert('LINE公式アカウントのURLをここに設定してください'); return false;" style="margin-top:14px;animation:none;box-shadow:0 6px 0 #024D24"><span class="icn">L</span><span><span class="lbl-mini">＼ 千葉県限定 ／</span>LINEで友だち追加</span></a>
+  </div>
+
+  <div class="alt-box">
+    <h3>📨 フォームからのお問い合わせ</h3>
+    <form class="form" onsubmit="alert('送信先のフォーム処理を実装してください'); return false;">
+      <div class="row">
+        <label>お名前<span class="req">*</span></label>
+        <input type="text" name="name" required placeholder="例：千葉 太郎">
+      </div>
+      <div class="row">
+        <label>メールアドレス<span class="req">*</span></label>
+        <input type="email" name="email" required placeholder="例：example@gmail.com">
+      </div>
+      <div class="row">
+        <label>お電話番号</label>
+        <input type="tel" name="phone" placeholder="例：090-XXXX-XXXX（任意）">
+      </div>
+      <div class="row">
+        <label>お住まいエリア<span class="req">*</span></label>
+        <select name="area" required>
+          <option value="">エリアを選択</option>
+          <option>北西部（船橋・市川・松戸・柏 ほか）</option>
+          <option>中央部（千葉市・市原・四街道 ほか）</option>
+          <option>房総・東部（木更津・茂原・成田 ほか）</option>
+          <option>千葉県以外（千葉県限定です）</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>ご相談内容<span class="req">*</span></label>
+        <select name="topic" required>
+          <option value="">ご相談内容を選択</option>
+          <option>プロパンガスの料金診断</option>
+          <option>給湯器の交換</option>
+          <option>エコキュートの交換／新設</option>
+          <option>アパート・マンションのオーナー相談</option>
+          <option>その他</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>ご質問・ご要望</label>
+        <textarea name="message" placeholder="ご質問やお気づきの点があればご記入ください"></textarea>
+      </div>
+      <div class="privacy-note">
+        送信前に <a href="privacy.html">プライバシーポリシー</a> をご確認ください
+      </div>
+      <button type="submit" class="submit-btn">この内容で送信する</button>
+    </form>
+  </div>
+</section>
+
+<section style="background:#FFFAF0">
+  <div class="eyebrow">CONTACT INFO</div>
+  <h2 class="h2">受付時間・対応エリア</h2>
+  <div class="card">
+    <table style="width:100%;font-size:13px;border-collapse:collapse">
+      <tr style="border-bottom:1px solid #EEE"><th style="text-align:left;padding:10px 8px;background:#FAFAFA;color:var(--bl2);width:35%;font-weight:700">受付時間</th><td style="padding:10px 8px">平日 10:00 〜 18:00<br><small style="color:var(--sub)">※LINEは24時間受付（自動応答）</small></td></tr>
+      <tr style="border-bottom:1px solid #EEE"><th style="text-align:left;padding:10px 8px;background:#FAFAFA;color:var(--bl2);font-weight:700">対応エリア</th><td style="padding:10px 8px">千葉県内全域</td></tr>
+      <tr><th style="text-align:left;padding:10px 8px;background:#FAFAFA;color:var(--bl2);font-weight:700">回答SLA</th><td style="padding:10px 8px">営業時間内 30分以内 / 検針票受領後 24時間以内に正式見積</td></tr>
+    </table>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="grid">
+    <div>
+      <h4>ライズウェイ</h4>
+      <ul>
+        <li>千葉県（本社所在地はこちら）</li>
+        <li>事業内容：プロパンガス切替・給湯器、エコキュート交換 他</li>
+      </ul>
+    </div>
+    <div>
+      <h4>サイトマップ</h4>
+      <ul style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
+        <li><a href="index.html">トップ</a></li>
+        <li><a href="shindan.html">料金診断</a></li>
+        <li><a href="service.html">サービス</a></li>
+        <li><a href="flow.html">切替の流れ</a></li>
+        <li><a href="voice.html">お客様の声</a></li>
+        <li><a href="column.html">虎の巻</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="company.html">会社情報</a></li>
+        <li><a href="contact.html">お問い合わせ</a></li>
+        <li><a href="privacy.html">プライバシー</a></li>
+        <li><a href="tokushoho.html">特商法</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">© RISEWAY All rights reserved.</div>
+</footer>
+
+</div>
+
+<a class="float-line" href="contact.html">
+  <span class="icn">L</span>
+  <span class="lbl"><small>＼ 30秒で削減額がわかる ／</small><b>LINEで無料診断する</b></span>
+  <span class="arr">▶</span>
+</a>
+
+<script src="common.js"></script>
+</body>
+</html>
