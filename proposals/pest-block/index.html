@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>害虫ブロック | 法人向け 害虫対策サービス</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1a3a2e;
+    --green-mid: #2d5a45;
+    --green-soft: #4a7862;
+    --ivory: #f5f1e8;
+    --ivory-warm: #ebe4d3;
+    --cream: #faf7ef;
+    --gold: #b08d57;
+    --charcoal: #1a1a1a;
+    --grey-soft: #6b6b6b;
+    --serif: 'Noto Serif JP', serif;
+    --sans: 'Noto Sans JP', sans-serif;
+    --display: 'Cormorant Garamond', serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--sans);
+    color: var(--charcoal);
+    background: var(--cream);
+    line-height: 1.7;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== HEADER ===== */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(250, 247, 239, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    border-bottom: 1px solid rgba(26, 58, 46, 0.08);
+  }
+  .header-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px; max-width: 1200px; margin: 0 auto;
+  }
+  .logo {
+    font-family: var(--serif); font-weight: 900; font-size: 20px;
+    color: var(--green-deep); letter-spacing: 0.05em;
+  }
+  .logo span { color: var(--gold); }
+  .header-cta {
+    background: var(--green-deep); color: var(--ivory);
+    padding: 10px 24px; border-radius: 2px;
+    font-size: 13px; font-weight: 500; text-decoration: none;
+    transition: all 0.3s;
+  }
+  .header-cta:hover { background: var(--green-mid); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh; padding: 120px 24px 80px;
+    background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+    color: var(--ivory);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center;
+  }
+  .hero::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(176,141,87,0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(74,120,98,0.3) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    position: relative; z-index: 1;
+  }
+  .hero-eyebrow {
+    font-family: var(--display); font-size: 14px;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 40px; height: 1px; background: var(--gold);
+  }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 900;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.3; margin-bottom: 32px;
+    letter-spacing: 0.02em;
+  }
+  .hero h1 .accent { color: var(--gold); }
+  .hero-sub {
+    font-size: 18px; line-height: 1.9; max-width: 560px;
+    margin-bottom: 48px; color: rgba(245,241,232,0.85);
+  }
+  .hero-badges {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    margin-bottom: 48px; padding: 20px 0;
+    border-top: 1px solid rgba(245,241,232,0.2);
+    border-bottom: 1px solid rgba(245,241,232,0.2);
+  }
+  .badge {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; letter-spacing: 0.05em;
+  }
+  .badge-icon {
+    width: 28px; height: 28px; border: 1px solid var(--gold);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 12px;
+  }
+  .hero-cta-group { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--gold); color: var(--green-deep);
+    padding: 18px 36px; border-radius: 2px;
+    font-weight: 700; font-size: 15px; text-decoration: none;
+    letter-spacing: 0.05em; transition: all 0.3s;
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .btn-primary:hover { background: var(--ivory); transform: translateY(-2px); }
+  .btn-primary::after { content: '→'; font-size: 18px; }
+  .btn-secondary {
+    background: transparent; color: var(--ivory);
+    padding: 18px 36px; border: 1px solid rgba(245,241,232,0.4);
+    border-radius: 2px; font-weight: 500; font-size: 15px;
+    text-decoration: none; transition: all 0.3s;
+  }
+  .btn-secondary:hover { border-color: var(--ivory); background: rgba(245,241,232,0.05); }
+
+  /* ===== SECTION COMMON ===== */
+  section { padding: 100px 24px; }
+  .section-eyebrow {
+    font-family: var(--display); font-size: 13px;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px; justify-content: center;
+  }
+  .section-eyebrow::before, .section-eyebrow::after {
+    content: ''; width: 30px; height: 1px; background: var(--gold);
+  }
+  .section-title {
+    font-family: var(--serif); font-weight: 900;
+    font-size: clamp(26px, 3.5vw, 40px); line-height: 1.4;
+    text-align: center; color: var(--green-deep);
+    margin-bottom: 64px; letter-spacing: 0.02em;
+  }
+
+  /* ===== PROBLEMS ===== */
+  .problems { background: var(--ivory); }
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+  }
+  .problem-card {
+    background: var(--cream); padding: 40px 32px;
+    border-top: 3px solid var(--green-deep);
+    text-align: center; transition: transform 0.3s;
+  }
+  .problem-card:hover { transform: translateY(-4px); }
+  .problem-icon {
+    width: 60px; height: 60px; margin: 0 auto 24px;
+    border: 1px solid var(--green-deep); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-size: 24px; color: var(--green-deep);
+  }
+  .problem-target {
+    font-family: var(--serif); font-weight: 700; font-size: 17px;
+    color: var(--green-deep); margin-bottom: 12px;
+  }
+  .problem-desc { font-size: 14px; color: var(--grey-soft); line-height: 1.8; }
+
+  /* ===== STRENGTH (NO HARM) ===== */
+  .strength { background: var(--cream); }
+  .strength-hero {
+    text-align: center; max-width: 800px; margin: 0 auto 80px;
+  }
+  .strength-hero p {
+    font-family: var(--serif); font-size: 20px; line-height: 2;
+    color: var(--green-deep);
+  }
+  .strength-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px; margin-bottom: 64px;
+  }
+  .strength-card {
+    background: var(--ivory); padding: 48px 32px;
+    position: relative; border: 1px solid rgba(26,58,46,0.1);
+  }
+  .strength-num {
+    font-family: var(--display); font-size: 64px; font-weight: 300;
+    color: var(--gold); line-height: 1; margin-bottom: 16px;
+  }
+  .strength-card h3 {
+    font-family: var(--serif); font-weight: 700; font-size: 19px;
+    color: var(--green-deep); margin-bottom: 16px; line-height: 1.5;
+  }
+  .strength-card p { font-size: 14px; color: var(--grey-soft); line-height: 1.9; }
+
+  .mechanism-box {
+    background: var(--green-deep); color: var(--ivory);
+    padding: 60px 48px; border-radius: 2px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: center;
+  }
+  .mechanism-label {
+    font-family: var(--display); font-size: 13px; letter-spacing: 0.3em;
+    color: var(--gold); margin-bottom: 16px; text-transform: uppercase;
+  }
+  .mechanism-box h3 {
+    font-family: var(--serif); font-size: 24px; line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .mechanism-box p { font-size: 14px; line-height: 1.9; opacity: 0.85; }
+  .mechanism-visual {
+    background: rgba(245,241,232,0.05); border: 1px dashed rgba(245,241,232,0.3);
+    aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+    color: rgba(245,241,232,0.5); font-size: 13px; text-align: center; padding: 24px;
+  }
+
+  /* ===== GREETING (TERA) ===== */
+  .greeting {
+    background: var(--ivory);
+    position: relative;
+    overflow: hidden;
+  }
+  .greeting::before {
+    content: ''; position: absolute;
+    top: -50px; right: -50px; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(176,141,87,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .greeting-flex {
+    display: grid; grid-template-columns: 1fr 1.5fr; gap: 64px;
+    align-items: center; position: relative;
+  }
+  .greeting-illustration {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .greeting-illustration svg {
+    width: 100%; height: 100%;
+  }
+  .greeting-channel-badge {
+    position: absolute;
+    bottom: 0; right: 0;
+    background: var(--green-deep);
+    color: var(--ivory);
+    padding: 12px 20px;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    box-shadow: 0 8px 20px rgba(26,58,46,0.2);
+  }
+  .greeting-channel-badge strong {
+    display: block;
+    font-family: var(--display);
+    font-size: 16px;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .greeting-content .section-eyebrow {
+    justify-content: flex-start;
+  }
+  .greeting-content h2 {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: clamp(24px, 3vw, 34px);
+    color: var(--green-deep);
+    line-height: 1.5;
+    margin-bottom: 32px;
+    letter-spacing: 0.02em;
+  }
+  .greeting-tagline {
+    display: inline-block;
+    background: var(--green-deep);
+    color: var(--gold);
+    padding: 8px 20px;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+    border-radius: 2px;
+  }
+  .greeting-text {
+    font-size: 15px;
+    line-height: 2;
+    color: var(--charcoal);
+    margin-bottom: 24px;
+  }
+  .greeting-signature {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--grey-soft);
+    padding-top: 24px;
+    border-top: 1px solid rgba(26,58,46,0.1);
+  }
+  .greeting-signature strong {
+    font-size: 18px;
+    color: var(--green-deep);
+    display: block;
+    margin-top: 4px;
+  }
+  .youtube-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding: 14px 24px;
+    background: transparent;
+    border: 1px solid var(--green-deep);
+    color: var(--green-deep);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: all 0.3s;
+  }
+  .youtube-link:hover {
+    background: var(--green-deep);
+    color: var(--ivory);
+  }
+  .youtube-icon {
+    width: 24px; height: 24px;
+    background: #ff0000;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+  }
+
+  /* ===== HACCP ===== */
+  .haccp {
+    background: linear-gradient(180deg, var(--ivory) 0%, var(--ivory-warm) 100%);
+  }
+  .haccp-flex {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+  }
+  .haccp-content h2 {
+    font-family: var(--serif); font-weight: 900; font-size: 32px;
+    color: var(--green-deep); line-height: 1.5; margin-bottom: 24px;
+  }
+  .haccp-content p {
+    font-size: 15px; line-height: 2; color: var(--charcoal);
+    margin-bottom: 32px;
+  }
+  .haccp-list { list-style: none; }
+  .haccp-list li {
+    padding: 16px 0; border-bottom: 1px solid rgba(26,58,46,0.1);
+    font-size: 14px; display: flex; gap: 16px;
+  }
+  .haccp-list li::before {
+    content: '✓'; color: var(--gold); font-weight: 700;
+    flex-shrink: 0;
+  }
+  .haccp-visual {
+    background: var(--cream); aspect-ratio: 4/5;
+    border: 1px solid rgba(26,58,46,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--grey-soft); font-size: 13px; text-align: center; padding: 24px;
+  }
+
+  /* ===== CASE STUDIES ===== */
+  .cases { background: var(--cream); }
+  .case-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+  }
+  .case-card {
+    background: var(--ivory); border: 1px solid rgba(26,58,46,0.08);
+    overflow: hidden; transition: all 0.3s;
+  }
+  .case-card:hover { box-shadow: 0 12px 32px rgba(26,58,46,0.08); }
+  .case-image {
+    background: var(--green-soft); aspect-ratio: 16/10;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ivory); font-size: 12px; padding: 16px;
+  }
+  .case-body { padding: 32px; }
+  .case-tag {
+    display: inline-block; background: var(--green-deep); color: var(--ivory);
+    padding: 4px 12px; font-size: 11px; letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .case-card h4 {
+    font-family: var(--serif); font-size: 17px; font-weight: 700;
+    color: var(--green-deep); line-height: 1.6; margin-bottom: 16px;
+  }
+  .case-meta {
+    display: flex; gap: 24px; padding: 16px 0;
+    border-top: 1px solid rgba(26,58,46,0.1);
+    border-bottom: 1px solid rgba(26,58,46,0.1);
+    margin: 16px 0; font-size: 12px; color: var(--grey-soft);
+  }
+  .case-meta strong { color: var(--green-deep); display: block; font-size: 14px; }
+  .case-quote {
+    font-family: var(--serif); font-style: italic;
+    font-size: 13px; color: var(--grey-soft); line-height: 1.8;
+    padding-left: 16px; border-left: 2px solid var(--gold);
+  }
+
+  /* ===== PRICING ===== */
+  .pricing { background: var(--green-deep); color: var(--ivory); text-align: center; }
+  .pricing .section-title { color: var(--ivory); }
+  .pricing .section-eyebrow { color: var(--gold); }
+  .price-hero {
+    margin-bottom: 64px;
+  }
+  .price-display {
+    font-family: var(--display); font-size: clamp(60px, 10vw, 120px);
+    font-weight: 300; color: var(--gold); line-height: 1;
+    margin-bottom: 16px;
+  }
+  .price-display .yen { font-size: 0.5em; }
+  .price-display .unit { font-size: 0.3em; color: var(--ivory); margin-left: 12px; }
+  .price-note {
+    font-size: 14px; color: rgba(245,241,232,0.7); letter-spacing: 0.05em;
+  }
+  .price-examples {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px; max-width: 900px; margin: 0 auto 48px;
+  }
+  .price-example {
+    background: rgba(245,241,232,0.05); border: 1px solid rgba(245,241,232,0.15);
+    padding: 32px 24px;
+  }
+  .price-example-label {
+    font-size: 13px; color: rgba(245,241,232,0.7); margin-bottom: 12px;
+  }
+  .price-example-area {
+    font-family: var(--serif); font-size: 22px; font-weight: 700;
+    color: var(--ivory); margin-bottom: 8px;
+  }
+  .price-example-amount {
+    font-family: var(--display); font-size: 28px; color: var(--gold);
+  }
+
+  /* ===== FLOW ===== */
+  .flow { background: var(--ivory); }
+  .flow-steps {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+    position: relative;
+  }
+  .flow-step { text-align: center; position: relative; }
+  .flow-num {
+    width: 56px; height: 56px; margin: 0 auto 20px;
+    background: var(--green-deep); color: var(--gold);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-size: 22px; font-weight: 500;
+    position: relative; z-index: 1;
+  }
+  .flow-step:not(:last-child)::after {
+    content: ''; position: absolute; top: 28px; left: 60%;
+    width: 80%; height: 1px; background: var(--green-soft);
+  }
+  .flow-step h4 {
+    font-family: var(--serif); font-size: 15px; font-weight: 700;
+    color: var(--green-deep); margin-bottom: 8px;
+  }
+  .flow-step p { font-size: 12px; color: var(--grey-soft); line-height: 1.7; }
+
+  /* ===== FAQ ===== */
+  .faq { background: var(--cream); }
+  .faq-list { max-width: 800px; margin: 0 auto; }
+  .faq-item {
+    border-bottom: 1px solid rgba(26,58,46,0.15);
+    padding: 24px 0;
+  }
+  .faq-q {
+    font-family: var(--serif); font-weight: 700; font-size: 16px;
+    color: var(--green-deep); display: flex; gap: 16px;
+    cursor: pointer; align-items: flex-start;
+  }
+  .faq-q::before {
+    content: 'Q'; font-family: var(--display); color: var(--gold);
+    font-size: 22px; line-height: 1; flex-shrink: 0;
+  }
+  .faq-a {
+    margin-top: 16px; padding-left: 32px;
+    font-size: 14px; color: var(--grey-soft); line-height: 1.9;
+  }
+
+  /* ===== FINAL CTA ===== */
+  .final-cta {
+    background:
+      linear-gradient(135deg, rgba(26,58,46,0.95) 0%, rgba(45,90,69,0.95) 100%),
+      var(--green-deep);
+    color: var(--ivory); text-align: center; padding: 120px 24px;
+    position: relative; overflow: hidden;
+  }
+  .final-cta::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(176,141,87,0.1) 0%, transparent 60%);
+  }
+  .final-cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+  .final-cta h2 {
+    font-family: var(--serif); font-weight: 900;
+    font-size: clamp(28px, 4vw, 42px); line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .final-cta h2 .accent { color: var(--gold); }
+  .final-cta p {
+    font-size: 16px; line-height: 2; opacity: 0.85;
+    margin-bottom: 48px;
+  }
+  .final-cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--charcoal); color: rgba(245,241,232,0.6);
+    padding: 60px 24px 32px; text-align: center;
+  }
+  footer .logo { color: var(--ivory); margin-bottom: 24px; }
+  .footer-info {
+    font-size: 12px; line-height: 2;
+    padding-bottom: 32px; border-bottom: 1px solid rgba(245,241,232,0.1);
+    margin-bottom: 24px;
+  }
+  .copyright { font-size: 11px; letter-spacing: 0.1em; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    section { padding: 64px 20px; }
+    .hero { padding: 100px 20px 60px; }
+    .mechanism-box { grid-template-columns: 1fr; padding: 40px 24px; gap: 32px; }
+    .haccp-flex { grid-template-columns: 1fr; gap: 40px; }
+    .greeting-flex { grid-template-columns: 1fr; gap: 40px; }
+    .greeting-illustration { max-width: 280px; }
+    .flow-steps { grid-template-columns: 1fr; gap: 32px; }
+    .flow-step:not(:last-child)::after { display: none; }
+    .header-cta { padding: 8px 16px; font-size: 12px; }
+    .hero-cta-group { flex-direction: column; }
+    .btn-primary, .btn-secondary { width: 100%; justify-content: center; text-align: center; }
+  }
+
+  /* ===== WIREFRAME LABEL ===== */
+  .wf-label {
+    position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+    background: var(--charcoal); color: var(--gold);
+    padding: 8px 16px; font-size: 11px; letter-spacing: 0.2em;
+    font-family: var(--display);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">害虫ブロック<span>.</span></div>
+    <a href="#cta" class="header-cta">無料の現地調査を予約</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">For Food Industry & Hospitality</div>
+    <h1>食品工場でも使える、<br><span class="accent">人体・食品に無害な</span><br>害虫ブロック。</h1>
+    <p class="hero-sub">
+      殺虫ではなく、虫を寄せ付けない「バリア施工」。<br>
+      HACCP対応の衛生基準をクリアした薬剤で、<br>
+      食品工場・ホテル・スーパー・ゴルフ場の害虫対策を行います。
+    </p>
+    <div class="hero-badges">
+      <div class="badge"><span class="badge-icon">✓</span>HACCP対応</div>
+      <div class="badge"><span class="badge-icon">◯</span>施工実績◯◯件以上</div>
+      <div class="badge"><span class="badge-icon">¥</span>1,000円/㎡〜</div>
+      <div class="badge"><span class="badge-icon">◎</span>有資格者在籍</div>
+    </div>
+    <div class="hero-cta-group">
+      <a href="#cta" class="btn-primary">無料の現地調査を予約する</a>
+      <a href="#" class="btn-secondary">LINEで相談する</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMS -->
+<section class="problems">
+  <div class="container">
+    <div class="section-eyebrow">Problems</div>
+    <h2 class="section-title">こんな課題、ありませんか?</h2>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-icon">A</div>
+        <div class="problem-target">食品工場</div>
+        <p class="problem-desc">異物混入リスクをゼロに近づけたい。HACCP監査で指摘されたくない。</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">B</div>
+        <div class="problem-target">スーパー搬入口</div>
+        <p class="problem-desc">夏場のコバエ・蛾が止まらない。バックヤードの衛生を保ちたい。</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">C</div>
+        <div class="problem-target">ホテル・旅館</div>
+        <p class="problem-desc">客室・ロビーでの虫の指摘がクチコミに出始めた。早急に対策したい。</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">D</div>
+        <div class="problem-target">ゴルフ場</div>
+        <p class="problem-desc">クラブハウス・レストラン周辺の虫害。来場者の体験を損ねたくない。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRENGTH -->
+<section class="strength">
+  <div class="container">
+    <div class="section-eyebrow">Our Strength</div>
+    <h2 class="section-title">「無害」だから、食品工場で選ばれる。</h2>
+    
+    <div class="strength-hero">
+      <p>私たちが使うのは、虫が嫌う成分でつくる「見えないバリア」。<br>
+      殺虫剤を散布するのではなく、虫の侵入そのものを断つ施工です。</p>
+    </div>
+
+    <div class="strength-grid">
+      <div class="strength-card">
+        <div class="strength-num">01</div>
+        <h3>人体・食品に無害な薬剤</h3>
+        <p>食品衛生基準を満たす成分のみを使用。施工中も食品への影響を最小限に抑えます。SDS(安全データシート)も全件開示。</p>
+      </div>
+      <div class="strength-card">
+        <div class="strength-num">02</div>
+        <h3>侵入を防ぐ「ブロック施工」</h3>
+        <p>殺虫剤を撒くのではなく、害虫が嫌う成分を建物の境界に配置。寄せ付けないから死骸も出にくい。</p>
+      </div>
+      <div class="strength-card">
+        <div class="strength-num">03</div>
+        <h3>持続するバリア効果</h3>
+        <p>一度の施工で長期間の効果を発揮。定期メンテナンスで年間を通じて衛生環境を維持します。</p>
+      </div>
+    </div>
+
+    <div class="mechanism-box">
+      <div>
+        <div class="mechanism-label">How it works</div>
+        <h3>「殺す」のではなく「寄せ付けない」<br>新しい害虫対策。</h3>
+        <p>建物の出入口・搬入口・窓周辺など、害虫の侵入経路に薬剤を配置。<br>
+        虫が嫌う成分が見えないバリアとなり、施設内への侵入をブロックします。<br>
+        食品が直接触れる場所でも安心して使える、衛生管理型の害虫対策です。</p>
+      </div>
+      <div class="mechanism-visual">[ 施工イメージ図 ]<br>建物外周にバリアを形成する図解</div>
+    </div>
+  </div>
+</section>
+
+<!-- GREETING (TERA) -->
+<section class="greeting">
+  <div class="container">
+    <div class="greeting-flex">
+      <div class="greeting-illustration">
+        <!-- TERA イラスト(SVG) -->
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <!-- 背景円 -->
+          <circle cx="200" cy="200" r="180" fill="#f5f1e8" stroke="#1a3a2e" stroke-width="2"/>
+          <circle cx="200" cy="200" r="180" fill="none" stroke="#b08d57" stroke-width="1" stroke-dasharray="4 8"/>
+          
+          <!-- 体(作業着) -->
+          <path d="M 130 380 L 130 280 Q 130 240 200 240 Q 270 240 270 280 L 270 380 Z" fill="#2d5a45"/>
+          <!-- 作業着のジッパー -->
+          <line x1="200" y1="240" x2="200" y2="380" stroke="#1a3a2e" stroke-width="2"/>
+          <!-- 胸ポケット・ロゴ -->
+          <rect x="155" y="270" width="35" height="20" fill="#1a3a2e" rx="2"/>
+          <text x="172" y="284" font-family="serif" font-size="10" fill="#b08d57" text-anchor="middle" font-weight="bold">TERA</text>
+          
+          <!-- 首 -->
+          <rect x="185" y="220" width="30" height="30" fill="#f4d4b8"/>
+          
+          <!-- 顔 -->
+          <ellipse cx="200" cy="180" rx="55" ry="65" fill="#f4d4b8"/>
+          
+          <!-- 髪 -->
+          <path d="M 145 160 Q 145 110 200 110 Q 255 110 255 160 Q 255 145 245 140 Q 235 125 215 125 Q 200 115 185 125 Q 165 125 155 140 Q 145 145 145 160 Z" fill="#2a2a2a"/>
+          
+          <!-- 耳 -->
+          <ellipse cx="148" cy="180" rx="6" ry="10" fill="#f4d4b8"/>
+          <ellipse cx="252" cy="180" rx="6" ry="10" fill="#f4d4b8"/>
+          
+          <!-- 眉毛(明るく元気な印象) -->
+          <path d="M 170 160 Q 180 155 190 160" stroke="#2a2a2a" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M 210 160 Q 220 155 230 160" stroke="#2a2a2a" stroke-width="3" fill="none" stroke-linecap="round"/>
+          
+          <!-- 目(笑顔) -->
+          <path d="M 172 178 Q 180 174 188 178" stroke="#1a1a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M 212 178 Q 220 174 228 178" stroke="#1a1a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          
+          <!-- 鼻 -->
+          <path d="M 198 188 Q 200 200 202 188" stroke="#d4a888" stroke-width="1.5" fill="none"/>
+          
+          <!-- 口(元気な笑顔) -->
+          <path d="M 180 210 Q 200 225 220 210" stroke="#1a1a1a" stroke-width="2.5" fill="#c44" stroke-linecap="round"/>
+          <path d="M 180 210 Q 200 220 220 210" stroke="none" fill="#fff"/>
+          
+          <!-- 頬の赤み -->
+          <ellipse cx="165" cy="200" rx="8" ry="5" fill="#ffb8a0" opacity="0.5"/>
+          <ellipse cx="235" cy="200" rx="8" ry="5" fill="#ffb8a0" opacity="0.5"/>
+          
+          <!-- 親指立てる手(右手) -->
+          <g transform="translate(280, 280) rotate(-15)">
+            <ellipse cx="0" cy="0" rx="18" ry="22" fill="#f4d4b8"/>
+            <rect x="-6" y="-30" width="12" height="20" rx="6" fill="#f4d4b8"/>
+          </g>
+          
+          <!-- 装飾(元気アクセント) -->
+          <text x="80" y="100" font-family="serif" font-size="14" fill="#b08d57" font-weight="bold" opacity="0.6">MEGA!</text>
+          <text x="290" y="120" font-family="serif" font-size="14" fill="#b08d57" font-weight="bold" opacity="0.6">GIGA!</text>
+          <text x="320" y="200" font-family="serif" font-size="18" fill="#1a3a2e" font-weight="bold" opacity="0.7">TERA!</text>
+          
+          <!-- 効果線 -->
+          <line x1="60" y1="140" x2="80" y2="150" stroke="#b08d57" stroke-width="2" opacity="0.5"/>
+          <line x1="55" y1="170" x2="78" y2="172" stroke="#b08d57" stroke-width="2" opacity="0.5"/>
+          <line x1="320" y1="140" x2="340" y2="135" stroke="#b08d57" stroke-width="2" opacity="0.5"/>
+          <line x1="320" y1="170" x2="345" y2="170" stroke="#b08d57" stroke-width="2" opacity="0.5"/>
+        </svg>
+        
+        <div class="greeting-channel-badge">
+          YouTube
+          <strong>TERAちゃんねる</strong>
+        </div>
+      </div>
+      
+      <div class="greeting-content">
+        <div class="section-eyebrow">Message from TERA</div>
+        <div class="greeting-tagline">メガ! ギガ! TERAでーす!</div>
+        <h2>害虫対策で、<br>もう悩まないでください。</h2>
+        <p class="greeting-text">
+          YouTube「TERAちゃんねる」で害虫対策の現場を発信し続けてきた中で、たくさんの法人様から「うちの工場でも同じことで困っている」というお声をいただきました。
+        </p>
+        <p class="greeting-text">
+          食品工場・スーパー・ホテル・ゴルフ場の現場には、それぞれ事情があります。「殺虫剤を撒けば終わり」では済まない、人と食品の安全を守りながら虫を遠ざける施工が必要です。
+        </p>
+        <p class="greeting-text">
+          私たちが提供するのは、現場で本当に使える害虫ブロック。チャンネルで発信してきた知識を、法人様のサービスとして本格的にご提供します。
+        </p>
+        <div class="greeting-signature">
+          害虫ブロック 代表
+          <strong>TERA</strong>
+        </div>
+        <a href="#" class="youtube-link">
+          <span class="youtube-icon">▶</span>
+          YouTube「TERAちゃんねる」を見る
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HACCP -->
+<section class="haccp">
+  <div class="container">
+    <div class="haccp-flex">
+      <div class="haccp-content">
+        <div class="section-eyebrow" style="justify-content: flex-start;">HACCP Compliance</div>
+        <h2>HACCP対応で、<br>監査に強い害虫対策。</h2>
+        <p>食品工場・スーパーの品質管理担当者様に選ばれる理由は、施工後の「記録」までフォローしているから。HACCPの一般衛生管理プログラムに対応した施工記録書を発行します。</p>
+        <ul class="haccp-list">
+          <li>施工箇所・薬剤・実施日を記録した報告書を発行</li>
+          <li>HACCP一般衛生管理プログラムに準拠</li>
+          <li>食品衛生監査時の根拠資料として提出可能</li>
+          <li>定期点検レポートで継続的なモニタリング</li>
+          <li>有資格者(防除作業監督者)による施工</li>
+        </ul>
+      </div>
+      <div class="haccp-visual">[ 施工報告書サンプル画像 ]</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="cases">
+  <div class="container">
+    <div class="section-eyebrow">Case Studies</div>
+    <h2 class="section-title">導入事例</h2>
+    <div class="case-grid">
+      <div class="case-card">
+        <div class="case-image">[ 食品工場・搬入口の施工写真 ]</div>
+        <div class="case-body">
+          <span class="case-tag">食品工場</span>
+          <h4>夏場のコバエ発生をゼロに。<br>HACCP監査もクリア。</h4>
+          <div class="case-meta">
+            <div><strong>施工面積</strong>200㎡</div>
+            <div><strong>業種</strong>食品加工</div>
+            <div><strong>期間</strong>1日</div>
+          </div>
+          <p class="case-quote">「監査時の根拠資料まで揃えてくれる業者は他になかった」(品質管理責任者)</p>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-image">[ スーパーバックヤードの施工写真 ]</div>
+        <div class="case-body">
+          <span class="case-tag">スーパー</span>
+          <h4>搬入口の蛾・コバエ対策で<br>クレームゼロを継続中。</h4>
+          <div class="case-meta">
+            <div><strong>施工面積</strong>80㎡</div>
+            <div><strong>業種</strong>食品スーパー</div>
+            <div><strong>期間</strong>半日</div>
+          </div>
+          <p class="case-quote">「夏のクレームが激減した。年間契約で続けています」(店舗運営マネージャー)</p>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-image">[ ホテル外観・施工エリア写真 ]</div>
+        <div class="case-body">
+          <span class="case-tag">ホテル・旅館</span>
+          <h4>客室クチコミから虫の指摘が消えた。</h4>
+          <div class="case-meta">
+            <div><strong>施工面積</strong>500㎡</div>
+            <div><strong>業種</strong>リゾートホテル</div>
+            <div><strong>期間</strong>2日</div>
+          </div>
+          <p class="case-quote">「営業を止めずに施工してくれて、ゲストへの影響もゼロ」(総支配人)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <div class="container">
+    <div class="section-eyebrow">Pricing</div>
+    <h2 class="section-title">明朗な料金体系</h2>
+    
+    <div class="price-hero">
+      <div class="price-display">
+        <span class="yen">¥</span>1,000<span class="unit">/ ㎡〜</span>
+      </div>
+      <p class="price-note">税別 / 施工内容により変動 / 詳細は現地調査でお見積もり</p>
+    </div>
+
+    <div class="price-examples">
+      <div class="price-example">
+        <div class="price-example-label">スーパー搬入口エリア</div>
+        <div class="price-example-area">約 50㎡</div>
+        <div class="price-example-amount">¥50,000〜</div>
+      </div>
+      <div class="price-example">
+        <div class="price-example-label">中規模食品工場・重点エリア</div>
+        <div class="price-example-area">約 200㎡</div>
+        <div class="price-example-amount">¥200,000〜</div>
+      </div>
+      <div class="price-example">
+        <div class="price-example-label">ホテル・旅館全館</div>
+        <div class="price-example-area">約 500㎡</div>
+        <div class="price-example-amount">¥500,000〜</div>
+      </div>
+    </div>
+
+    <a href="#cta" class="btn-primary" style="background: var(--gold);">正確な金額を現地調査で出す</a>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section class="flow">
+  <div class="container">
+    <div class="section-eyebrow">Process</div>
+    <h2 class="section-title">施工までの流れ</h2>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <h4>お問い合わせ</h4>
+        <p>LINEまたはフォームから。最短当日返信。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <h4>現地調査</h4>
+        <p>無料で約1時間。専門スタッフが訪問。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <h4>お見積もり</h4>
+        <p>調査から48時間以内に提出。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <h4>施工</h4>
+        <p>営業を止めずに対応可能。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">5</div>
+        <h4>アフター点検</h4>
+        <p>定期点検で効果を維持。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div class="section-eyebrow">FAQ</div>
+    <h2 class="section-title">よくあるご質問</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">食品が並ぶ場所でも施工できますか?</div>
+        <div class="faq-a">はい。当社の薬剤は食品衛生基準を満たした成分のみを使用しており、食品が直接接触する可能性のある環境でも施工可能です。SDS(安全データシート)も全件開示しております。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">営業中・稼働中でも施工できますか?</div>
+        <div class="faq-a">可能です。営業時間外や休業日に合わせた施工スケジュールを組ませていただきます。ホテルや稼働中の工場でも、業務に支障が出ないよう調整いたします。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">効果はどれくらい持続しますか?</div>
+        <div class="faq-a">施工内容と環境にもよりますが、おおむね数ヶ月〜半年程度の持続効果が見込めます。詳しくは現地調査の際にご説明します。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">HACCP監査の根拠資料になりますか?</div>
+        <div class="faq-a">はい。施工内容・使用薬剤・実施日を記録した報告書を発行いたします。HACCPの一般衛生管理プログラムに対応した形式で、監査時の根拠資料としてご利用いただけます。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">対応エリアはどこまでですか?</div>
+        <div class="faq-a">[ 全国対応 / ◯◯エリアを中心に対応 ] ※実際の対応エリアに応じて記載</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">効果が出なかった場合は?</div>
+        <div class="faq-a">施工後に効果が見られない場合の再施工保証についても、契約内容に含めることが可能です。詳細は現地調査時にご説明いたします。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="cta">
+  <div class="final-cta-inner">
+    <div class="section-eyebrow" style="color: var(--gold);">Get Started</div>
+    <h2>まずは<span class="accent">無料の現地調査</span>から。<br>お見積もりまで費用はかかりません。</h2>
+    <p>専門スタッフが現地を訪問し、施設に最適な施工プランをご提案します。<br>
+    お見積もりまで完全無料。しつこい営業も一切ございません。</p>
+    <div class="final-cta-buttons">
+      <a href="#" class="btn-primary">現地調査を予約する</a>
+      <a href="#" class="btn-secondary">LINEで相談する</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">害虫ブロック<span style="color: var(--gold);">.</span></div>
+  <div class="footer-info">
+    [ 会社名 ] / [ 所在地 ] / [ 電話番号 ] / [ 営業時間 ]<br>
+    防除作業監督者 在籍 / 建築物ねずみ昆虫等防除業 登録
+  </div>
+  <div class="copyright">© 2026 害虫ブロック All Rights Reserved.</div>
+</footer>
+
+<div class="wf-label">WIREFRAME v1</div>
+
+</body>
+</html>
