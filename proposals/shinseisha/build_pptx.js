@@ -154,19 +154,19 @@ console.log("slides 2-3 built");
   s.addText("最推奨", { x:11.42, y:1.45, w:1.28, h:0.42, fontFace:F, fontSize:12, bold:true, color:WHITE, align:"center", valign:"middle", margin:0 });
   const plans = [
     [GREY,"A 現状維持","全量売電",
-      ["20年累計 8,099万円","電気代 5,660万","屋根メンテ 2,439万 (2回)","設備投資 0円","BCP対策なし"],
+      ["20年累計 12,244万円","電気代 5,660万","塗装+足場 6,584万★","設備投資 0円","暑さ対策ならず"],
       "最も高い", RED],
     [BLUE,"B サニックス","太陽光のみ自家消費",
-      ["20年累計 6,810万円","A比 ▲1,289万","電気代のみ改善","BCP × / 補助金なし","屋根メンテ 2,439万残る"],
+      ["20年累計 10,955万円","A比 ▲1,289万","電気代のみ改善","BCP × / 補助金なし","塗装メンテ 6,584万残る"],
       "電気代のみ", BLUE],
     [TEAL,"C シスコム","蓄電池+補助金",
-      ["20年累計 5,676万円","A比 ▲2,423万","オムロン国産+地元施工","BCP 54kWh / 18h","屋根メンテ 2,439万残る"],
+      ["20年累計 9,821万円","A比 ▲2,423万","オムロン国産+地元施工","BCP 54kWh / 18h","塗装メンテ 6,584万残る"],
       "電気代+BCP", TEAL],
     [GOLDD,"D ダブル","屋根外壁ポリウレア",
-      ["20年累計 5,375万円","A比 ▲2,724万","空調30%カット","設備 補助前4,573→実質3,573","屋根+外壁 20年メンテ0"],
+      ["20年累計 5,375万円","A比 ▲6,869万 ★","空調30%カット","設備 補助前4,573→実質3,573","20年メンテ 0円"],
       "建物寿命+20年", GOLDD],
     ["E07D45","E 屋根のみ先行","2年で補助金2回狙い",
-      ["20年累計 4,095〜5,223万","A比 ▲2,876〜▲4,004万 ★","屋根遮熱+蓄電池+太陽光","補助金1,000万 (今年)","来年 外壁で1,000万再狙い"],
+      ["20年累計 4,095万円 ★最安","A比 ▲8,149万","屋根遮熱+蓄電池+太陽光","補助金1,000万 (今年)","来年外壁で実質930万"],
       "2段階で最大", "E07D45"],
   ];
   const cw=2.34, cx0=0.55, cgap=0.13, cy=1.95, ch=4.35;
@@ -185,7 +185,7 @@ console.log("slides 2-3 built");
   s.addShape(pres.shapes.RECTANGLE, { x:0.5, y:6.5, w:12.33, h:0.62, fill:{color:NAVY}, line:{type:"none"} });
   s.addText([
     {text:"結論：",options:{color:GOLD,bold:true}},
-    {text:"D は20年確定で最安(A比▲2,724万)。 E は屋根のみ先行で投資を抑えつつ補助金を2年に分けて最大2,000万円狙う2段階作戦(A比▲2,876〜▲4,004万)。 末松社長のご判断ポイントは「一気にD」か「2年でE→外壁」か",options:{color:WHITE}}
+    {text:"D 案は20年確定で A比▲6,869万円お得。 E 案は屋根のみ先行で投資を抑えつつ補助金を2年で2回獲り、 A比▲8,149万円。 ★塗装は維持費かかっても暑さ対策にならない! ポリウレアは20年メンテ0円+遮熱で空調代も下がる二重効果",options:{color:WHITE}}
   ], { x:0.7, y:6.5, w:11.95, h:0.62, fontFace:F, fontSize:10.5, align:"left", valign:"middle", lineSpacingMultiple:1.1, margin:0 });
   footer(s,4);
 })();
@@ -480,9 +480,9 @@ console.log("slide 7 REBUILT");
   s.addShape(pres.shapes.RECTANGLE,{x:6.83,y:2.78,w:6.0,h:0.5,fill:{color:GOLDD},line:{type:"none"}});
   s.addText("【来年】外壁 1,500 ㎡(補助金チャレンジ)",{x:7.03,y:2.78,w:5.7,h:0.5,fontFace:F,fontSize:14,bold:true,color:WHITE,align:"left",valign:"middle",margin:0});
   const next_year=[["外壁ポリウレア 1,500 ㎡","1,320 万円"],
-                   ["昇降足場 (外壁単独)","30 万円"],
-                   ["― ","―"],
-                   ["― ","―"],
+                   ["全面足場 1,800 ㎡(3,000円/㎡)","540 万円"],
+                   ["― 屋根は20年耐候のため不要","―"],
+                   ["― 物価高騰の影響を回避","―"],
                    ["来年度 R9 補助金 申請","対象"]];
   yy=3.45;
   next_year.forEach((r,i)=>{
@@ -493,17 +493,17 @@ console.log("slide 7 REBUILT");
   });
   s.addShape(pres.shapes.RECTANGLE,{x:7.13,y:yy+0.05,w:5.4,h:0.4,fill:{color:NAVY},line:{type:"none"}});
   s.addText("補助前合計",{x:7.28,y:yy+0.05,w:3.7,h:0.4,fontFace:F,fontSize:11,bold:true,color:WHITE,align:"left",valign:"middle",margin:0});
-  s.addText("1,350 万円",{x:10.85,y:yy+0.05,w:1.6,h:0.4,fontFace:F,fontSize:12,bold:true,color:GOLD,align:"right",valign:"middle",margin:0});
+  s.addText("1,860 万円",{x:10.85,y:yy+0.05,w:1.6,h:0.4,fontFace:F,fontSize:12,bold:true,color:GOLD,align:"right",valign:"middle",margin:0});
   s.addShape(pres.shapes.RECTANGLE,{x:7.13,y:yy+0.5,w:5.4,h:0.35,fill:{color:WHITE},line:{color:BLUE,width:1.2}});
   s.addText("補助金 1/2 (想定)",{x:7.28,y:yy+0.5,w:3.7,h:0.35,fontFace:F,fontSize:10,bold:true,color:BLUE,align:"left",valign:"middle",margin:0});
-  s.addText("▲ 675 万円",{x:10.85,y:yy+0.5,w:1.6,h:0.35,fontFace:F,fontSize:11,bold:true,color:BLUE,align:"right",valign:"middle",margin:0});
+  s.addText("▲ 930 万円",{x:10.85,y:yy+0.5,w:1.6,h:0.35,fontFace:F,fontSize:11,bold:true,color:BLUE,align:"right",valign:"middle",margin:0});
   s.addShape(pres.shapes.RECTANGLE,{x:7.13,y:yy+0.92,w:5.4,h:0.45,fill:{color:GOLDD},line:{type:"none"}});
   s.addText("実質投資 (来年)",{x:7.28,y:yy+0.92,w:3.7,h:0.45,fontFace:F,fontSize:12,bold:true,color:WHITE,align:"left",valign:"middle",margin:0});
-  s.addText("675 万円",{x:10.7,y:yy+0.92,w:1.75,h:0.45,fontFace:F,fontSize:14,bold:true,color:WHITE,align:"right",valign:"middle",margin:0});
+  s.addText("930 万円",{x:10.7,y:yy+0.92,w:1.75,h:0.45,fontFace:F,fontSize:14,bold:true,color:WHITE,align:"right",valign:"middle",margin:0});
 
   // 下部結論バー
   s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:6.85,w:12.33,h:0.42,fill:{color:"E07D45"},line:{type:"none"}});
-  s.addText("E プラン 2 年合計：実質投資 2,733 万円 (D 比 ▲840 万円) ／ 補助金 計 1,675 万円獲得 ／ 20 年累計 4,095 万円(A 比 ▲4,004 万円)",
+  s.addText("E プラン 2 年合計：実質投資 2,988 万円 (D 比 ▲585万) ／ 補助金 計 1,930 万円獲得 ／ 20 年累計 4,095 万円 (A 比 ▲8,149万)",
     {x:0.5,y:6.85,w:12.33,h:0.42,fontFace:F,fontSize:11,bold:true,color:WHITE,align:"center",valign:"middle",margin:0});
   footer(s,10);
 })();
@@ -516,11 +516,11 @@ console.log("slides 8-9 built");
   const s = pres.addSlide(); s.background={color:WHITE};
   secNum(s,"05"); title(s,"20 年累計支出比較 ― 電気代＋建物メンテ＋設備投資");
   const cols=[
-    [GREY,"A 現状","8,099 万円",["└ 電気代 5,660","└ メンテ 2,439","└ 設備 0"],"─",MGREY],
-    [BLUE,"B サニックス","6,810 万円",["└ 電気代 3,755","└ メンテ 2,439","└ 設備 616"],"▲ 1,289 万",BLUE],
-    [TEAL,"C シスコム","5,676 万円",["└ 電気代 2,084","└ メンテ 2,439","└ 設備 実質 1,153"],"▲ 2,423 万",TEAL],
-    [GOLDD,"D ダブル","5,375 万円",["└ 電気代 1,802","└ メンテ 0 ★","└ 設備 実質 3,573"],"▲ 2,724 万",GOLDD],
-    ["E07D45","E 屋根先行","4,095〜5,223万",["└ 電気代 2,037","└ メンテ 0〜1,128","└ 設備 実質 2,058"],"▲ 2,876〜4,004","E07D45"],
+    [GREY,"A 現状","12,244 万円",["└ 電気代 5,660","└ 塗装+足場 6,584★","└ 設備 0"],"─",MGREY],
+    [BLUE,"B サニックス","10,955 万円",["└ 電気代 3,755","└ 塗装+足場 6,584","└ 設備 616"],"▲ 1,289 万",BLUE],
+    [TEAL,"C シスコム","9,821 万円",["└ 電気代 2,084","└ 塗装+足場 6,584","└ 設備 実質 1,153"],"▲ 2,423 万",TEAL],
+    [GOLDD,"D ダブル","5,375 万円",["└ 電気代 1,802","└ メンテ 0 ★","└ 設備 実質 3,573"],"▲ 6,869 万",GOLDD],
+    ["E07D45","E 屋根先行","4,095 万円★",["└ 電気代 2,037","└ メンテ 0 ★","└ 設備 実質 2,058"],"▲ 8,149 万","E07D45"],
   ];
   const cw=2.34, cx0=0.55, cgap=0.13, cy=1.9, ch=4.0;
   cols.forEach((c,i)=>{
@@ -538,7 +538,7 @@ console.log("slides 8-9 built");
   // 下部結論
   s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:6.1,w:12.33,h:0.95,fill:{color:NAVY},line:{type:"none"}});
   s.addText("初期投資が一番高そうに見える D プランが、 20 年で最も安い",{x:0.7,y:6.16,w:12,h:0.36,fontFace:F,fontSize:13,bold:true,color:GOLD,align:"left",valign:"middle",margin:0});
-  s.addText("理由：①窓断熱 + 屋根遮熱ポリウレアで空調電気代を 30% カット ②E案は屋根遮熱+創エネを今年実施、外壁は来年補助金で再チャレンジの2段階作戦 ③ 20 年塗装 + 足場 2,439 万円が不要 ④補助金 1,000 万円 ( 上限 ) で設備費圧縮、外壁ポリウレア化で資産価値も向上",
+  s.addText("理由：①窓断熱 + 屋根遮熱ポリウレアで空調電気代を 30% カット ②塗装+足場は20年で 6,584万かかる。 D/E案はポリウレアで20年メンテ0+遮熱で空調代も下がる ③ 20 年塗装 + 足場 2,439 万円が不要 ④補助金 1,000 万円 ( 上限 ) で設備費圧縮、外壁ポリウレア化で資産価値も向上",
     {x:0.7,y:6.5,w:11.95,h:0.5,fontFace:F,fontSize:10,color:WHITE,align:"left",valign:"middle",lineSpacingMultiple:1.15,margin:0});
   footer(s,11);
 })();
@@ -553,14 +553,14 @@ console.log("slides 8-9 built");
   // A: 電気5660 メンテ2439 投資0 / B: 3680 2439 616 / C:1773 2439 1153 / D:1009 0 3588
   const data=[
     {name:"電気代", labels:["A 現状","B サニ","C シスコム","D ダブル","E 屋根先行"], values:[5660,3755,2084,1802,2037]},
-    {name:"建物メンテ", labels:["A 現状","B サニ","C シスコム","D ダブル","E 屋根先行"], values:[2439,2439,2439,0,0]},
+    {name:"建物メンテ", labels:["A 現状","B サニ","C シスコム","D ダブル","E 屋根先行"], values:[6584,6584,6584,0,0]},
     {name:"設備投資", labels:["A 現状","B サニ","C シスコム","D ダブル","E 屋根先行"], values:[0,616,1153,3573,2058]},
   ];
   s.addChart(pres.charts.BAR, data, {
     x:0.6, y:1.85, w:9.3, h:4.5, barDir:"col", barGrouping:"stacked",
     chartColors:["5B7A95", ORANGE, NAVY],
     showLegend:false, showValue:false,
-    valAxisMinVal:0, valAxisMaxVal:9000, valAxisMajorUnit:2250,
+    valAxisMinVal:0, valAxisMaxVal:13500, valAxisMajorUnit:2250,
     valAxisLabelColor:"64748B", valAxisLabelFontSize:10, valAxisLabelFontFace:F,
     catAxisLabelColor:"1A2B40", catAxisLabelFontSize:11, catAxisLabelFontFace:F, catAxisLabelFontBold:true,
     valGridLine:{color:"E8ECF1",size:0.5}, catGridLine:{style:"none"},
@@ -568,15 +568,15 @@ console.log("slides 8-9 built");
     chartArea:{fill:{color:"FFFFFF"}},
   });
   // 合計ラベル（手動オーバーレイ）
-  const totals=[["8,099 万",1.05],["6,810 万",2.55],["5,676 万",4.05],["5,375 万",5.55],["4,095 万",7.05]];
-  const topY=[2.25,2.9,3.46,3.61,4.25]; // 5本(E案 最良シナリオ)
+  const totals=[["12,244 万",0.95],["10,955 万",2.85],["9,821 万",4.75],["5,375 万",6.65],["4,095 万",8.55]];
+  const topY=[2.22,2.65,3.03,4.51,4.93]; // 5本 軸13500
   totals.forEach((t,i)=>{
-    s.addShape(pres.shapes.RECTANGLE,{x:t[1],y:topY[i],w:1.25,h:0.42,fill:{color:NAVY},line:{type:"none"}});
-    s.addText(t[0],{x:t[1],y:topY[i],w:1.25,h:0.42,fontFace:F,fontSize:11,bold:true,color:WHITE,align:"center",valign:"middle",margin:0});
+    s.addShape(pres.shapes.RECTANGLE,{x:t[1],y:topY[i],w:1.35,h:0.42,fill:{color:NAVY},line:{type:"none"}});
+    s.addText(t[0],{x:t[1],y:topY[i],w:1.35,h:0.42,fontFace:F,fontSize:11,bold:true,color:WHITE,align:"center",valign:"middle",margin:0});
   });
   // ★マーク（D）
-  s.addShape(pres.shapes.OVAL,{x:7.4,y:3.7,w:0.55,h:0.55,fill:{color:GOLD},line:{type:"none"}});
-  s.addText("★",{x:7.4,y:3.7,w:0.55,h:0.55,fontFace:F,fontSize:16,bold:true,color:NAVY,align:"center",valign:"middle",margin:0});
+  s.addShape(pres.shapes.OVAL,{x:8.95,y:4.38,w:0.55,h:0.55,fill:{color:GOLD},line:{type:"none"}});
+  s.addText("★",{x:8.95,y:4.38,w:0.55,h:0.55,fontFace:F,fontSize:16,bold:true,color:NAVY,align:"center",valign:"middle",margin:0});
   // 凡例カード
   card(s, 10.15, 2.4, 2.68, 3.45, LGREY);
   s.addText("内訳",{x:10.4,y:2.6,w:2.3,h:0.35,fontFace:F,fontSize:13,bold:true,color:NAVY,align:"left",valign:"middle",margin:0});
@@ -589,7 +589,7 @@ console.log("slides 8-9 built");
   });
   // 下部結論バー
   s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:6.55,w:12.33,h:0.55,fill:{color:GOLDD},line:{type:"none"}});
-  s.addText("D が確定で最安。 E は来年外壁の補助金が通れば最安(▲4,004万)、通らなくても A比▲2,876万。2段階作戦が経営的に強い",
+  s.addText("D は確定で A比 ▲6,869 万。 E は来年外壁の補助金成功で最安 A比 ▲8,149 万。 ★A/B/C のオレンジ部分(塗装+足場)は暑さ対策にならず物価で雪だるま式に増える ／ D/E はポリウレアでメンテ0+遮熱二重効果★",
     {x:0.5,y:6.55,w:12.33,h:0.55,fontFace:F,fontSize:12.5,bold:true,color:NAVY,align:"center",valign:"middle",margin:0});
   footer(s,12);
 })();
@@ -600,34 +600,37 @@ console.log("slides 10-11 built");
 // ============================================================
 (function(){
   const s = pres.addSlide(); s.background={color:WHITE};
-  secNum(s,"05"); title(s,"建物維持負担 ― 20 年で発生する隠れコスト");
-  s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:1.55,w:12.33,h:0.55,fill:{color:NAVY},line:{type:"none"}});
-  s.addText("普通の建物管理だと、 20 年で「電気代」とは別に必ず発生する 3 つの工事費",
-    {x:0.7,y:1.55,w:12,h:0.55,fontFace:F,fontSize:13,bold:true,color:GOLD,align:"left",valign:"middle",margin:0});
-  s.addText("A ・ B ・ C 案 共通：建物メンテ計画（ 20 年）",{x:0.5,y:2.35,w:8,h:0.35,fontFace:F,fontSize:13,bold:true,color:INK,align:"left",valign:"middle",margin:0});
-  // タイムライン軸
-  const axY=3.4;
+  secNum(s,"05"); title(s,"建物維持負担 ― 通常塗装は20年で6,584万円 ★暑さ対策にならない!");
+  s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:1.55,w:12.33,h:0.55,fill:{color:RED},line:{type:"none"}});
+  s.addText("★ 塗装は維持費をかけても暑さ対策にならない! ／ 物価高騰6%/年で工事費は雪だるま式に上がる",
+    {x:0.7,y:1.55,w:12,h:0.55,fontFace:F,fontSize:13.5,bold:true,color:WHITE,align:"left",valign:"middle",margin:0});
+  s.addText("A ・ B ・ C 案 共通：通常塗装メンテ計画(20年で2回・物価6%/年複利)",
+    {x:0.5,y:2.3,w:10,h:0.35,fontFace:F,fontSize:13,bold:true,color:INK,align:"left",valign:"middle",margin:0});
+  const axY=3.55;
   s.addShape(pres.shapes.LINE,{x:1.3,y:axY,w:10.7,h:0,line:{color:INK,width:2}});
-  const pts=[[2.0,GREY,"今","─","現状維持",MGREY],[6.3,ORANGE,"5 年後","▲ 874 万円","屋根塗装 + 足場 + 脱着 ( 物価 6%/ 年高騰 )",ORANGE],[10.5,RED,"15 年後","▲ 1,565 万円","屋根塗装 + 足場 + 脱着 ( 物価高騰累積 )",RED]];
+  const pts=[[2.0,GREY,"今","─","1回現価 1,763 万円",MGREY],
+             [6.3,ORANGE,"5 年後","▲ 2,359 万円","塗装1,160+足場540+脱着63",ORANGE],
+             [10.5,RED,"15 年後","▲ 4,225 万円","物価高騰6%/年×15年累積",RED]];
   pts.forEach((p)=>{
     s.addText(p[2],{x:p[0]-1.0,y:axY-0.65,w:2.0,h:0.3,fontFace:F,fontSize:13,bold:true,color:INK,align:"center",valign:"middle",margin:0});
     s.addShape(pres.shapes.OVAL,{x:p[0]-0.18,y:axY-0.18,w:0.36,h:0.36,fill:{color:p[1]},line:{color:WHITE,width:2}});
-    s.addText(p[3],{x:p[0]-1.3,y:axY+0.35,w:2.6,h:0.35,fontFace:F,fontSize:16,bold:true,color:p[5],align:"center",valign:"middle",margin:0});
-    s.addText(p[4],{x:p[0]-1.6,y:axY+0.78,w:3.2,h:0.5,fontFace:F,fontSize:9.5,color:MGREY,align:"center",valign:"top",lineSpacingMultiple:1.1,margin:0});
+    s.addText(p[3],{x:p[0]-1.3,y:axY+0.35,w:2.6,h:0.4,fontFace:F,fontSize:17,bold:true,color:p[5],align:"center",valign:"middle",margin:0});
+    s.addText(p[4],{x:p[0]-1.7,y:axY+0.83,w:3.4,h:0.4,fontFace:F,fontSize:9,color:MGREY,align:"center",valign:"top",lineSpacingMultiple:1.1,margin:0});
   });
-  // 中段グレー注記
-  s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:4.85,w:12.33,h:0.5,fill:{color:LGREY},line:{color:BORDER,width:1}});
-  s.addText("→ A ・ B ・ C 案では共通して 20 年で 2,439 万円 の屋根メンテ費用が必ず発生 ( 塗装 4,000 円 / ㎡ + 昇降足場 30 万 + パネル脱着 63 万 × 物価高騰 6%/ 年 ×2 回 )",
-    {x:0.7,y:4.85,w:12,h:0.5,fontFace:F,fontSize:10.5,bold:true,color:RED,align:"left",valign:"middle",margin:0});
-  // D案ゴールドボックス
-  s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:5.5,w:12.33,h:1.5,fill:{color:GOLDD},line:{type:"none"}});
-  s.addText("D 案：脱炭素化促進事業の補助金活用で「メンテ自体が無くなる」",{x:0.7,y:5.58,w:12,h:0.32,fontFace:F,fontSize:13,bold:true,color:NAVY,align:"left",valign:"middle",margin:0});
+  s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:5.0,w:12.33,h:0.5,fill:{color:LGREY},line:{color:BORDER,width:1}});
+  s.addText("1回あたり: 塗装(4,000円×2,900㎡=1,160万) + 全面足場(3,000円×1,800㎡=540万) + パネル脱着 63万 = 1,763万円(現価)",
+    {x:0.7,y:5.0,w:12,h:0.5,fontFace:F,fontSize:10.5,bold:true,color:INK,align:"left",valign:"middle",margin:0});
+  s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:5.6,w:12.33,h:0.6,fill:{color:RED},line:{type:"none"}});
+  s.addText("→ A・B・C 案では20年で 6,584 万円 のメンテ費用が必ず発生し、 ★暑さは1ミリも改善しない★",
+    {x:0.7,y:5.6,w:12,h:0.6,fontFace:F,fontSize:13,bold:true,color:WHITE,align:"left",valign:"middle",margin:0});
+  s.addShape(pres.shapes.RECTANGLE,{x:0.5,y:6.3,w:12.33,h:0.95,fill:{color:GOLDD},line:{type:"none"}});
+  s.addText("D / E 案：脱炭素化促進事業の補助金活用で「メンテ自体が無くなる + 暑さも下がる」",
+    {x:0.7,y:6.35,w:12,h:0.32,fontFace:F,fontSize:13,bold:true,color:NAVY,align:"left",valign:"middle",margin:0});
   s.addText([
-    {text:"ポリウレア + 足場 2,840 万円 ( 税込 ) → 単独補助 1,291 万 / 上限後 実質 2,277 万円 ( 昇降足場は 1 回のみ・外壁含む )",options:{bullet:{code:"25CF"},breakLine:true,paraSpaceAfter:4}},
-    {text:"20 年間、塗装工事 0 円 ( 脂肪族ポリウレア 防水 / 防錆 10 年保証・ 20 年以上耐候 )",options:{bullet:{code:"25CF"},breakLine:true,paraSpaceAfter:4}},
-    {text:"屋根防水とポリウレアが一体施工のため、太陽光パネル脱着 0 円",options:{bullet:{code:"25CF"},breakLine:true,paraSpaceAfter:4}},
-    {text:"★ 物価高騰下で 2,439 万円かかる屋根メンテが、 D プランでは 0 円 ( 外壁も同時にポリウレア化 )",options:{bullet:{code:"25CF"},bold:true}},
-  ],{x:0.75,y:5.95,w:12,h:1.0,fontFace:F,fontSize:10.5,color:NAVY,align:"left",valign:"top",margin:0});
+    {text:"D 案: 屋根+外壁ポリウレア2,900㎡(税込2,840万) → 補助金▲1,000万 → 実質1,840万。20年で6,584万のメンテが0円に",options:{bullet:{code:"25CF"},breakLine:true,paraSpaceAfter:4}},
+    {text:"E 案: 今年屋根のみ施工し補助金1,000万、来年外壁施工で補助金930万追加 ★ 補助金を2回獲りに行く2段階作戦",options:{bullet:{code:"25CF"},breakLine:true,paraSpaceAfter:4}},
+    {text:"加えて、屋根5%+窓25%=空調30%カット効果。 ★塗装にはない遮熱効果で電気代も下がる二重効果★",options:{bullet:{code:"25CF"},bold:true}},
+  ],{x:0.75,y:6.65,w:12,h:0.55,fontFace:F,fontSize:10,color:NAVY,align:"left",valign:"top",margin:0});
   footer(s,13);
 })();
 
