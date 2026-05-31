@@ -423,8 +423,23 @@ function playCurrentSlideAndAdvance() {
 function play() {
   window._userTriggered = true;
   if (current >= TOTAL - 1) { current = 0; render(); }
-  playing = true;
-  playBtn.textContent = '⏸ 一時停止';
+  playing = true; playBtn.textContent = '⏸ 一時停止';
+
+  // ★ ブラウザの自動再生許可を取得するため、ユーザー操作と同じスタックで一度audio.play()を呼ぶ
+  // これで以降のaudio再生がブロックされなくなる
+  if (!window._audioUnlocked) {
+    try {
+      const unlock = new Audio();
+      // 短い無音MP3 (data URI)
+      unlock.src = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAAEAAAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uAAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCgAAAAAAAAAAEAOJB/lwAAAAAAAAAAAAAAAAAAAAA//sQxAADwAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=';
+      unlock.volume = 0.01;
+      unlock.play().then(() => { 
+        window._audioUnlocked = true;
+        unlock.pause(); unlock.src = '';
+      }).catch(e => { /* OK: 失敗してもいい、本番のaudio.playで再試行 */ });
+    } catch(e) {}
+  }
+
   playCurrentSlideAndAdvance();
 }
 
