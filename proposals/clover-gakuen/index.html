@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>クローバー学園様 脱炭素設備導入のご提案｜シスコムサステナシールド</title>
+<meta name="description" content="社会福祉法人クローバー会様 脱炭素設備導入のご提案。千葉県令和8年度補助金を活用した太陽光＋蓄電池＋窓ガラスコーティング。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f2a43;--navy2:#163a5c;--gold:#f5c518;--green:#2e9e6b;--ink:#15324a;--paper:#f6f9fc;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:"Zen Kaku Gothic New",sans-serif;background:#06121f;color:#fff;overflow:hidden;}
+#stage{position:relative;width:100vw;height:100vh;overflow:hidden;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:6vh 7vw;opacity:0;transform:translateY(20px) scale(.99);transition:opacity .7s ease,transform .7s ease;
+  pointer-events:none;background:radial-gradient(120% 120% at 50% 0%,var(--navy2) 0%,var(--navy) 55%,#0a1f33 100%);text-align:center;}
+.slide.active{opacity:1;transform:none;pointer-events:auto;}
+.kicker{color:var(--gold);font-weight:700;letter-spacing:.18em;font-size:clamp(11px,1.6vw,15px);margin-bottom:18px;}
+h1.title{font-size:clamp(26px,5.4vw,60px);font-weight:900;line-height:1.18;}
+h2.title{font-size:clamp(22px,4.4vw,46px);font-weight:900;line-height:1.22;}
+.title .hl{color:var(--gold);}
+.lead{margin-top:22px;font-size:clamp(14px,2.2vw,22px);line-height:1.9;color:#dbe7f2;max-width:900px;}
+.big-num{font-family:"Bebas Neue";font-size:clamp(54px,13vw,150px);color:var(--gold);line-height:1;letter-spacing:.02em;}
+.unit{font-size:clamp(18px,3vw,30px);color:#fff;font-weight:700;}
+.cards{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:30px;max-width:1000px;}
+.card{background:rgba(255,255,255,.07);border:1px solid rgba(245,197,24,.35);border-radius:16px;padding:22px 24px;min-width:200px;max-width:300px;flex:1;}
+.card .ic{font-size:34px;}
+.card .ct{color:var(--gold);font-weight:700;font-size:clamp(15px,2vw,19px);margin:8px 0 6px;}
+.card .cd{font-size:clamp(12px,1.5vw,15px);color:#cfdcea;line-height:1.7;}
+.scheme{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap;justify-content:center;margin-top:26px;}
+.box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:18px 22px;min-width:150px;}
+.box .l{font-size:13px;color:#bcd0e2;}
+.box .v{font-size:clamp(20px,3vw,30px);font-weight:900;margin-top:6px;}
+.box.gold{background:rgba(245,197,24,.16);border-color:var(--gold);}
+.box.gold .v{color:var(--gold);}
+.arrow{display:flex;align-items:center;font-size:30px;color:var(--gold);}
+.foot{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#7e98ad;font-size:12px;}
+/* controls */
+#bar{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:14px;padding:12px 18px;
+  background:linear-gradient(0deg,rgba(6,18,31,.92),rgba(6,18,31,0));z-index:30;}
+#bar button{background:var(--gold);color:var(--navy);border:none;border-radius:9px;padding:10px 16px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;}
+#bar button.ghost{background:rgba(255,255,255,.14);color:#fff;}
+#prog{flex:1;height:6px;background:rgba(255,255,255,.16);border-radius:6px;overflow:hidden;}
+#prog>i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s;}
+#cnt{color:#cfe0ef;font-size:13px;min-width:54px;text-align:center;}
+.dl{color:var(--navy)!important;text-decoration:none;}
+/* start overlay */
+#start{position:fixed;inset:0;z-index:50;background:radial-gradient(120% 120% at 50% 30%,#163a5c,#06121f);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8vw;}
+#start .logo{color:var(--gold);font-weight:700;letter-spacing:.2em;margin-bottom:20px;font-size:14px;}
+#start h1{font-size:clamp(24px,5vw,52px);font-weight:900;line-height:1.25;}
+#start p{margin-top:18px;color:#cfdcea;font-size:clamp(13px,2vw,18px);line-height:1.8;}
+#start button{margin-top:34px;background:var(--gold);color:var(--navy);border:none;border-radius:50px;
+  padding:18px 44px;font-size:18px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 10px 30px rgba(245,197,24,.35);}
+.muted{font-size:12px;color:#90a7bb;margin-top:22px;}
+</style>
+</head>
+<body>
+
+<div id="start">
+  <div class="logo">SYSCOM SUSTAINASHIELD ／ 株式会社シスコムネット</div>
+  <h1>社会福祉法人クローバー会 様<br><span style="color:var(--gold)">脱炭素設備導入のご提案</span></h1>
+  <p>千葉県 令和8年度 補助金を活用した<br>太陽光＋蓄電池＋窓ガラスコーティング（音声ナレーション付き・約4分）</p>
+  <button id="startBtn">▶ 提案をはじめる</button>
+  <div class="muted">※音声が流れます。音量にご注意ください。</div>
+</div>
+
+<div id="stage">
+  <!-- 1 -->
+  <section class="slide" data-audio="mp3/narr-01.mp3">
+    <div class="kicker">脱炭素設備導入のご提案</div>
+    <h1 class="title">社会福祉法人クローバー会 様</h1>
+    <p class="lead">千葉県 令和8年度 補助金を活用し、<span class="hl">太陽光・蓄電池・窓ガラスコーティング</span>で<br>光熱費の削減と、災害に強い施設づくりを同時に実現します。</p>
+    <div class="lead" style="margin-top:18px;font-size:15px;">株式会社シスコムネット ／ 担当：寺嵜 忠弘</div>
+  </section>
+  <!-- 2 -->
+  <section class="slide" data-audio="mp3/narr-02.mp3">
+    <div class="kicker">千葉県の補助金は今がチャンス</div>
+    <h2 class="title">補助率<span class="hl">1/2</span>・上限<span class="hl">1,000万円</span></h2>
+    <p class="lead">業務用設備等脱炭素化促進事業。福祉施設はまさに対象です。<br><b style="color:#ffd76b">交付決定の前に契約・着工すると対象外</b>。今年度の早い申請が鍵です。</p>
+  </section>
+  <!-- 3 -->
+  <section class="slide" data-audio="mp3/narr-03.mp3">
+    <div class="kicker">ご提案の全体像</div>
+    <h2 class="title">3つの柱 ＜ 2施設で補助金活用 ＞</h2>
+    <div class="cards">
+      <div class="card"><div class="ic">🔋</div><div class="ct">蓄電池</div><div class="cd">Tesla Powerwall×6（81kWh）<br>クローバー学園</div></div>
+      <div class="card"><div class="ic">🪟</div><div class="ct">窓ガラスコーティング</div><div class="cd">遮熱195㎡<br>第2クローバー学園</div></div>
+      <div class="card"><div class="ic">☀️</div><div class="ct">太陽光発電</div><div class="cd">約40kW 自家消費<br>クローバー学園</div></div>
+    </div>
+  </section>
+  <!-- 4 -->
+  <section class="slide" data-audio="mp3/narr-04.mp3">
+    <div class="kicker">蓄電池 ／ Tesla Powerwall ×6</div>
+    <div class="big-num">81<span class="unit"> kWh</span></div>
+    <p class="lead">大容量蓄電池で、停電時には重要な電源を<span class="hl">自動バックアップ</span>。<br>利用者様の安全を守る、福祉施設の<b style="color:#ffd76b">BCP対策</b>として最高の安心を。</p>
+  </section>
+  <!-- 5 -->
+  <section class="slide" data-audio="mp3/narr-05.mp3">
+    <div class="kicker">窓ガラスコーティング ／ 第2クローバー学園</div>
+    <h2 class="title">紫外線<span class="hl">99%</span>・赤外線<span class="hl">最大90%</span>カット</h2>
+    <p class="lead">ビッグファインGを195㎡施工。夏の暑さをやわらげ、<br>空調の負荷を下げて、<span class="hl">快適性と省エネ</span>を同時に実現します。</p>
+  </section>
+  <!-- 6 -->
+  <section class="slide" data-audio="mp3/narr-06.mp3">
+    <div class="kicker">太陽光発電 ／ 自家消費</div>
+    <div class="big-num">40<span class="unit"> kW 級</span></div>
+    <p class="lead">つくった電気をその場で使う自家消費型。電気代が高騰する今、<br><span class="hl">自前の電源</span>が、長期のコスト圧縮と資産価値向上につながります。</p>
+  </section>
+  <!-- 7 -->
+  <section class="slide" data-audio="mp3/narr-07.mp3">
+    <div class="kicker">補助金スキーム ／ 実質負担を圧縮</div>
+    <div class="scheme">
+      <div class="box"><div class="l">補助対象経費</div><div class="v">1,963<span style="font-size:16px">万円</span></div></div>
+      <div class="arrow">→</div>
+      <div class="box"><div class="l">補助率</div><div class="v">1/2</div></div>
+      <div class="arrow">→</div>
+      <div class="box gold"><div class="l">補助金（交付申請額）</div><div class="v">982<span style="font-size:16px">万円</span></div></div>
+    </div>
+    <p class="lead">蓄電池と窓ガラスコーティングが補助対象。<br>実質ご負担を大きく圧縮し、最新の脱炭素設備一式を導入いただけます。</p>
+  </section>
+  <!-- 8 -->
+  <section class="slide" data-audio="mp3/narr-08.mp3">
+    <div class="kicker">CO₂削減 ＆ 次のステップ</div>
+    <h2 class="title">脱炭素経営を、<span class="hl">私たちが伴走</span>します</h2>
+    <div class="cards">
+      <div class="card"><div class="ic">①</div><div class="ct">省エネ診断 申込</div><div class="cd">補助率1/2の必須要件</div></div>
+      <div class="card"><div class="ic">②</div><div class="ct">交付申請</div><div class="cd">書類作成を全面サポート</div></div>
+      <div class="card"><div class="ic">③</div><div class="ct">交付決定後 着工</div><div class="cd">施工・実績報告まで</div></div>
+    </div>
+    <p class="lead" style="margin-top:24px;">ぜひ、前向きにご検討ください。</p>
+  </section>
+</div>
+
+<div id="bar">
+  <button class="ghost" id="prev">◀ 前へ</button>
+  <button id="play">⏸ 一時停止</button>
+  <button class="ghost" id="next">次へ ▶</button>
+  <div id="prog"><i></i></div>
+  <div id="cnt">1 / 8</div>
+  <a class="dl" href="クローバー学園様_お見積明細_20260610.pdf" download><button>📄 見積明細PDF</button></a>
+</div>
+
+<audio id="au"></audio>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const au=document.getElementById('au');
+const progI=document.querySelector('#prog>i');
+const cnt=document.getElementById('cnt');
+const playBtn=document.getElementById('play');
+let i=0, playing=true;
+
+function show(n,auto=true){
+  i=(n+slides.length)%slides.length;
+  slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+  cnt.textContent=(i+1)+' / '+slides.length;
+  const src=slides[i].dataset.audio;
+  if(src){ au.src=src; if(playing&&auto){ au.play().catch(()=>{}); } }
+}
+au.addEventListener('timeupdate',()=>{ if(au.duration) progI.style.width=(au.currentTime/au.duration*100)+'%'; });
+au.addEventListener('ended',()=>{ if(playing){ if(i<slides.length-1) show(i+1); else { playing=false; playBtn.textContent='▶ 最初から'; } } });
+document.getElementById('next').onclick=()=>show(i+1);
+document.getElementById('prev').onclick=()=>show(i-1);
+playBtn.onclick=()=>{
+  if(au.ended && i===slides.length-1){ playing=true; playBtn.textContent='⏸ 一時停止'; show(0); return; }
+  if(playing){ au.pause(); playing=false; playBtn.textContent='▶ 再生'; }
+  else { playing=true; playBtn.textContent='⏸ 一時停止'; au.play().catch(()=>{}); }
+};
+document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight')show(i+1); if(e.key==='ArrowLeft')show(i-1); if(e.key===' '){e.preventDefault();playBtn.click();} });
+document.getElementById('startBtn').onclick=()=>{
+  document.getElementById('start').style.display='none';
+  playing=true; show(0);
+};
+show(0,false);
+</script>
+</body>
+</html>
