@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>30秒でわかる！卒FIT自家消費 おひさまエコキュート診断｜シスコムサステナシールド</title>
+<meta name="description" content="卒FIT世帯向け。太陽光の余剰電力を売る（安い）より、昼にお湯を沸かして自家消費するおひさまエコキュート。30秒・無料で年間の概算メリットを診断。公式LINEで正式試算も。" />
+<meta name="theme-color" content="#0288D1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=RocknRoll+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../common.css">
+<style>
+  .diag-hero{background:linear-gradient(135deg,#0288D1,#01579B);color:#fff;padding:24px 20px 30px;text-align:center;position:relative;overflow:hidden}
+  .diag-hero::before,.diag-hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.15)}
+  .diag-hero::before{width:140px;height:140px;top:-50px;right:-30px}
+  .diag-hero::after{width:80px;height:80px;bottom:-30px;left:-20px}
+  .diag-hero > *{position:relative}
+  .diag-hero .badge-pop{display:inline-block;background:var(--r);color:#fff;font-size:11px;font-weight:900;padding:4px 12px;border-radius:999px;margin-bottom:8px;letter-spacing:.04em;animation:wob 1.6s ease-in-out infinite}
+  @keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+  .diag-hero h1{margin:0 0 6px;font-size:23px;font-weight:900;line-height:1.4}
+  .diag-hero h1 .num{color:var(--y);font-family:"RocknRoll One";font-size:1.35em}
+  .diag-hero p{margin:0;font-size:13px;color:#E1F5FE;font-weight:600}
+  .diag-hero .promises{display:flex;justify-content:center;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .diag-hero .promises span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+
+  .dx-card-full{background:#fff;border-radius:18px;margin:20px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,.1);border:2px solid #B3E5FC}
+  .dx-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .dx-progress .label{font-size:12px;font-weight:900;color:var(--bl2);letter-spacing:.06em;flex-shrink:0}
+  .dx-bar{flex:1;height:8px;background:#E0E0E0;border-radius:999px;overflow:hidden}
+  .dx-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--y),#0288D1);width:14%;transition:width .4s ease}
+  .dx-step{display:none}
+  .dx-step.active{display:block;animation:fadeUp .4s ease}
+  @keyframes fadeUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+  .dx-step .qnum{display:inline-block;background:var(--r);color:#fff;font-family:"RocknRoll One";font-size:14px;padding:2px 12px;border-radius:999px;margin-bottom:6px}
+  .dx-step h2{margin:0 0 4px;font-size:18px;color:var(--bl2);font-weight:900;line-height:1.4}
+  .dx-step p.h{margin:0 0 14px;font-size:12.5px;color:var(--sub);line-height:1.6}
+  .dx-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .dx-options.cols-3{grid-template-columns:repeat(3,1fr)}
+  .dx-options.cols-1{grid-template-columns:1fr}
+  .dx-opt{background:#E1F5FE;border:2px solid #81D4FA;border-radius:10px;padding:12px 8px;font-weight:700;color:var(--ink);font-size:13px;cursor:pointer;font-family:inherit;text-align:center;transition:all .15s ease}
+  .dx-opt:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1)}
+  .dx-opt.selected{background:#0288D1;border-color:#01579B;color:#fff;transform:scale(1.03)}
+  .dx-opt .ico{font-size:22px;display:block;margin-bottom:2px}
+  .dx-opt small{display:block;font-size:10px;color:var(--sub);font-weight:500;margin-top:2px}
+  .dx-opt.selected small{color:#E1F5FE}
+  .dx-skip{display:block;width:100%;text-align:center;background:transparent;border:0;color:var(--sub);font-weight:700;cursor:pointer;font-family:inherit;font-size:12px;margin-top:10px;padding:8px;text-decoration:underline}
+  .dx-actions{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed #EEE}
+  .dx-back{background:transparent;border:0;color:var(--sub);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+
+  .dx-result{display:none}
+  .dx-result.show{display:block;animation:fadeUp .5s ease}
+  .dx-result .pre{font-size:11px;color:var(--sub);margin:0;text-align:center;letter-spacing:.06em}
+  .dx-result h2{font-size:14px;color:var(--bl2);margin:4px 0 16px;font-weight:900;text-align:center;line-height:1.5}
+  .dx-result h2 small{display:block;font-size:11px;color:var(--sub);font-weight:600;margin-top:2px}
+  .savings-card{background:linear-gradient(135deg,#E1F5FE,#81D4FA);border:3px solid #0288D1;border-radius:14px;padding:18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
+  .savings-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.6),transparent 60%);animation:rotShine 5s linear infinite}
+  @keyframes rotShine{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .savings-card > *{position:relative}
+  .savings-card .lbl{font-size:11px;font-weight:900;color:var(--bl2);letter-spacing:.08em}
+  .savings-card .yen{font-family:"RocknRoll One";font-size:52px;color:#01579B;line-height:1;margin:6px 0 0;-webkit-text-stroke:1.2px #fff}
+  .savings-card .yen .u{font-size:20px;color:var(--ink);margin-left:4px;-webkit-text-stroke:0;font-family:"Noto Sans JP";font-weight:900}
+  .savings-card .ms{font-size:13px;color:var(--ink);font-weight:700;margin-top:6px}
+  .savings-card .ms b{color:var(--r);font-size:1.15em}
+
+  .compare-bar{background:#fff;border:1px solid #EEE;border-radius:12px;padding:14px;margin-bottom:14px}
+  .compare-bar .ttl{font-size:12px;color:var(--sub);font-weight:700;margin-bottom:8px}
+  .bar-row{display:grid;grid-template-columns:96px 1fr 78px;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+  .bar-row .lbl{font-weight:700;color:var(--ink-2)}
+  .bar-row .bar{background:#F5F5F5;border-radius:999px;height:18px;position:relative;overflow:hidden}
+  .bar-row .bar i{display:block;height:100%;border-radius:999px}
+  .bar-row.now .bar i{background:linear-gradient(90deg,#FFE0B2,#FB8C00)}
+  .bar-row.next .bar i{background:linear-gradient(90deg,#A5D6A7,#06C755)}
+  .bar-row .val{text-align:right;font-weight:900;color:var(--bl2);font-family:"RocknRoll One"}
+
+  .dx-detail{background:#F8FCFE;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:var(--ink-2);margin-bottom:14px}
+  .dx-detail b{color:var(--bl2);font-weight:900}
+  .lead-form{background:#E8F5E9;border:2px solid var(--line-g);border-radius:14px;padding:16px;margin-bottom:14px}
+  .lead-form h3{margin:0 0 4px;color:var(--bl2);font-size:14px;font-weight:900}
+  .lead-form p{margin:0 0 10px;font-size:12px;color:var(--ink-2);line-height:1.6}
+  .lead-form .privacy-mini{font-size:10px;color:var(--sub);margin-top:6px;text-align:center}
+  .lead-form .privacy-mini a{color:var(--bl2);text-decoration:underline}
+  .dx-restart{margin-top:8px;font-size:12px;color:var(--sub);background:transparent;border:0;cursor:pointer;font-family:inherit;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site-header">
+  <a href="../index.html" class="brand" style="text-decoration:none">
+    <span class="mark">S</span>
+    <span>シスコムサステナシールド<small>省エネ・創エネ ワンストップ</small></span>
+  </a>
+  <div class="actions">
+    <span class="area-tag">千葉県対応</span>
+    <button class="menu-btn" id="menuBtn" aria-label="メニュー" type="button"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="side-menu" id="sideMenu">
+  <div class="panel">
+    <div class="panel-head"><h3>メニュー</h3><button id="sideMenuClose" type="button">×</button></div>
+    <nav>
+      <a href="../index.html"><span class="ic">🏠</span>トップ<span class="arr">›</span></a>
+      <a href="./" class="current"><span class="ic">📊</span>卒FIT自家消費診断<span class="arr">›</span></a>
+      <a href="../lp/"><span class="ic">🛡️</span>省エネ・創エネLP<span class="arr">›</span></a>
+      <a href="../terasaki_lp.html"><span class="ic">👤</span>代表プロフィール<span class="arr">›</span></a>
+    </nav>
+    <div class="panel-foot">
+      <a class="btn-line" href="https://line.me/R/ti/p/@829oslez" target="_blank" rel="noopener"><span class="icn">L</span><span><span class="lbl-mini">＼ 30秒で完了 ／</span>LINEで無料診断</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="diag-hero">
+  <span class="badge-pop">⚡ 卒FIT世帯むけ・30秒・無料</span>
+  <h1>余った太陽光、<br><span class="num">いくら</span>お得に変わる？</h1>
+  <p>7問でわかる「売る→使う」おひさまエコキュート診断</p>
+  <div class="promises">
+    <span>✓ 個人情報不要</span>
+    <span>✓ しつこい営業なし</span>
+    <span>✓ 完全無料</span>
+  </div>
+</div>
+
+<div class="dx-card-full" id="dxCard">
+  <div class="dx-progress">
+    <span class="label" id="dxStepLabel">Q1 / 7</span>
+    <div class="dx-bar"><i id="dxBar"></i></div>
+  </div>
+
+  <!-- Q1 太陽光 -->
+  <div class="dx-step active" data-step="1">
+    <span class="qnum">Q1</span>
+    <h2>太陽光発電はありますか？</h2>
+    <p class="h">余った電気を「お湯」に変えられるかの大前提です</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="solar" data-val="yes">設置している</button>
+      <button class="dx-opt" data-key="solar" data-val="plan">これから検討したい</button>
+      <button class="dx-opt" data-key="solar" data-val="none">設置していない</button>
+    </div>
+  </div>
+
+  <!-- Q2 FIT状況 -->
+  <div class="dx-step" data-step="2">
+    <span class="qnum">Q2</span>
+    <h2>売電（FIT）の状況は？</h2>
+    <p class="h">FIT終了後＝卒FIT は、いちばん効果が出やすいタイミングです</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="fit" data-val="done">卒FIT済み（10年終了）</button>
+      <button class="dx-opt" data-key="fit" data-val="soon">もうすぐ卒FIT</button>
+      <button class="dx-opt" data-key="fit" data-val="now">まだFIT期間中</button>
+      <button class="dx-opt" data-key="fit" data-val="unknown">わからない</button>
+    </div>
+  </div>
+
+  <!-- Q3 容量 -->
+  <div class="dx-step" data-step="3">
+    <span class="qnum">Q3</span>
+    <h2>太陽光の容量は？（だいたいで可）</h2>
+    <p class="h">余剰のボリュームで自家消費できる量が変わります</p>
+    <div class="dx-options">
+      <button class="dx-opt" data-key="cap" data-val="3">〜3kW</button>
+      <button class="dx-opt" data-key="cap" data-val="4.5">4〜5kW</button>
+      <button class="dx-opt" data-key="cap" data-val="6">5〜6kW</button>
+      <button class="dx-opt" data-key="cap" data-val="8">7kW〜</button>
+    </div>
+    <button class="dx-skip" data-key="cap" data-val="unknown">→ よく分からないので「だいたい」で答える</button>
+  </div>
+
+  <!-- Q4 家族 -->
+  <div class="dx-step" data-step="4">
+    <span class="qnum">Q4</span>
+    <h2>ご家族は何人ですか？</h2>
+    <p class="h">お湯の使用量（給湯の電力量）の目安を推計します</p>
+    <div class="dx-options">
+      <button class="dx-opt" data-key="size" data-val="1"><span class="ico">👤</span>1人</button>
+      <button class="dx-opt" data-key="size" data-val="2"><span class="ico">👫</span>2人</button>
+      <button class="dx-opt" data-key="size" data-val="3"><span class="ico">👨‍👩‍👧</span>3〜4人</button>
+      <button class="dx-opt" data-key="size" data-val="5"><span class="ico">👨‍👩‍👧‍👦</span>5人以上</button>
+    </div>
+  </div>
+
+  <!-- Q5 給湯設備 -->
+  <div class="dx-step" data-step="5">
+    <span class="qnum">Q5</span>
+    <h2>今の給湯設備は？</h2>
+    <p class="h">古い設備・ガス/灯油ほど、切替メリットが大きくなります</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="heater" data-val="econew">エコキュート（10年未満）</button>
+      <button class="dx-opt" data-key="heater" data-val="ecoold">エコキュート（10年以上）</button>
+      <button class="dx-opt" data-key="heater" data-val="gas">ガス・灯油の給湯</button>
+      <button class="dx-opt" data-key="heater" data-val="unknown">わからない</button>
+    </div>
+  </div>
+
+  <!-- Q6 エリア -->
+  <div class="dx-step" data-step="6">
+    <span class="qnum">Q6</span>
+    <h2>お住まいエリアは千葉県のどちら？</h2>
+    <p class="h">日射量・地域条件を加味します</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="area" data-val="nw">北西部<small>船橋・市川・松戸・柏・浦安・習志野・八千代 ほか</small></button>
+      <button class="dx-opt" data-key="area" data-val="ce">中央部<small>千葉市・市原・四街道・佐倉・八街・東金 ほか</small></button>
+      <button class="dx-opt" data-key="area" data-val="bs">房総・東部<small>木更津・茂原・成田・館山・銚子 ほか</small></button>
+    </div>
+  </div>
+
+  <!-- Q7 検討度 -->
+  <div class="dx-step" data-step="7">
+    <span class="qnum">Q7</span>
+    <h2>ご検討度は？</h2>
+    <p class="h">最適なご案内方法を判断するために伺います</p>
+    <div class="dx-options cols-1">
+      <button class="dx-opt" data-key="intent" data-val="now">いますぐ相談したい</button>
+      <button class="dx-opt" data-key="intent" data-val="soon">数ヶ月以内に検討したい</button>
+      <button class="dx-opt" data-key="intent" data-val="later">情報収集中</button>
+      <button class="dx-opt" data-key="intent" data-val="just">概算だけ知りたい</button>
+    </div>
+  </div>
+
+  <div class="dx-actions">
+    <button class="dx-back" id="dxBack" type="button">← 戻る</button>
+    <span style="font-size:11px;color:var(--sub)">タップで自動的に次へ</span>
+  </div>
+
+  <!-- ===== RESULT ===== -->
+  <div class="dx-result" id="dxResult">
+    <p class="pre">━━ 診断結果 ━━</p>
+    <h2 id="dxResultTitle">あなたの場合の概算メリット<small>「売る」より「使う」に変えたら</small></h2>
+
+    <div class="savings-card">
+      <div class="lbl" id="dxSaveLabel">想定 年間メリット（概算）</div>
+      <div class="yen"><span id="dxYearly">0</span><span class="u">円</span></div>
+      <div class="ms">15年でおよそ <b id="dxTotal">0</b> 円</div>
+    </div>
+
+    <div class="compare-bar">
+      <div class="ttl">余った電気の“価値”（年間・試算）</div>
+      <div class="bar-row now">
+        <span class="lbl">売電のまま</span>
+        <div class="bar"><i id="barNow"></i></div>
+        <span class="val"><span id="dxNow">0</span>円</span>
+      </div>
+      <div class="bar-row next">
+        <span class="lbl">お湯に自家消費</span>
+        <div class="bar"><i id="barNext"></i></div>
+        <span class="val"><span id="dxNext">0</span>円</span>
+      </div>
+    </div>
+
+    <div class="dx-detail">
+      <b>📊 試算根拠</b><br>
+      <span id="dxDetail"></span>
+    </div>
+
+    <div class="lead-form">
+      <h3>📨 正式な「実数」診断を公式LINEで！</h3>
+      <p>発電量・検針票をもとに、<strong>あなたの家だけの正確なメリット</strong>と最適プラン・補助金まで、省エネアドバイザーがご提案します。</p>
+      <a class="btn-line" href="https://line.me/R/ti/p/@829oslez" target="_blank" rel="noopener" style="margin-bottom:6px"><span class="icn">L</span><span><span class="lbl-mini">＼ 無料・しつこい営業なし ／</span>LINEで正式診断を受け取る</span></a>
+      <div class="privacy-mini">登録は無料／<a href="../tokushoho.html">特定商取引法</a>・<a href="../privacy.html">プライバシーポリシー</a></div>
+    </div>
+
+    <div style="text-align:center">
+      <button class="dx-restart" id="dxRestart" type="button">↻ もう一度診断する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 補足 -->
+<section style="background:var(--bg);padding:30px 20px;margin-top:8px">
+  <div class="eyebrow">ABOUT THIS</div>
+  <h2 class="h2">この診断について</h2>
+  <p class="lead-c">7問・30秒で、卒FIT後に余剰電力を「自家消費」へ変えた場合の<strong>概算メリット</strong>を試算します。</p>
+
+  <div class="card card-y" style="margin-bottom:14px">
+    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">📌 試算の前提と精度</h3>
+    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
+      「夜間に買っていた給湯用の電気を、売電に回していた太陽光の余剰でまかなう」前提の概算です。<b>メリット ＝ 給湯の年間電力量 × 自家消費率 ×（夜間買電単価 − 売電単価）</b>。
+      給湯の消費電力はメーカー・環境省の一般的な目安、買電単価は経済産業省/ご契約先、売電単価は卒FIT後のご契約先を基準にした<strong>仮の値【要確認】</strong>です。実際の金額は発電量・お湯の使い方・契約プランで変わるため、<strong>正式な額はLINEの無料・実測診断で確定</strong>します。
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">🔒 個人情報の取り扱い</h3>
+    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
+      診断のみなら<strong>個人情報は不要</strong>です。お名前・ご連絡先をお預かりするのは、お見積り・診断のご依頼以降のみ。<a href="../privacy.html">プライバシーポリシー</a>に基づき安全に管理します。
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom:0">
+    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">📞 執拗な営業はしません</h3>
+    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
+      電気工事27年の省エネアドバイザーが、データに基づきご提案します。診断結果のご相談は、お客様のペースで公式LINEからどうぞ。
+    </p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="grid">
+    <div>
+      <h4>シスコムサステナシールド</h4>
+      <ul>
+        <li>代表／省エネアドバイザー 寺嵜忠弘</li>
+        <li>元 株式会社シスコムネット 専務取締役</li>
+        <li>千葉県対応／電気工事27年</li>
+        <li>TEL 043-261-8033</li>
+      </ul>
+    </div>
+    <div>
+      <h4>メニュー</h4>
+      <ul style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
+        <li><a href="../index.html">トップ</a></li>
+        <li><a href="./">卒FIT診断</a></li>
+        <li><a href="../lp/">省エネ創エネLP</a></li>
+        <li><a href="../terasaki_lp.html">代表プロフィール</a></li>
+        <li><a href="../privacy.html">プライバシー</a></li>
+        <li><a href="../tokushoho.html">特商法</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copy">© SYSCOM SUSTAINA SHIELD</div>
+</footer>
+
+</div>
+
+<a class="float-line" href="https://line.me/R/ti/p/@829oslez" target="_blank" rel="noopener">
+  <span class="icn">L</span>
+  <span class="lbl"><small>＼ 30秒で概算メリットがわかる ／</small><b>LINEで無料診断する</b></span>
+  <span class="arr">▶</span>
+</a>
+
+<script src="../common.js"></script>
+<script>
+(function(){
+  var state = { solar:null, fit:null, cap:null, size:null, heater:null, area:null, intent:null };
+  var totalSteps = 7, currentStep = 1;
+  var bar = document.getElementById('dxBar');
+  var label = document.getElementById('dxStepLabel');
+  var backBtn = document.getElementById('dxBack');
+  var resultEl = document.getElementById('dxResult');
+  var restartBtn = document.getElementById('dxRestart');
+  var card = document.getElementById('dxCard');
+
+  // ===== 前提値（すべて目安・要確認。LINE正式診断で実数化）=====
+  var TN = 29.0;   // 夜間買電単価 円/kWh【要確認：契約プラン/経産省】
+  var TS = 8.5;    // 卒FIT売電単価 円/kWh【要確認：契約先】
+  var TS_FIT = 17.0; // FIT期間中の想定売電単価（高いのでメリット小）
+  var E_BY_SIZE = {'1':900,'2':1200,'3':1600,'5':2000}; // 給湯の年間消費電力 kWh【要確認：機種/環境省】
+  var R_BY_CAP  = {'3':0.6,'4.5':0.8,'6':0.9,'8':0.95,'unknown':0.75}; // 昼の余剰で給湯をまかなえる率
+
+  function showStep(n){
+    document.querySelectorAll('.dx-step').forEach(function(el){
+      el.classList.toggle('active', parseInt(el.dataset.step,10) === n);
+    });
+    label.textContent = 'Q' + n + ' / ' + totalSteps;
+    bar.style.width = (n / totalSteps * 100) + '%';
+    backBtn.style.visibility = (n === 1) ? 'hidden' : 'visible';
+    resultEl.classList.remove('show');
+    document.querySelector('.dx-actions').style.display = '';
+  }
+  function selectOption(btn){
+    state[btn.dataset.key] = btn.dataset.val;
+    btn.parentElement.querySelectorAll('.dx-opt').forEach(function(b){b.classList.remove('selected')});
+    btn.classList.add('selected');
+    setTimeout(function(){
+      if(currentStep < totalSteps){ currentStep += 1; showStep(currentStep); }
+      else { renderResult(); }
+    }, 300);
+  }
+  document.querySelectorAll('.dx-opt,.dx-skip').forEach(function(b){
+    b.addEventListener('click', function(){ selectOption(b); });
+  });
+  backBtn.addEventListener('click', function(){
+    if(resultEl.classList.contains('show')){ resultEl.classList.remove('show'); showStep(currentStep); return; }
+    if(currentStep > 1){ currentStep -= 1; showStep(currentStep); }
+  });
+  restartBtn.addEventListener('click', function(){
+    state = { solar:null, fit:null, cap:null, size:null, heater:null, area:null, intent:null };
+    document.querySelectorAll('.dx-opt').forEach(function(b){b.classList.remove('selected')});
+    currentStep = 1; showStep(1);
+    card.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
+  function fmt(n){ return Math.round(n).toLocaleString('ja-JP'); }
+  function sl(s){return ({'1':'1人','2':'2人','3':'3〜4人','5':'5人以上'}[s])||'';}
+  function al(a){return ({nw:'北西部',ce:'中央部',bs:'房総・東部'}[a])||'千葉県';}
+
+  function animN(el,t){
+    var dur=1400,start=performance.now();
+    function tick(now){
+      var p=Math.max(0,Math.min(1,(now-start)/dur));
+      var e=1-Math.pow(1-p,3);
+      el.textContent = fmt(t*e);
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function renderResult(){
+    var E = E_BY_SIZE[state.size] || 1600;
+    var noSolar = (state.solar === 'none');
+    var cap = state.cap || (noSolar ? '4.5' : 'unknown'); // 太陽光なしは5kW導入想定で試算
+    var r = R_BY_CAP[cap] || 0.75;
+
+    var ts = TS;
+    if(state.fit === 'now') ts = TS_FIT;           // FIT期間中は売電単価が高い→メリット小
+    var diff = Math.max(0.5, TN - ts);
+
+    var sellValue = E * r * ts;          // 売電のまま（その余剰を売った価値）
+    var selfValue = E * r * TN;          // お湯に自家消費（買電を減らせた価値）
+    var merit = Math.round((selfValue - sellValue) / 100) * 100;
+    if(merit < 0) merit = 0;
+
+    // 古い設備・ガス/灯油は買い替え価値が上乗せされやすい（メッセージで補足、概算には係数僅少）
+    var heaterBonus = (state.heater==='ecoold' || state.heater==='gas') ? 1.1 : 1.0;
+    merit = Math.round(merit * heaterBonus / 100) * 100;
+
+    animN(document.getElementById('dxYearly'), Math.max(merit,0));
+    document.getElementById('dxTotal').textContent = fmt(Math.max(merit,0) * 15);
+    document.getElementById('dxNow').textContent = fmt(sellValue);
+    document.getElementById('dxNext').textContent = fmt(selfValue);
+    var maxBar = Math.max(sellValue, selfValue, 1);
+    document.getElementById('barNow').style.width  = (sellValue/maxBar*100) + '%';
+    document.getElementById('barNext').style.width = (selfValue/maxBar*100) + '%';
+
+    // タイトル
+    var t = al(state.area) + ' / ' + sl(state.size) + 'ご家族';
+    document.querySelector('#dxResultTitle').firstChild.textContent =
+      noSolar ? '太陽光＋おひさまエコキュート導入時の概算' : (t + 'の概算メリット');
+    document.getElementById('dxSaveLabel').textContent =
+      noSolar ? '想定 年間メリット（太陽光5kW導入時の概算）' : '想定 年間メリット（概算）';
+
+    // 詳細
+    var d = '';
+    d += '<b>昼の余剰でまかなう給湯：</b>約 ' + fmt(E*r) + ' kWh/年（自家消費率 ' + Math.round(r*100) + '%）。<br>';
+    d += '<b>単価差：</b>夜間買電 約¥' + TN + ' − 売電 約¥' + ts + ' ＝ <b>¥' + diff.toFixed(1) + '/kWh</b>【要確認：契約先・経産省】。<br>';
+    d += '<b>→ 年間メリット 概算 ¥' + fmt(merit) + '</b>（売る→使うの差額）。<br>';
+    if(noSolar){
+      d += '💡 太陽光が未設置のため、<strong>太陽光＋おひさまエコキュートのセット導入</strong>を前提にした試算です。創エネから一体でご提案します。';
+    } else if(state.fit === 'now'){
+      d += '💡 いまはFIT期間中で売電単価が高いため、<strong>卒FIT後にメリットが大きく伸びます</strong>。';
+    } else if(state.heater==='ecoold' || state.heater==='gas'){
+      d += '💡 給湯設備の更新時期。<strong>おひさまエコキュートへの切替で省エネ＋自家消費</strong>を同時に実現できます。';
+    } else {
+      d += '💡 卒FIT済み／間近なら、いまが切替の好機です。補助金の活用可否も一緒に確認します【要確認：年度制度】。';
+    }
+    document.getElementById('dxDetail').innerHTML = d;
+
+    document.querySelectorAll('.dx-step').forEach(function(el){el.classList.remove('active')});
+    document.querySelector('.dx-actions').style.display='none';
+    bar.style.width='100%';
+    label.textContent='診断結果';
+    resultEl.classList.add('show');
+    setTimeout(function(){ card.scrollIntoView({behavior:'smooth',block:'start'}); }, 50);
+  }
+})();
+</script>
+</body>
+</html>
