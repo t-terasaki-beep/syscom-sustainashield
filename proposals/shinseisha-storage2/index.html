@@ -107,7 +107,7 @@ footer{ text-align:center; color:var(--mid-grey); font-size:11px; padding:12px 0
       <button class="btn icon" onclick="prevSlide()" id="prevBtn" aria-label="前へ">‹</button>
       <button class="btn icon" onclick="nextSlide()" id="nextBtn" aria-label="次へ">›</button>
       <div class="spacer"></div>
-      <span class="page-info" id="pageInfo">1 / 7</span>
+      <span class="page-info" id="pageInfo">1 / 8</span>
       <div class="spacer"></div>
       <button class="btn secondary icon" onclick="restart()" aria-label="最初から">⟲</button>
     </div>
@@ -140,12 +140,12 @@ footer{ text-align:center; color:var(--mid-grey); font-size:11px; padding:12px 0
 
 <script>
 const SLIDES = [
-  "./slides/slide-01.jpg","./slides/slide-02.jpg","./slides/slide-03.jpg",
-  "./slides/slide-04.jpg","./slides/slide-05.jpg","./slides/slide-06.jpg","./slides/slide-07.jpg"
+  "./slides/slide-01.jpg","./slides/slide-02.jpg","./slides/slide-03.jpg","./slides/slide-04.jpg",
+  "./slides/slide-05.jpg","./slides/slide-06.jpg","./slides/slide-07.jpg","./slides/slide-08.jpg"
 ];
 const AUDIOS = [
-  "./mp3/narr-01.mp3","./mp3/narr-02.mp3","./mp3/narr-03.mp3",
-  "./mp3/narr-04.mp3","./mp3/narr-05.mp3","./mp3/narr-06.mp3","./mp3/narr-07.mp3"
+  "./mp3/narr-01.mp3","./mp3/narr-02.mp3","./mp3/narr-03.mp3","./mp3/narr-04.mp3",
+  "./mp3/narr-05.mp3","./mp3/narr-06.mp3","./mp3/narr-07.mp3","./mp3/narr-08.mp3"
 ];
 const NARRATIONS = [
 "新生社の皆様、こんにちは。シスコムサステナシールド代表、省エネアドバイザーの寺嵜です。本日は、先日お出しした提案①の続き、提案②をご覧いただきありがとうございます。ひとことで言えば、補助金を最大限に活用して、御社の実質負担を一段下げる版です。",
@@ -154,7 +154,8 @@ const NARRATIONS = [
 "提案②の肝、補助金スキームです。補助対象の主軸は蓄電池システム1,100万円。そこにパワコン交換と監視のうち再エネ自家消費に資する約200万円を取り込み、補助対象経費は1,300万円。省エネ診断ありで補助率2分の1、その半額の650万円を上限枠内で獲得します。",
 "お金の全体像です。総事業費およそ1,400万円、補助金650万円、実質負担はおよそ750万円。パワコン交換を取り込まない場合は補助金550万円・実質負担850万円。取り込むことで100万円圧縮、つまりパワコン交換の自己負担を実質半分にできます。",
 "確定の前に確認しておきたい点です。補助対象範囲、Powerwall 4のスペックと価格、エコメガネの費用、そしてスケジュール。特に補助対象の範囲は、県要綱と事務局への事前協議で適格性を確定させたうえで見積に反映します。",
-"進め方は5ステップ。補助対象の事前協議、CO2スマート宣言登録と省エネ診断申込、確定見積、令和8年度補助金の募集開始即日申請、交付決定後の工事・運用開始。まずは事前協議とCO2スマート登録・省エネ診断申込から。補助金およそ650万円獲得の起点です。本日はありがとうございました。"
+"進め方は5ステップ。補助対象の事前協議、CO2スマート宣言登録と省エネ診断申込、確定見積、令和8年度補助金の募集開始即日申請、交付決定後の工事・運用開始。まずは事前協議とCO2スマート登録・省エネ診断申込から。補助金およそ650万円獲得の起点です。",
+"最後にひとつ。夏の暑さ・冬の寒さは、屋根・外壁の遮熱断熱工事で根本から解決できます。こちらは建物の状態で最適解が変わるため、別途、現場調査とお打合せを。そして蓄電池も遮熱工事も、千葉県の脱炭素化促進事業を活用したほうが費用を抑えられ、投資効果は抜群です。電気代上昇・卒FIT・停電・設備更新といった先々の経営リスクを、まとめて削れます。新生社様の安心と強い経営の一歩に、ぜひ前向きにご検討ください。本日はありがとうございました。"
 ];
 const FALLBACK_DURATIONS = NARRATIONS.map(t => Math.max(8, Math.round(t.length / 6)));
 
