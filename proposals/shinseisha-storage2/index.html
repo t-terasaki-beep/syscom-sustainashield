@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="新生社様 ボーン・アゲイン1号店 太陽光蓄電池 提案② 補助金最大活用・実質負担ミニマム版 | シスコムサステナシールド 寺嵜忠弘">
+<meta property="og:title" content="新生社様 太陽光蓄電池 提案② 補助金最大活用版">
+<meta property="og:description" content="テスラPowerwall4×4台＋パワコン交換を一体設計。千葉県補助金 約650万円獲得・実質負担 約750万円。パワコン交換の自己負担を実質半減。">
+<meta property="og:type" content="article">
+<title>新生社様 太陽光蓄電池 提案② | シスコムサステナシールド</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root{
+  --navy:#1B2A4A; --navy-dark:#111d36; --gold:#E0A82E; --gold-soft:#F2C75C; --teal:#16A085;
+  --accent-blue:#4A90D9; --red:#C0392B; --green:#2E9E6B;
+  --off-white:#F4F6F9; --light-grey:#E8ECF1; --mid-grey:#94A0B0;
+  --dark-grey:#2C3E50; --text:#1A2332; --border:#D8DDE5;
+}
+html,body{
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","BIZ UDPGothic","Yu Gothic UI","Meiryo",sans-serif;
+  background:linear-gradient(180deg,var(--navy-dark) 0%,var(--navy) 100%);
+  color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%;
+}
+.app{ max-width:980px; margin:0 auto; padding:16px; display:flex; flex-direction:column; min-height:100vh; }
+header{ text-align:center; color:white; padding:12px 8px 16px; }
+header .brand{ font-size:11px; letter-spacing:3px; color:var(--gold); margin-bottom:6px; }
+header h1{ font-size:18px; font-weight:700; margin-bottom:4px; }
+header .sub{ font-size:12px; color:var(--light-grey); }
+.cta-banner{ background:var(--gold); color:var(--navy); padding:14px 16px; border-radius:10px; margin-bottom:16px; font-weight:700; font-size:13px; text-align:center; line-height:1.55; box-shadow:0 4px 12px rgba(224,168,46,0.3); }
+.cta-banner .big{ font-size:18px; display:block; margin-bottom:4px; }
+.toolbar{ display:flex; gap:8px; margin-bottom:12px; }
+.toolbar .btn{ flex:1; font-size:13px; padding:11px; }
+.audio-notice{ background:rgba(74,144,217,0.15); border:1px solid rgba(74,144,217,0.4); color:#bcd6f3; padding:8px 12px; border-radius:6px; font-size:12px; margin-bottom:12px; text-align:center; display:none; }
+.audio-notice.show{ display:block; }
+.deck{ background:white; border-radius:12px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.25); margin-bottom:16px; }
+.slide-wrap{ position:relative; background:var(--off-white); aspect-ratio:16/9; overflow:hidden; }
+.slide-img{ width:100%; height:100%; object-fit:contain; display:block; user-select:none; -webkit-user-drag:none; }
+.progress-bar{ position:absolute; bottom:0; left:0; right:0; height:4px; background:rgba(0,0,0,0.1); z-index:5; }
+.progress-fill{ height:100%; background:var(--gold); width:0%; transition:width .3s linear; }
+.narration{ background:var(--navy); color:white; padding:18px 20px; }
+.narration .label{ font-size:10px; letter-spacing:2px; color:var(--gold); margin-bottom:8px; font-weight:600; }
+.narration .text{ font-size:14px; line-height:1.9; color:white; white-space:pre-wrap; word-break:break-word; }
+.controls{ background:var(--navy-dark); padding:14px 16px; display:flex; align-items:center; gap:8px; border-top:1px solid rgba(255,255,255,0.1); }
+.btn{ background:var(--gold); color:var(--navy); border:none; padding:10px 14px; font-size:14px; font-weight:700; border-radius:6px; cursor:pointer; transition:all .15s; font-family:inherit; flex-shrink:0; min-height:42px; -webkit-tap-highlight-color:transparent; }
+.btn:hover{ background:var(--gold-soft); }
+.btn:active{ transform:translateY(1px); }
+.btn.secondary{ background:rgba(255,255,255,0.1); color:white; }
+.btn.secondary:hover{ background:rgba(255,255,255,0.2); }
+.btn.icon{ width:42px; padding:10px; font-size:18px; }
+.btn.audio-toggle{ background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(224,168,46,0.4); }
+.btn.audio-toggle.active{ background:var(--gold); color:var(--navy); border-color:var(--gold); }
+.spacer{ flex:1; }
+.page-info{ color:var(--gold); font-size:13px; font-weight:600; white-space:nowrap; padding:0 6px; }
+.thumbs{ background:white; border-radius:12px; padding:12px; margin-bottom:16px; display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:6px; max-height:240px; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+.thumb{ cursor:pointer; border:2px solid transparent; border-radius:4px; overflow:hidden; transition:all .15s; position:relative; background:var(--off-white); aspect-ratio:16/9; }
+.thumb img{ width:100%; height:100%; object-fit:contain; display:block; }
+.thumb .num{ position:absolute; top:2px; left:2px; background:rgba(27,42,74,0.85); color:var(--gold); font-size:10px; font-weight:700; padding:1px 5px; border-radius:3px; }
+.thumb.active{ border-color:var(--gold); box-shadow:0 0 0 2px rgba(224,168,46,0.3); }
+.dl-bar{ background:var(--teal); color:white; padding:13px 14px; border-radius:8px; margin-bottom:12px; display:flex; align-items:center; gap:10px; text-decoration:none; font-size:13px; font-weight:600; transition:all .15s; }
+.dl-bar:hover{ background:#138a72; }
+.dl-bar .icon{ font-size:18px; }
+.contact{ background:rgba(255,255,255,0.05); border:1px solid rgba(224,168,46,0.3); border-radius:10px; padding:18px 16px; color:white; margin-bottom:12px; }
+.contact h3{ color:var(--gold); font-size:11px; letter-spacing:3px; margin-bottom:10px; font-weight:600; }
+.contact .name{ font-size:16px; font-weight:700; margin-bottom:4px; }
+.contact .role{ font-size:12px; color:var(--light-grey); margin-bottom:6px; }
+.contact .license{ font-size:11px; color:var(--gold); margin-bottom:14px; font-weight:600; }
+.links{ display:grid; grid-template-columns:1fr; gap:8px; }
+.link{ background:rgba(255,255,255,0.08); padding:10px 12px; border-radius:6px; display:flex; align-items:center; gap:10px; color:white; text-decoration:none; font-size:12px; transition:all .15s; border:1px solid rgba(255,255,255,0.1); }
+.link:hover{ background:rgba(224,168,46,0.2); border-color:var(--gold); }
+.link .l-label{ color:var(--gold); font-weight:600; min-width:90px; flex-shrink:0; }
+.link .l-url{ color:white; opacity:0.85; font-size:11px; word-break:break-all; }
+footer{ text-align:center; color:var(--mid-grey); font-size:11px; padding:12px 0 24px; line-height:1.6; }
+@media (max-width:600px){ header h1{ font-size:16px; } .narration .text{ font-size:13px; } .btn{ padding:9px 11px; font-size:13px; } .btn.icon{ width:40px; padding:9px; } .thumbs{ grid-template-columns:repeat(auto-fill,minmax(70px,1fr)); max-height:180px; } }
+@media (max-width:380px){ .controls{ flex-wrap:wrap; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">CHIBA PREFECTURE SUBSIDY × ENERGY STORAGE</div>
+    <h1>新生社様 太陽光蓄電池 提案② <span style="color:var(--gold)">補助金最大活用・実質負担ミニマム版</span></h1>
+    <div class="sub">ボーン・アゲイン1号店 / 千葉県八街市八街に49-76</div>
+  </header>
+
+  <div class="cta-banner">
+    <span class="big">千葉県補助金 約650万円 獲得 ／ 実質負担 約750万円</span>
+    テスラ Powerwall 4×4台 ＋ パワコン交換を一体設計 ─ パワコン交換の自己負担を実質半減
+  </div>
+
+  <div class="toolbar">
+    <button class="btn" onclick="togglePlay()" id="playBtn">▶ 自動再生</button>
+    <button class="btn audio-toggle active" onclick="toggleAudio()" id="audioBtn">🔊 音声 ON</button>
+    <button class="btn secondary" onclick="toggleThumbs()" id="thumbBtn">⊞ 一覧</button>
+  </div>
+  <div class="audio-notice" id="audioNotice"></div>
+
+  <div class="deck">
+    <div class="slide-wrap">
+      <img id="slideImg" class="slide-img" alt="スライド" src="./slides/slide-01.jpg">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="narration">
+      <div class="label" id="narrLabel">NARRATION / 01</div>
+      <div class="text" id="narrText"></div>
+    </div>
+    <div class="controls">
+      <button class="btn icon" onclick="prevSlide()" id="prevBtn" aria-label="前へ">‹</button>
+      <button class="btn icon" onclick="nextSlide()" id="nextBtn" aria-label="次へ">›</button>
+      <div class="spacer"></div>
+      <span class="page-info" id="pageInfo">1 / 7</span>
+      <div class="spacer"></div>
+      <button class="btn secondary icon" onclick="restart()" aria-label="最初から">⟲</button>
+    </div>
+  </div>
+
+  <div class="thumbs" id="thumbs" style="display:none;"></div>
+
+  <a class="dl-bar" href="./新生社様_太陽光蓄電池_提案②.pdf" download target="_blank" rel="noopener">
+    <span class="icon">📄</span>
+    <span>提案書PDFをダウンロード（保存して印刷もできます）</span>
+  </a>
+
+  <div class="contact">
+    <h3>CONTACT</h3>
+    <div class="name">寺嵜 忠弘</div>
+    <div class="role">シスコムサステナシールド 代表 / 省エネアドバイザー（元 株式会社シスコムネット 専務取締役）</div>
+    <div class="license">建設業許可：千葉県知事 (般-2) 第46651号</div>
+    <div class="links">
+      <a class="link" href="https://page.line.me/829oslez" target="_blank" rel="noopener"><span class="l-label">LINE公式</span><span class="l-url">page.line.me/829oslez</span></a>
+      <a class="link" href="https://syscom-sustaina-shield.com/" target="_blank" rel="noopener"><span class="l-label">公式サイト</span><span class="l-url">syscom-sustaina-shield.com</span></a>
+      <a class="link" href="https://syscomnet.co.jp/" target="_blank" rel="noopener"><span class="l-label">シスコムネット</span><span class="l-url">syscomnet.co.jp</span></a>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 シスコムサステナシールド<br>
+    本資料は新生社様向けに作成された個別提案書（提案②）です。金額は概算で、確定見積・補助金事前協議のうえ確定します。
+  </footer>
+</div>
+
+<script>
+const SLIDES = [
+  "./slides/slide-01.jpg","./slides/slide-02.jpg","./slides/slide-03.jpg",
+  "./slides/slide-04.jpg","./slides/slide-05.jpg","./slides/slide-06.jpg","./slides/slide-07.jpg"
+];
+const AUDIOS = [
+  "./mp3/narr-01.mp3","./mp3/narr-02.mp3","./mp3/narr-03.mp3",
+  "./mp3/narr-04.mp3","./mp3/narr-05.mp3","./mp3/narr-06.mp3","./mp3/narr-07.mp3"
+];
+const NARRATIONS = [
+"新生社の皆様、こんにちは。シスコムサステナシールド代表、省エネアドバイザーの寺嵜です。本日は、先日お出しした提案①の続き、提案②をご覧いただきありがとうございます。ひとことで言えば、補助金を最大限に活用して、御社の実質負担を一段下げる版です。",
+"なぜ続きをお出しするのか。提案①では蓄電池の経済性とBCPの価値を数字でお示ししました。提案②は、そこに「必ず発生するパワコン交換」を組み込みます。既設のオムロンパワコン9台は更新時期。約270万円とエコメガネは単体では補助対象になりにくく持ち出しになりがち。これを蓄電池システムと一体で設計し、約200万円を補助対象に取り込みます。",
+"ミニマム構成と費用の内訳です。蓄電池はテスラ Powerwall 4 を4台。パワーウォール本体800万円＋設置・電気工事300万円で、蓄電池システムは1,100万円。オムロンパワコン9台交換270万円、エコメガネ約30万円。総事業費はおよそ1,400万円。余計なものを足さない最小構成です。",
+"提案②の肝、補助金スキームです。補助対象の主軸は蓄電池システム1,100万円。そこにパワコン交換と監視のうち再エネ自家消費に資する約200万円を取り込み、補助対象経費は1,300万円。省エネ診断ありで補助率2分の1、その半額の650万円を上限枠内で獲得します。",
+"お金の全体像です。総事業費およそ1,400万円、補助金650万円、実質負担はおよそ750万円。パワコン交換を取り込まない場合は補助金550万円・実質負担850万円。取り込むことで100万円圧縮、つまりパワコン交換の自己負担を実質半分にできます。",
+"確定の前に確認しておきたい点です。補助対象範囲、Powerwall 4のスペックと価格、エコメガネの費用、そしてスケジュール。特に補助対象の範囲は、県要綱と事務局への事前協議で適格性を確定させたうえで見積に反映します。",
+"進め方は5ステップ。補助対象の事前協議、CO2スマート宣言登録と省エネ診断申込、確定見積、令和8年度補助金の募集開始即日申請、交付決定後の工事・運用開始。まずは事前協議とCO2スマート登録・省エネ診断申込から。補助金およそ650万円獲得の起点です。本日はありがとうございました。"
+];
+const FALLBACK_DURATIONS = NARRATIONS.map(t => Math.max(8, Math.round(t.length / 6)));
+
+const TOTAL = SLIDES.length;
+let current = 0, playing = false, audioEnabled = true;
+let audioPlayer = null, advanceTimer = null, progressTimer = null, watchdogTimer = null, sessionId = 0;
+
+const slideImg = document.getElementById('slideImg');
+const narrText = document.getElementById('narrText');
+const narrLabel = document.getElementById('narrLabel');
+const playBtn = document.getElementById('playBtn');
+const audioBtn = document.getElementById('audioBtn');
+const audioNotice = document.getElementById('audioNotice');
+const progressFill = document.getElementById('progressFill');
+const pageInfo = document.getElementById('pageInfo');
+const thumbsDiv = document.getElementById('thumbs');
+
+function toggleAudio(){
+  audioEnabled = !audioEnabled;
+  if(audioEnabled){ audioBtn.textContent='🔊 音声 ON'; audioBtn.classList.add('active'); }
+  else { audioBtn.textContent='🔇 音声 OFF'; audioBtn.classList.remove('active'); stopAudio(); }
+}
+function clearAllTimers(){
+  if(advanceTimer){clearTimeout(advanceTimer);advanceTimer=null;}
+  if(progressTimer){clearInterval(progressTimer);progressTimer=null;}
+  if(watchdogTimer){clearTimeout(watchdogTimer);watchdogTimer=null;}
+}
+function stopAudio(){
+  if(audioPlayer){ try{ audioPlayer.pause(); audioPlayer.removeAttribute('src'); audioPlayer.load(); }catch(e){} audioPlayer=null; }
+}
+function render(){
+  slideImg.src = SLIDES[current];
+  narrText.textContent = (NARRATIONS[current]||'').replace(/\\n/g,'\n');
+  narrLabel.textContent = 'NARRATION / ' + String(current+1).padStart(2,'0');
+  pageInfo.textContent = (current+1)+' / '+TOTAL;
+  progressFill.style.width='0%';
+  [...thumbsDiv.children].forEach((c,i)=>c.classList.toggle('active',i===current));
+  if(window.innerWidth<700 && window._userTriggered){
+    document.querySelector('.deck').scrollIntoView({behavior:'smooth',block:'start'});
+    window._userTriggered=false;
+  }
+}
+function startProgress(durationMs){
+  if(progressTimer)clearInterval(progressTimer);
+  const start=Date.now(); progressFill.style.width='0%';
+  progressTimer=setInterval(()=>{
+    const p=Math.min(100,(Date.now()-start)/durationMs*100);
+    progressFill.style.width=p+'%';
+    if(p>=100){clearInterval(progressTimer);progressTimer=null;}
+  },100);
+}
+function completeProgress(){ if(progressTimer){clearInterval(progressTimer);progressTimer=null;} progressFill.style.width='100%'; }
+
+function playCurrentSlideAndAdvance(){
+  clearAllTimers(); stopAudio(); sessionId++; const mySession=sessionId;
+  let advanced=false;
+  const advance=()=>{
+    if(advanced||mySession!==sessionId)return; advanced=true; completeProgress();
+    if(!playing)return;
+    setTimeout(()=>{
+      if(!playing||mySession!==sessionId)return;
+      if(current<TOTAL-1){ current++; render(); playCurrentSlideAndAdvance(); }
+      else { pause(); }
+    },450);
+  };
+  if(audioEnabled && AUDIOS[current]){
+    audioPlayer=new Audio(); audioPlayer.preload='auto';
+    let progressStarted=false;
+    const tryStartProgress=()=>{
+      if(mySession!==sessionId||progressStarted)return;
+      const d=audioPlayer.duration;
+      if(d&&isFinite(d)&&d>0){ progressStarted=true; startProgress(d*1000); }
+    };
+    audioPlayer.addEventListener('loadedmetadata',tryStartProgress);
+    audioPlayer.addEventListener('durationchange',tryStartProgress);
+    audioPlayer.addEventListener('canplay',tryStartProgress);
+    audioPlayer.addEventListener('ended',()=>{ if(mySession===sessionId) advance(); });
+    audioPlayer.addEventListener('error',()=>{
+      if(mySession!==sessionId)return;
+      const ms=FALLBACK_DURATIONS[current]*1000; startProgress(ms); advanceTimer=setTimeout(advance,ms);
+    });
+    audioPlayer.src=AUDIOS[current];
+    const p=audioPlayer.play();
+    if(p&&p.catch){ p.catch(()=>{
+      if(mySession!==sessionId)return;
+      const ms=FALLBACK_DURATIONS[current]*1000; startProgress(ms); advanceTimer=setTimeout(advance,ms);
+    }); }
+    watchdogTimer=setTimeout(()=>{ if(mySession===sessionId&&!advanced) advance(); },300000);
+  } else {
+    const ms=FALLBACK_DURATIONS[current]*1000; startProgress(ms); advanceTimer=setTimeout(advance,ms);
+  }
+}
+function play(){
+  window._userTriggered=true;
+  if(current>=TOTAL-1){ current=0; render(); }
+  playing=true; playBtn.textContent='⏸ 一時停止';
+  if(!window._audioUnlocked){
+    try{
+      const unlock=new Audio();
+      unlock.src='data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAAEAAAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uAAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCgAAAAAAAAAAEAOJB/lwAAAAAAAAAAAAAAAAAAAAA//sQxAADwAABpAAAACAAADSAAAAETEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=';
+      unlock.volume=0.01;
+      unlock.play().then(()=>{ window._audioUnlocked=true; unlock.pause(); unlock.src=''; }).catch(()=>{});
+    }catch(e){}
+  }
+  playCurrentSlideAndAdvance();
+}
+function pause(){ playing=false; playBtn.textContent='▶ 自動再生'; clearAllTimers(); stopAudio(); }
+function togglePlay(){ if(playing)pause(); else play(); }
+function nextSlide(){ window._userTriggered=true; if(current<TOTAL-1){ current++; render(); if(playing)playCurrentSlideAndAdvance(); else {clearAllTimers();stopAudio();} } }
+function prevSlide(){ window._userTriggered=true; if(current>0){ current--; render(); if(playing)playCurrentSlideAndAdvance(); else {clearAllTimers();stopAudio();} } }
+function restart(){ window._userTriggered=true; current=0; render(); if(playing)playCurrentSlideAndAdvance(); else {clearAllTimers();stopAudio();} }
+
+function buildThumbs(){
+  thumbsDiv.innerHTML='';
+  SLIDES.forEach((src,i)=>{
+    const div=document.createElement('div'); div.className='thumb'+(i===current?' active':'');
+    div.innerHTML='<img src="'+src+'" alt=""><div class="num">'+(i+1)+'</div>';
+    div.onclick=()=>{ current=i; render(); thumbsDiv.style.display='none'; if(playing)playCurrentSlideAndAdvance(); };
+    thumbsDiv.appendChild(div);
+  });
+}
+function toggleThumbs(){
+  if(thumbsDiv.style.display==='none'||!thumbsDiv.style.display){ if(thumbsDiv.children.length===0)buildThumbs(); thumbsDiv.style.display='grid'; }
+  else { thumbsDiv.style.display='none'; }
+}
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); nextSlide(); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); prevSlide(); }
+  else if(e.key==='Escape') pause();
+});
+
+render();
+audioNotice.textContent='🔊 「自動再生」を押すと、AIナレーション付きで提案が始まります。';
+audioNotice.classList.add('show');
+setTimeout(()=>audioNotice.classList.remove('show'),6000);
+</script>
+</body>
+</html>
