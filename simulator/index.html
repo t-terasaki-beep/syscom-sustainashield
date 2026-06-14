@@ -278,7 +278,8 @@
     <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">📌 試算の前提と精度</h3>
     <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
       「夜間に買っていた給湯用の電気を、売電に回していた太陽光の余剰でまかなう」前提の概算です。<b>メリット ＝ 給湯の年間電力量 × 自家消費率 ×（夜間買電単価 − 売電単価）</b>。
-      給湯の消費電力はメーカー・環境省の一般的な目安、買電単価は経済産業省/ご契約先、売電単価は卒FIT後のご契約先を基準にした<strong>仮の値【要確認】</strong>です。実際の金額は発電量・お湯の使い方・契約プランで変わるため、<strong>正式な額はLINEの無料・実測診断で確定</strong>します。
+      給湯の消費電力はメーカー・環境省の一般的な目安、買電単価は経済産業省/ご契約先、売電単価は卒FIT後のご契約先を基準にした<strong>仮の値【要確認】</strong>です。実際の金額は発電量・お湯の使い方・契約プランで変わるため、<strong>正式な額はLINEの無料・実測診断で確定</strong>します。<br>
+      <span style="display:inline-block;margin-top:8px">💰 国の高効率給湯器補助金「<a href="https://kyutou-shoene2026.meti.go.jp/" target="_blank" rel="noopener" style="color:var(--bl2);font-weight:800">給湯省エネ2026事業</a>」では、エコキュート（ヒートポンプ給湯機）は<strong>1台7万円（基本額）〜最大10万円</strong>の補助対象。申請は2025年11月28日〜予算上限まで（遅くとも2026年12月31日）。要件・予算枠は公式でご確認ください。</span>
     </p>
   </div>
 
@@ -444,7 +445,7 @@
     } else if(state.heater==='ecoold' || state.heater==='gas'){
       d += '💡 給湯設備の更新時期。<strong>おひさまエコキュートへの切替で省エネ＋自家消費</strong>を同時に実現できます。';
     } else {
-      d += '💡 卒FIT済み／間近なら、いまが切替の好機です。補助金の活用可否も一緒に確認します【要確認：年度制度】。';
+      d += '💡 卒FIT済み／間近なら、いまが切替の好機です。国の「給湯省エネ2026事業」でエコキュートは1台7万円〜最大10万円の補助対象。活用可否も一緒に確認します。';
     }
     document.getElementById('dxDetail').innerHTML = d;
 
