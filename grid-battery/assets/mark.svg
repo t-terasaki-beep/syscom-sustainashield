@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2ee6a6"/>
+      <stop offset="0.5" stop-color="#15c0d8"/>
+      <stop offset="1" stop-color="#2b6cf0"/>
+    </linearGradient>
+    <linearGradient id="bolt" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#c8ffe0"/>
+      <stop offset="0.5" stop-color="#3ef0b4"/>
+      <stop offset="1" stop-color="#13c5d6"/>
+    </linearGradient>
+    <radialGradient id="inner" cx="0.5" cy="0.36" r="0.8">
+      <stop offset="0" stop-color="#103a56"/>
+      <stop offset="1" stop-color="#06121f"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- 六角形ベース -->
+  <path d="M192 100 L146 180 L54 180 L8 100 L54 20 L146 20 Z"
+        fill="url(#inner)" stroke="url(#edge)" stroke-width="9" stroke-linejoin="round"/>
+  <!-- 内側の薄いリング -->
+  <path d="M168 100 L131 164 L69 164 L32 100 L69 36 L131 36 Z"
+        fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+  <!-- ネオン稲妻 -->
+  <path filter="url(#glow)" d="M115 30 L70 106 L98 106 L85 170 L140 88 L108 88 Z"
+        fill="url(#bolt)" stroke="#eafff5" stroke-width="2" stroke-linejoin="round"/>
+  <!-- スパーク（連携ノード） -->
+  <g fill="#7dffce">
+    <circle cx="44" cy="64" r="4.5" opacity="0.9"/>
+    <circle cx="156" cy="138" r="4.5" opacity="0.9"/>
+  </g>
+</svg>

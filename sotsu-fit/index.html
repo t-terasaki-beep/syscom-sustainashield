@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>卒FIT、そのままにしてませんか？｜シスコムサステナシールド</title>
+<meta name="description" content="太陽光のFITが10年で満了する「卒FIT」。売電単価が下がる今、そのまま売り続ける・勢いで蓄電池を即決する・放置する——よくある3つの選択ミスと、損しないための考え方を解説。LINEで無料相談できます。">
+
+<!-- OGP（公開URL確定後に差し替え：要確認） -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="卒FITで損する人がやる「3つの選択ミス」">
+<meta property="og:description" content="売電単価が下がる卒FIT。そのまま売る・即決する・放置する前に。LINEで無料相談。">
+<meta property="og:url" content="https://syscom-sustaina-shield.com/sotsu-fit/">
+<link rel="canonical" href="https://syscom-sustaina-shield.com/sotsu-fit/">
+<meta property="og:image" content="REPLACE_OGP_IMAGE"><!-- 要確認：1200x630 -->
+<meta name="twitter:card" content="summary_large_image">
+
+<style>
+  :root{
+    --green:#1f7a3d; --green-d:#155c2d; --ink:#1c2520; --sub:#5b6b62;
+    --bg:#f6f8f5; --card:#fff; --line:#e2e9e3; --accent:#f4a623; --line2:#06c755;
+    --radius:16px; --maxw:680px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);background:var(--bg);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.75;-webkit-font-smoothing:antialiased;font-size:16px}
+  img{max-width:100%;height:auto;display:block}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    padding:16px 18px;border-radius:999px;font-weight:700;text-decoration:none;font-size:17px;border:0;cursor:pointer;text-align:center}
+  .btn-line{background:var(--line2);color:#fff}
+  .btn-sim{background:#fff;color:var(--green-d);border:2px solid var(--green)}
+  .btn:active{transform:translateY(1px)}
+  .muted{color:var(--sub)} .small{font-size:13px} .center{text-align:center}
+  section{padding:42px 0}
+  h2{font-size:22px;line-height:1.45;margin:0 0 16px}
+  .eyebrow{color:var(--green);font-weight:700;font-size:14px;margin:0 0 6px}
+
+  .hero{background:linear-gradient(160deg,#1f7a3d,#155c2d 60%,#0f3f20);color:#fff;padding:52px 0 38px}
+  .hero h1{font-size:30px;line-height:1.34;margin:8px 0 14px;font-weight:800}
+  .hero h1 .mark{color:#ffe08a}
+  .hero p.lead{font-size:16px;opacity:.95;margin:0 0 20px}
+  .hero-cta{display:grid;gap:10px;margin-top:22px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .badge{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:6px 12px;border-radius:999px;font-size:13px}
+
+  .video-frame{position:relative;aspect-ratio:16/9;background:#0c1a12;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+  .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#cfe8d8;gap:10px;text-align:center;padding:20px}
+  .video-ph .play{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:24px}
+
+  .miss{display:grid;gap:14px}
+  .miss .item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;position:relative;padding-left:64px}
+  .miss .num{position:absolute;left:16px;top:16px;width:34px;height:34px;border-radius:9px;background:#fdecec;color:#c0392b;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .miss h3{margin:0 0 6px;font-size:17px}
+  .miss p{margin:0;color:var(--sub);font-size:14.5px}
+
+  .answer{background:#eef6f0;border:1px solid #cfe6d6;border-radius:14px;padding:18px}
+  .answer ol{margin:8px 0 0;padding-left:20px}
+  .answer li{margin-bottom:6px}
+
+  .note{background:#fff8ec;border:1px solid #f3d79b;border-radius:14px;padding:16px;font-size:14px}
+  .note b{color:#9a6a00}
+
+  .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .opt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .opt .ic{font-size:24px} .opt h4{margin:6px 0 4px;font-size:14px} .opt p{margin:0;font-size:12px;color:var(--sub)}
+
+  .steps{display:grid;gap:14px;counter-reset:s}
+  .step{display:flex;gap:14px;align-items:flex-start}
+  .step .n{counter-increment:s;flex:0 0 32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+  .step .n::before{content:counter(s)}
+
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 16px;margin-bottom:10px}
+  details summary{cursor:pointer;list-style:none;padding:14px 0;font-weight:700;display:flex;justify-content:space-between;gap:10px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"＋";color:var(--green);font-weight:800}
+  details[open] summary::after{content:"−"}
+  details .ans{padding:0 0 14px;color:var(--sub);font-size:14px}
+
+  .sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
+  .sticky .row{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+  .sticky .btn{padding:13px;font-size:15px}
+  footer{padding:28px 0 110px;text-align:center;color:var(--sub);font-size:13px}
+  .footer-brand{font-weight:700;color:var(--ink)}
+  @media(min-width:560px){.hero h1{font-size:34px} .hero-cta{grid-template-columns:1.3fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow" style="color:#ffe08a">卒FIT（太陽光10年満了）でお悩みの方へ</p>
+    <h1>卒FIT、<span class="mark">そのまま</span>にしてませんか？</h1>
+    <p class="lead">FITが終わると売電の単価は下がります。でも「そのまま売り続ける」「勢いで蓄電池を即決」「よく分からず放置」——この<strong>3つのどれか</strong>をやっていると、太陽光の価値を活かしきれていないかもしれません。</p>
+    <div class="hero-cta">
+      <a class="btn btn-line" data-cta="line" href="#contact">LINEで無料相談する</a>
+      <a class="btn btn-sim" data-cta="sim" href="#contact">かんたんシミュレーション</a>
+    </div>
+    <div class="badges">
+      <span class="badge">相談無料</span>
+      <span class="badge">しつこい営業なし</span>
+      <span class="badge">卒FIT専門で対応</span>
+    </div>
+  </div>
+</header>
+
+<!-- VIDEO -->
+<section id="video">
+  <div class="wrap">
+    <p class="eyebrow">動画で30秒チェック</p>
+    <h2>卒FITで損する「3つの選択ミス」</h2>
+    <div class="video-frame" id="videoFrame">
+      <div class="video-ph" id="videoPh">
+        <div class="play">▶</div>
+        <div>動画は準備中です<br><span class="small">（公開でき次第ここに表示／要確認）</span></div>
+      </div>
+    </div>
+    <p class="small muted center" style="margin-top:10px">TERAちゃんねる｜シスコムサステナシールド</p>
+  </div>
+</section>
+
+<!-- 3 MISSES -->
+<section style="background:var(--card)">
+  <div class="wrap">
+    <p class="eyebrow">あてはまっていませんか？</p>
+    <h2>卒FITで損する人がやりがちな3つの選択ミス</h2>
+    <div class="miss">
+      <div class="item"><div class="num">1</div>
+        <h3>そのまま安く売り続ける</h3>
+        <p>卒FIT後の売電単価は下がります。「売る電気」より「買わずに済む電気」のほうが家計にプラスになるケースが多いのに、そこを比べていない。</p></div>
+      <div class="item"><div class="num">2</div>
+        <h3>勢いで蓄電池を即決する</h3>
+        <p>蓄電池はいい選択肢。でも容量や電気の使い方で合う・合わないが分かれます。家の使い方を見ずに即決すると、オーバースペックになりがち。</p></div>
+      <div class="item"><div class="num">3</div>
+        <h3>よく分からず放置する</h3>
+        <p>いちばん多いのがこれ。放置している間も、本来もっと活かせた電気を安く手放し続けている状態です。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ANSWER -->
+<section id="answer">
+  <div class="wrap">
+    <p class="eyebrow">損しないための考え方</p>
+    <h2>正解は「家ごと」に違う。だから比べるのが先</h2>
+    <div class="answer">
+      <p style="margin:0">商品から入らず、<strong>今の電気の使い方から逆算</strong>するのがコツです。</p>
+      <ol>
+        <li><strong>疑う</strong>：「そのまま売る」前提を一度見直す</li>
+        <li><strong>逆算する</strong>：商品ありきでなく、家の使い方から選ぶ</li>
+        <li><strong>比較する</strong>：放置せず、選択肢を並べて比べる</li>
+      </ol>
+    </div>
+    <p class="muted small" style="margin-top:12px">※どれが得かはご家庭ごとに異なります。まずは「うちはどうなんだろう？」から始めればOKです。</p>
+  </div>
+</section>
+
+<!-- OPTIONS -->
+<section style="background:var(--card)">
+  <div class="wrap">
+    <p class="eyebrow">卒FIT後の主な選択肢</p>
+    <h2>「売る・貯める・使う」を最適化する</h2>
+    <div class="opts">
+      <div class="opt"><div class="ic">🔋</div><h4>蓄電池</h4><p>創った電気を貯めて夜使う。停電の備えにも。</p></div>
+      <div class="opt"><div class="ic">♨️</div><h4>おひさまエコキュート</h4><p>昼の電気でお湯を沸かし自家消費。</p></div>
+      <div class="opt"><div class="ic">🚗</div><h4>V2H / EV</h4><p>クルマの電池を家の電気に活用。</p></div>
+    </div>
+    <p class="small muted" style="margin-top:12px">※組み合わせや容量はご家庭の電気の使い方に合わせて最適化します。</p>
+  </div>
+</section>
+
+<!-- NOTE -->
+<section>
+  <div class="wrap">
+    <div class="note">
+      <b>売電単価・補助金について：</b>卒FIT後の売電単価や使える補助金は、<b>年度・電力会社・お住まいによって変わります</b>。
+      このページでは具体額を断定していません。最新の条件をもとに、根拠・上限・締切・必要書類をセットでご案内します（要確認）。
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section style="background:var(--card)">
+  <div class="wrap">
+    <p class="eyebrow">かんたん3ステップ</p>
+    <h2>相談から導入まで</h2>
+    <div class="steps">
+      <div class="step"><div class="n"></div><div><strong>LINEで無料相談</strong><br><span class="muted small">今の電気の使い方・売電状況を教えてください。</span></div></div>
+      <div class="step"><div class="n"></div><div><strong>最適な選択肢をご提案</strong><br><span class="muted small">売る・貯める・使う、どれが合いそうかを素案でご提示。</span></div></div>
+      <div class="step"><div class="n"></div><div><strong>導入・施工・アフター</strong><br><span class="muted small">工事から運用・補助金サポートまで対応。</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap center">
+    <p class="eyebrow center">無料相談</p>
+    <h2>まずはLINEで「うちはどうすべき？」を聞いてみる</h2>
+    <p class="muted" style="margin-top:-6px">しつこい営業はしません。相談・診断は無料です。</p>
+    <div class="hero-cta" style="margin-top:20px;text-align:left">
+      <a class="btn btn-line" data-cta="line" href="#" id="ctaLine">LINEで無料相談する</a>
+      <a class="btn btn-sim" data-cta="sim" href="#" id="ctaSim">かんたんシミュレーションを試す</a>
+    </div>
+    <p class="small muted" id="contactNote" style="margin-top:12px">※リンクは設定後に有効になります（要確認）</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:var(--card)">
+  <div class="wrap">
+    <p class="eyebrow">よくあるご質問</p>
+    <h2>FAQ</h2>
+    <details><summary>相談は無料ですか？</summary><div class="ans">はい。ご相談・現地診断・お見積りは無料です。</div></details>
+    <details><summary>卒FIT後、蓄電池は必ず付けるべき？</summary><div class="ans">いいえ。蓄電池が合う家もあれば、エコキュートやV2Hが合う家もあります。使い方から逆算して選ぶのがおすすめです。</div></details>
+    <details><summary>売電単価はいくらになりますか？</summary><div class="ans">電力会社・年度・契約により変わるため断定はできません。最新の条件をもとにご案内します。</div></details>
+    <details><summary>補助金は使えますか？</summary><div class="ans">条件・時期によって対象可否や上限が変わるため、必ず使えるとは断定できません。最新の公募要領で確認してお伝えします。</div></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-brand">シスコムサステナシールド ｜ TERAちゃんねる</div>
+    <p class="small">卒FIT後の電気を、いちばん得な形に。</p>
+    <p class="small">© <span id="yr"></span> シスコムサステナシールド</p>
+  </div>
+</footer>
+
+<!-- STICKY -->
+<div class="sticky">
+  <div class="row">
+    <a class="btn btn-line" data-cta="line" href="#contact">LINEで無料相談</a>
+    <a class="btn btn-sim" data-cta="sim" href="#contact">シミュ</a>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     CONFIG — 公開前にここだけ埋める（要確認）
+     ============================================================ */
+  const CONFIG = {
+    lineUrl:    "https://line.me/R/ti/p/@829oslez",   // 公式LINE 友だち追加（@829oslez）
+    simulatorUrl:"",  // 削減シミュレーター（例: https://.../simulator/）
+    videoEmbed: "",   // YouTube埋め込みURL（例: https://www.youtube.com/embed/xxxx）
+  };
+
+  if(CONFIG.videoEmbed){
+    document.getElementById('videoFrame').innerHTML =
+      '<iframe src="'+CONFIG.videoEmbed+'" title="卒FIT解説" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+  }
+  function wire(sel,url){
+    document.querySelectorAll(sel).forEach(function(a){
+      if(url){ a.setAttribute('href',url); a.setAttribute('target','_blank'); a.setAttribute('rel','noopener'); }
+      a.addEventListener('click',function(e){
+        /* 計測タグ枠：CTAクリック計測（gtag/Pixel）— 要設定 */
+        if(!url){ e.preventDefault(); document.getElementById('contact').scrollIntoView({behavior:'smooth'}); }
+      });
+    });
+  }
+  wire('[data-cta="line"]',CONFIG.lineUrl);
+  wire('[data-cta="sim"]', CONFIG.simulatorUrl);
+  if(CONFIG.lineUrl || CONFIG.simulatorUrl){ var n=document.getElementById('contactNote'); if(n) n.style.display='none'; }
+  document.getElementById('yr').textContent=new Date().getFullYear();
+</script>
+<!-- 計測タグ設置枠（要設定）：GA / Google広告 / Meta Pixel は </head>直前かここに貼付 -->
+</body>
+</html>

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a2a4a"/>
+      <stop offset="0.5" stop-color="#0e5f7e"/>
+      <stop offset="0.8" stop-color="#1f9e8a"/>
+      <stop offset="1" stop-color="#f4b24a"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.78" cy="0.32" r="0.35">
+      <stop offset="0" stop-color="#ffe7a8" stop-opacity="0.95"/>
+      <stop offset="0.4" stop-color="#ffd166" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#ffd166" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d4e6e"/>
+      <stop offset="1" stop-color="#0c2b40"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f5a44"/>
+      <stop offset="1" stop-color="#0a3f30"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect width="1600" height="900" fill="url(#sun)"/>
+  <circle cx="1248" cy="288" r="86" fill="#ffe9b0" opacity="0.85"/>
+
+  <!-- 遠景の丘 -->
+  <path d="M0 560 Q 380 500 760 545 T 1600 540 V900 H0 Z" fill="#0e6f78" opacity="0.55"/>
+  <path d="M0 620 Q 420 560 900 605 T 1600 600 V900 H0 Z" fill="url(#hill)"/>
+
+  <!-- 送電鉄塔 -->
+  <g stroke="#0a2233" stroke-width="5" fill="none" opacity="0.85">
+    <path d="M170 250 L150 600 M170 250 L190 600 M150 600 L190 600"/>
+    <path d="M120 360 L220 360 M110 430 L230 430 M100 500 L240 500"/>
+    <path d="M120 360 L170 250 L220 360"/>
+  </g>
+  <g stroke="#0a2233" stroke-width="3" opacity="0.5">
+    <path d="M120 360 C 500 380 900 380 1300 360" fill="none"/>
+    <path d="M110 430 C 500 450 900 450 1300 430" fill="none"/>
+  </g>
+
+  <!-- 系統用蓄電池コンテナ -->
+  <g>
+    <g transform="translate(940,560)">
+      <rect x="0" y="0" width="230" height="92" rx="6" fill="#eef3f6" stroke="#b9c7cf" stroke-width="2"/>
+      <rect x="0" y="0" width="230" height="22" rx="6" fill="#cdd8de"/>
+      <rect x="16" y="38" width="40" height="40" fill="#9fb3bd" opacity="0.7"/>
+      <rect x="66" y="38" width="40" height="40" fill="#9fb3bd" opacity="0.7"/>
+      <rect x="116" y="38" width="40" height="40" fill="#9fb3bd" opacity="0.7"/>
+      <rect x="166" y="38" width="48" height="40" fill="#9fb3bd" opacity="0.7"/>
+    </g>
+    <g transform="translate(1180,580)">
+      <rect x="0" y="0" width="200" height="84" rx="6" fill="#e3edf2" stroke="#b9c7cf" stroke-width="2"/>
+      <rect x="0" y="0" width="200" height="20" rx="6" fill="#c6d3da"/>
+      <rect x="16" y="34" width="36" height="38" fill="#9fb3bd" opacity="0.7"/>
+      <rect x="60" y="34" width="36" height="38" fill="#9fb3bd" opacity="0.7"/>
+      <rect x="104" y="34" width="36" height="38" fill="#9fb3bd" opacity="0.7"/>
+      <rect x="148" y="34" width="40" height="38" fill="#9fb3bd" opacity="0.7"/>
+    </g>
+  </g>
+
+  <!-- 太陽光パネル列 -->
+  <g>
+    <g transform="translate(70,640)">
+      <g transform="skewX(-18)">
+        <rect x="0" y="0" width="150" height="70" rx="4" fill="url(#panel)" stroke="#0a2233" stroke-width="2"/>
+        <line x1="50" y1="0" x2="50" y2="70" stroke="#2b6e90" stroke-width="2"/>
+        <line x1="100" y1="0" x2="100" y2="70" stroke="#2b6e90" stroke-width="2"/>
+        <line x1="0" y1="35" x2="150" y2="35" stroke="#2b6e90" stroke-width="2"/>
+      </g>
+    </g>
+    <g transform="translate(280,650)">
+      <g transform="skewX(-18)">
+        <rect x="0" y="0" width="150" height="70" rx="4" fill="url(#panel)" stroke="#0a2233" stroke-width="2"/>
+        <line x1="50" y1="0" x2="50" y2="70" stroke="#2b6e90" stroke-width="2"/>
+        <line x1="100" y1="0" x2="100" y2="70" stroke="#2b6e90" stroke-width="2"/>
+        <line x1="0" y1="35" x2="150" y2="35" stroke="#2b6e90" stroke-width="2"/>
+      </g>
+    </g>
+    <g transform="translate(490,660)">
+      <g transform="skewX(-18)">
+        <rect x="0" y="0" width="150" height="70" rx="4" fill="url(#panel)" stroke="#0a2233" stroke-width="2"/>
+        <line x1="50" y1="0" x2="50" y2="70" stroke="#2b6e90" stroke-width="2"/>
+        <line x1="100" y1="0" x2="100" y2="70" stroke="#2b6e90" stroke-width="2"/>
+        <line x1="0" y1="35" x2="150" y2="35" stroke="#2b6e90" stroke-width="2"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- 前景 -->
+  <path d="M0 740 Q 500 700 1100 735 T 1600 730 V900 H0 Z" fill="#0a3326"/>
+</svg>

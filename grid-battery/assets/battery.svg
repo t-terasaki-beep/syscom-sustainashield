@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b3a5c"/>
+      <stop offset="1" stop-color="#1a86b8"/>
+    </linearGradient>
+    <linearGradient id="cont" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f3f7f9"/>
+      <stop offset="1" stop-color="#cdd9df"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bsky)"/>
+  <circle cx="930" cy="220" r="120" fill="#bfe3f0" opacity="0.4"/>
+  <rect y="560" width="1200" height="340" fill="#0c5a4a" opacity="0.5"/>
+  <rect y="640" width="1200" height="260" fill="#0a3f30"/>
+
+  <!-- コンテナ群 -->
+  <g stroke="#9fb3bd" stroke-width="3">
+    <g transform="translate(120,430)">
+      <rect width="420" height="180" rx="10" fill="url(#cont)"/>
+      <rect width="420" height="42" rx="10" fill="#c2d0d7"/>
+      <g fill="#8fa6b1" opacity="0.75">
+        <rect x="30" y="70" width="70" height="86"/>
+        <rect x="120" y="70" width="70" height="86"/>
+        <rect x="210" y="70" width="70" height="86"/>
+        <rect x="300" y="70" width="90" height="86"/>
+      </g>
+    </g>
+    <g transform="translate(600,470)">
+      <rect width="480" height="190" rx="10" fill="url(#cont)"/>
+      <rect width="480" height="44" rx="10" fill="#c2d0d7"/>
+      <g fill="#8fa6b1" opacity="0.75">
+        <rect x="34" y="74" width="78" height="92"/>
+        <rect x="134" y="74" width="78" height="92"/>
+        <rect x="234" y="74" width="78" height="92"/>
+        <rect x="334" y="74" width="112" height="92"/>
+      </g>
+    </g>
+  </g>
+  <!-- パワコン -->
+  <g transform="translate(70,560)" fill="#e3edf2" stroke="#9fb3bd" stroke-width="3">
+    <rect width="70" height="90" rx="6"/>
+    <rect x="14" y="16" width="42" height="30" fill="#7f99a5"/>
+  </g>
+</svg>

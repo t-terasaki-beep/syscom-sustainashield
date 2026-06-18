@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>千葉エネルギー研究会｜系統用蓄電池×土地活用で千葉を盛り上げる｜事務局：シスコムサステナシールド</title>
+<meta name="description" content="千葉エネルギー研究会は、系統用蓄電池と土地活用を軸に、千葉のエネルギーを守り・盛り上げる企業ネットワークです。遊休地の蓄電池用地活用、卒FIT・省エネのご相談はこちら。加盟8社が連携。事務局：シスコムサステナシールド（代表 寺嵜）。">
+
+<!-- OGP（公開URL確定後に og:image を差し替え：要確認） -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="千葉エネルギー研究会｜系統用蓄電池×土地活用で千葉を盛り上げる">
+<meta property="og:description" content="系統用蓄電池と土地活用で、千葉のエネルギーを守り・盛り上げる企業ネットワーク。遊休地の活用・電力の相談はこちら。">
+<meta property="og:url" content="https://syscom-sustaina-shield.com/chiba-ene-lab/">
+<link rel="canonical" href="https://syscom-sustaina-shield.com/chiba-ene-lab/">
+<meta property="og:image" content="REPLACE_OGP_IMAGE"><!-- 要確認：1200x630 -->
+<meta name="twitter:card" content="summary_large_image">
+
+<style>
+  :root{
+    --green:#15a04a; --green-d:#0c6e31; --ink:#10221a; --sub:#56685f;
+    --bg:#f3f7f4; --card:#fff; --line:#e1ebe4;
+    --gold:#ffc23d; --blue:#0e7fd6; --teal:#0ec3a6; --line2:#06c755;
+    --radius:18px; --maxw:1040px; --maxc:660px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);background:var(--bg);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.75;-webkit-font-smoothing:antialiased;font-size:16px}
+  img{max-width:100%;height:auto;display:block}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px}
+  .narrow{max-width:var(--maxc)}
+  a{color:inherit}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:16px 22px;border-radius:999px;font-weight:800;text-decoration:none;font-size:17px;border:0;cursor:pointer;text-align:center;line-height:1.3}
+  .btn-line{background:var(--line2);color:#fff;box-shadow:0 8px 22px rgba(6,199,85,.35)}
+  .btn-gold{background:linear-gradient(135deg,#ffd166,#ffb01f);color:#3a2a00;box-shadow:0 8px 22px rgba(255,176,31,.35)}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:2px solid rgba(255,255,255,.55)}
+  .btn-out{background:#fff;color:var(--green-d);border:2px solid var(--green)}
+  .btn:active{transform:translateY(1px)}
+  .full{display:flex;width:100%}
+  .muted{color:var(--sub)} .small{font-size:13px} .center{text-align:center}
+  section{padding:54px 0}
+  h2{font-size:26px;line-height:1.4;margin:0 0 8px;font-weight:900;letter-spacing:.01em}
+  .eyebrow{color:var(--green);font-weight:800;font-size:13px;letter-spacing:.12em;margin:0 0 8px;text-transform:uppercase}
+  .lead2{color:var(--sub);font-size:16px;margin:0 0 26px}
+
+  /* ===== HERO（写真背景：assets/hero.jpg があれば自動で活きる／無くても映える） ===== */
+  .hero{position:relative;color:#fff;overflow:hidden;
+    background:
+      linear-gradient(180deg,rgba(7,28,18,.66),rgba(6,40,62,.84)),
+      url('./assets/hero.jpg') center/cover no-repeat,
+      url('./assets/hero.svg') center/cover no-repeat,
+      linear-gradient(155deg,#0b3a5c 0%,#0f7a3e 60%,#072a18 100%);}
+  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(900px 360px at 80% -10%,rgba(14,195,166,.35),transparent 60%),
+              radial-gradient(700px 300px at 0% 110%,rgba(255,194,61,.22),transparent 60%);}
+  .hero .wrap{position:relative;z-index:1;padding-top:58px;padding-bottom:46px}
+  .topbar{background:#ffffff;border-bottom:1px solid #e6eef0}
+  .tb-in{max-width:var(--maxw);margin:0 auto;padding:8px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .tb-logo{height:64px;width:auto;display:block}
+  .tb-tel{font-weight:800;color:#0c2233;text-decoration:none;font-size:15px;white-space:nowrap}
+  @media(min-width:760px){.tb-logo{height:84px}}
+  .brandbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;text-decoration:none}
+  .brandbar .mark{width:46px;height:46px;border-radius:12px;display:block;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+  .brandbar .bw{color:#fff;font-weight:900;font-size:18px;letter-spacing:.04em}
+  .kicker{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);
+    padding:7px 14px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.08em}
+  .hero h1{font-size:34px;line-height:1.28;margin:16px 0 12px;font-weight:900;letter-spacing:.01em;text-shadow:0 2px 24px rgba(0,0,0,.35)}
+  .hero h1 .hl{color:var(--gold)}
+  .hero h1 .hl2{color:#8af0d6}
+  .hero p.sub{font-size:16.5px;opacity:.96;margin:0 0 24px;max-width:640px}
+  .hero-cta{display:grid;gap:12px;max-width:560px}
+  .stat{display:flex;gap:22px;flex-wrap:wrap;margin-top:26px}
+  .stat .s{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:12px 16px}
+  .stat .n{font-size:24px;font-weight:900;line-height:1}
+  .stat .t{font-size:12px;opacity:.9;margin-top:4px}
+
+  /* ===== 2大テーマ（サイトの中心） ===== */
+  .pillars{display:grid;gap:18px}
+  .pillar{position:relative;border-radius:var(--radius);overflow:hidden;color:#fff;min-height:230px;
+    display:flex;flex-direction:column;justify-content:flex-end;padding:22px;border:1px solid var(--line)}
+  .pillar.land{background:
+      linear-gradient(180deg,rgba(8,30,18,.15),rgba(8,40,30,.82)),
+      url('./assets/land.jpg') center/cover no-repeat,
+      url('./assets/land.svg') center/cover no-repeat,
+      linear-gradient(150deg,#137a3a,#0b4a26);}
+  .pillar.batt{background:
+      linear-gradient(180deg,rgba(6,24,40,.15),rgba(6,30,52,.84)),
+      url('./assets/battery.jpg') center/cover no-repeat,
+      url('./assets/battery.svg') center/cover no-repeat,
+      linear-gradient(150deg,#0e6fb8,#08365e);}
+  .pillar .tag{position:absolute;top:16px;left:16px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);
+    border-radius:999px;padding:5px 12px;font-size:12px;font-weight:800;letter-spacing:.06em}
+  .pillar h3{font-size:22px;margin:0 0 6px;font-weight:900;text-shadow:0 2px 16px rgba(0,0,0,.4)}
+  .pillar p{margin:0 0 14px;font-size:14.5px;opacity:.96;max-width:520px}
+  .pillar .go{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#0c2e1c;font-weight:800;
+    text-decoration:none;padding:11px 18px;border-radius:999px;font-size:15px;width:max-content}
+
+  /* ===== 守る・盛り上げる＋集合写真 ===== */
+  .band{position:relative;color:#fff;border-radius:var(--radius);overflow:hidden;margin-top:8px;
+    background:
+      linear-gradient(180deg,rgba(7,28,18,.55),rgba(6,36,30,.78)),
+      url('./assets/members.jpg') center/cover no-repeat,
+      url('./assets/members.svg') center/cover no-repeat,
+      linear-gradient(150deg,#0c6e31,#084122);}
+  .band-inner{position:relative;z-index:1;padding:40px 22px}
+  .band h2{color:#fff}
+  .band p{opacity:.96;max-width:620px}
+  .photo-note{font-size:12px;opacity:.85;margin-top:14px}
+
+  /* ===== 加盟企業 ===== */
+  .members{display:grid;grid-template-columns:1fr;gap:12px}
+  .m{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+  .m .no{flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#eafff2,#d8f5e4);
+    color:var(--green-d);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .m .body{flex:1;min-width:0}
+  .m .name{font-weight:800;font-size:16.5px;margin:0}
+  .m .str{color:var(--sub);font-size:14px;margin:4px 0 0}
+  .m .hp{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--blue);text-decoration:none}
+  .m .hp::after{content:" ↗"}
+  .sec-office{background:#eef6f0;border:1px solid #cfe6d6;border-radius:14px;padding:14px 16px;margin-top:14px;font-size:14px}
+  .sec-office b{color:var(--green-d)}
+
+  /* ===== 問い合わせ ===== */
+  .contact-card{background:linear-gradient(160deg,#0f7a3e,#0a3f22);color:#fff;border-radius:var(--radius);padding:30px 22px}
+  .contact-card h2{color:#fff}
+  .contact-card .lead2{color:rgba(255,255,255,.9)}
+  .form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}
+  .form label{display:block;font-size:13px;font-weight:700;margin:12px 0 4px;color:var(--ink)}
+  .form input,.form textarea,.form select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit}
+
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 16px;margin-bottom:10px}
+  details summary{cursor:pointer;list-style:none;padding:15px 0;font-weight:700;display:flex;justify-content:space-between;gap:10px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"＋";color:var(--green);font-weight:800}
+  details[open] summary::after{content:"−"}
+  details .ans{padding:0 0 14px;color:var(--sub);font-size:14px}
+
+  .note{background:#fff8ec;border:1px solid #f3d79b;border-radius:14px;padding:16px;font-size:13.5px}
+  .note b{color:#9a6a00}
+
+  .sticky{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
+  .sticky .row{max-width:var(--maxc);margin:0 auto;display:grid;grid-template-columns:1.25fr 1fr;gap:10px}
+  .sticky .btn{padding:13px;font-size:15px}
+  footer{padding:30px 0 110px;text-align:center;color:var(--sub);font-size:13px}
+  .footer-brand{font-weight:800;color:var(--ink);font-size:15px}
+
+  @media(min-width:760px){
+    .hero h1{font-size:46px}
+    .pillars{grid-template-columns:1fr 1fr}
+    .members{grid-template-columns:1fr 1fr}
+    section{padding:64px 0}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="tb-in">
+  <img class="tb-logo" src="./assets/logo.png" alt="千葉エネルギー研究会">
+  <a class="tb-tel" href="tel:0433084403">☎ 043-308-4403</a>
+</div></div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">千葉エネルギー研究会 ｜ 加盟企業ネットワーク</span>
+    <h1>千葉のエネルギーを、<br><span class="hl">守る。</span><span class="hl2">そして、盛り上げる。</span></h1>
+    <p class="sub">系統用蓄電池と土地活用を軸に、千葉の企業が手を組みました。遊休地を「動く資産」へ。卒FIT・省エネの悩みも、千葉のプロ集団がまるごと相談に乗ります。</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold full" data-cta="land" href="#pillars">🏞️ 土地を蓄電池用地として活かす相談</a>
+      <a class="btn btn-line full" data-cta="line" href="#contact">LINEで相談する（千葉エネルギー研究会）</a>
+    </div>
+    <div class="stat">
+      <div class="s"><div class="n">8社</div><div class="t">千葉の加盟企業が連携</div></div>
+      <div class="s"><div class="n">2本柱</div><div class="t">系統用蓄電池 × 土地活用</div></div>
+      <div class="s"><div class="n">無料</div><div class="t">参加・相談・初回ヒアリング</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 2大テーマ（中心） ============ -->
+<section id="pillars">
+  <div class="wrap">
+    <p class="eyebrow">研究会の主役</p>
+    <h2>千葉エネルギー研究会は、この2つを中心に動きます</h2>
+    <p class="lead2">「土地を活かしたい人」と「エネルギーをつくる仕組み」をつなぎます。まずは気になる方からご相談ください。</p>
+    <div class="pillars">
+      <div class="pillar land">
+        <span class="tag">用地オーナー向け</span>
+        <h3>遊休地を、系統用蓄電池の用地に</h3>
+        <p>使っていない土地・空き地を、賃貸・売却・共同事業など、土地に合った形で活かす相談窓口。千葉の用地を募集中です。</p>
+        <a class="go" href="#" id="goLand">土地活用を相談する →</a>
+      </div>
+      <div class="pillar batt">
+        <span class="tag">事業者・地主向け</span>
+        <h3>系統用蓄電池・連系・申請の窓口</h3>
+        <p>東京電力管内・千葉県内の系統用／低圧系統用蓄電池。連系や申請の動向把握から、用地・引渡までを加盟企業で連携してサポート。</p>
+        <a class="go" href="#contact" id="goBatt">蓄電池の相談をする →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 千葉発の強み・サービス ============ -->
+<style>
+  .svc{display:grid;gap:14px}
+  .svc .c{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column}
+  .svc .c .ic{font-size:30px;line-height:1}
+  .svc .c .cat{display:inline-block;width:max-content;background:#eafff2;color:var(--green-d);font-weight:800;font-size:11.5px;letter-spacing:.08em;padding:4px 10px;border-radius:999px;margin:12px 0 6px}
+  .svc .c h3{margin:0 0 6px;font-size:18px;font-weight:900}
+  .svc .c p{margin:0 0 14px;color:var(--sub);font-size:14px;flex:1}
+  .svc .c a.more{align-self:flex-start;text-decoration:none;font-weight:800;color:var(--blue);font-size:14px}
+  .svc .c a.more::after{content:" ↗"}
+  @media(min-width:760px){.svc{grid-template-columns:repeat(3,1fr)}}
+</style>
+<section>
+  <div class="wrap">
+    <p class="eyebrow">千葉発の強み</p>
+    <h2>加盟企業だからできる、千葉のエネルギーの選択肢</h2>
+    <p class="lead2">それぞれの会社の得意を持ち寄って、ここでしか出会えないサービスを。</p>
+    <div class="svc">
+      <div class="c">
+        <div class="ic">♻️</div>
+        <span class="cat">千葉発</span>
+        <h3>太陽光パネルの中間処理場</h3>
+        <p>使用済み・廃棄予定の太陽光パネルを千葉で受け入れ・中間処理。これからの大量廃棄時代に備える、地域の受け皿です。</p>
+        <a class="more" href="https://www.sspv.jp/" target="_blank" rel="noopener">詳しく見る</a>
+      </div>
+      <div class="c">
+        <div class="ic">⚡️</div>
+        <span class="cat">千葉発</span>
+        <h3>省エネ・創エネ ダブルプラン</h3>
+        <p>電気代を「減らす（省エネ）」と「つくる（創エネ）」を同時に設計。料金シミュレーターで削減のイメージをその場で確認できます。</p>
+        <a class="more" href="https://syscom-sustaina-shield.com/lp/#simulator" target="_blank" rel="noopener">シミュレーターを見る</a>
+      </div>
+      <div class="c">
+        <div class="ic">🔋</div>
+        <span class="cat">災害対策</span>
+        <h3>災害対策電力ユニット Eneco（エネコ）</h3>
+        <p>停電・災害時に電気を確保する電力ユニット。事業継続（BCP）や避難先の備えとして、千葉の事業所・施設に。</p>
+        <a class="more" href="https://eneco-jp.com/" target="_blank" rel="noopener">詳しく見る</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 守る・盛り上げる＋集合写真 ============ -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="band">
+      <div class="band-inner">
+        <p class="eyebrow" style="color:#ffe08a">なぜ、研究会なのか</p>
+        <h2>1社では届かないことも、千葉の仲間となら届く。</h2>
+        <p>電気代、卒FIT、土地活用、BCP——エネルギーの悩みは、1社の専門だけでは解けません。千葉エネルギー研究会は、得意分野の異なる企業が集まり、それぞれの強みを持ち寄って、千葉のエネルギーを<strong>守り</strong>、地域を<strong>盛り上げる</strong>ためのネットワークです。</p>
+        <p class="photo-note">▲ 千葉エネルギー研究会・加盟企業の仲間たち（集合写真）</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 加盟企業 ============ -->
+<section style="background:var(--card)">
+  <div class="wrap">
+    <p class="eyebrow">加盟企業</p>
+    <h2>千葉エネルギー研究会の仲間たち</h2>
+    <p class="lead2">それぞれの強みを活かして、千葉のエネルギーを支えます（あいうえお順）。</p>
+    <div class="members" id="memberList"></div>
+    <div class="sec-office">
+      <b>事務局：</b>シスコムサステナシールド（代表 寺嵜）｜
+      <b>公式LINE：</b>千葉エネルギー研究会（管理：寺嵜）
+    </div>
+  </div>
+</section>
+
+<!-- ============ 問い合わせ ============ -->
+<section id="contact">
+  <div class="wrap narrow">
+    <div class="contact-card">
+      <p class="eyebrow" style="color:#bff3d2">お問い合わせ</p>
+      <h2>千葉のエネルギー、まず相談から。</h2>
+      <p class="lead2">土地活用も、系統用蓄電池も、卒FIT・省エネも。しつこい営業はしません。参加・相談は無料です。</p>
+      <a class="btn btn-line full" data-cta="line" href="#" id="ctaLine" style="margin-bottom:12px">LINEで相談する（千葉エネルギー研究会 公式）</a>
+      <a class="btn btn-ghost full" data-cta="land" href="#" id="ctaLand">🏞️ 土地活用の相談ページを見る</a>
+    </div>
+
+    <form class="form" id="leadForm" onsubmit="return false;">
+      <label>お名前（任意）</label>
+      <input type="text" name="name" placeholder="例）千葉 太郎">
+      <label>お住まい・拠点（市区町村まででOK）</label>
+      <input type="text" name="area" placeholder="例）千葉県木更津市">
+      <label>ご相談テーマ</label>
+      <select name="topic">
+        <option value="">選んでください</option>
+        <option>土地を蓄電池用地として活かしたい</option>
+        <option>系統用蓄電池・連系・申請について</option>
+        <option>卒FIT・自家消費について</option>
+        <option>省エネ・電気代削減について</option>
+        <option>研究会への加盟・連携について</option>
+        <option>その他</option>
+      </select>
+      <label>ご連絡先（電話 or メール）</label>
+      <input type="text" name="contact" placeholder="折り返し先">
+      <label>ご相談内容（任意）</label>
+      <textarea name="memo" rows="3" placeholder="土地の所在地・広さ、相談したいことなど"></textarea>
+      <div style="margin-top:16px"><button class="btn btn-out full" type="submit" id="formSubmit">この内容で相談する</button></div>
+      <p class="small muted center" id="formNote" style="margin-top:10px">※送信先は設定後に有効になります（要確認）</p>
+    </form>
+
+    <div class="note" style="margin-top:18px">
+      <b>情報の扱いについて：</b>連系状況・申請・補助金・売電単価・土地条件などは、年度・電力会社・制度・系統の状況で変わります。本研究会は具体の可否・金額・時期を断定せず、公式の一次情報をもとに根拠・要確認をセットでお伝えします（投資勧誘ではありません）。
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section style="background:var(--card)">
+  <div class="wrap narrow">
+    <p class="eyebrow">よくあるご質問</p>
+    <h2>FAQ</h2>
+    <details><summary>土地を持っているのですが、どんな相談ができますか？</summary><div class="ans">遊休地・空き地を系統用蓄電池の用地として活かす可能性を、賃貸・売却・共同事業などの選択肢でご一緒に検討します。可否・条件は土地ごとに異なるため、現地・条件を確認のうえお伝えします。</div></details>
+    <details><summary>参加・相談に費用はかかりますか？</summary><div class="ans">参加・相談・初回ヒアリングは無料です。</div></details>
+    <details><summary>千葉県外でも相談できますか？</summary><div class="ans">基本は千葉県（東京電力管内）を中心にしています。県外の方はまずご相談ください。</div></details>
+    <details><summary>必ず契約・購入が必要ですか？</summary><div class="ans">いいえ。研究会は学び・つながりの場です。購入・契約の義務はありません。</div></details>
+    <details><summary>会社として加盟・連携したいのですが？</summary><div class="ans">歓迎します。お問い合わせフォーム／LINEからご連絡ください。事務局（シスコムサステナシールド）よりご案内します。</div></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-brand">千葉エネルギー研究会</div>
+    <p class="small">千葉のエネルギーを、守る。そして、盛り上げる。</p>
+    <p class="small">事務局：シスコムサステナシールド（代表 寺嵜忠弘）｜公式LINE：千葉エネルギー研究会</p>
+    <p class="small">© <span id="yr"></span> 千葉エネルギー研究会 / シスコムサステナシールド</p>
+  </div>
+</footer>
+
+<!-- ============ STICKY ============ -->
+<div class="sticky">
+  <div class="row">
+    <a class="btn btn-line" data-cta="line" href="#contact">LINEで相談</a>
+    <a class="btn btn-out" data-cta="land" href="#pillars">土地活用</a>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     CONFIG — 公開前にここだけ埋める（要確認）
+     ※ 公式LINEは「千葉エネルギー研究会」専用を作成し、管理は寺嵜。
+       作成後、友だち追加URL（https://line.me/R/ti/p/@xxxx）を lineUrl に。
+     ============================================================ */
+  const CONFIG = {
+    lineUrl:     "https://page.line.me/943gsxcu",  // 千葉エネルギー研究会 公式LINE（友だち追加）
+    formEndpoint:"",                     // フォーム送信先（Googleフォーム等のURL／要確認）
+    landUrl:     "../chiba-land-search/",// 土地探しLP（サブパス公開構成）
+    sotsuUrl:    "../sotsu-fit/",        // 卒FIT LP
+    battUrl:     "../grid-battery/",     // 系統用蓄電池 特設LP
+  };
+
+  /* 加盟企業（あいうえお順）— strength と hp は分かり次第ここを埋める（要確認）
+     hp が空欄の会社はリンクを出しません（裏が取れないものは載せない方針）。 */
+  const MEMBERS = [
+    { name:"アイ・コミュニケーション株式会社", strength:"", hp:"https://www.ai-communication.co.jp/" },
+    { name:"伊藤電気",                         strength:"", hp:"" },                       // HP要確認
+    { name:"桜技総建株式会社",                 strength:"", hp:"" },                       // HP要確認（sspv.jp はこちら？）
+    { name:"シスコムサステナシールド",         strength:"省エネ・創エネ・特殊塗装（ポリウレア遮熱）・BCP対策。研究会の事務局。", hp:"https://syscom-sustaina-shield.com/" },
+    { name:"株式会社SDテクノサービス",         strength:"", hp:"https://sd-techno.jp/" },
+    { name:"株式会社SDメンテナンス",           strength:"", hp:"https://sd-maintenance.jp/" },
+    { name:"株式会社太郎",                     strength:"", hp:"https://tarou-1.jimdosite.com/" },
+    { name:"未来ラボ株式会社",                 strength:"強アルカリ電解水「SAIW」など、除菌・洗浄ソリューション。", hp:"https://mirailaboratory.co.jp/saiw/" },
+  ];
+
+  /* 加盟企業カードを描画 */
+  (function(){
+    var el=document.getElementById('memberList'); if(!el) return;
+    el.innerHTML = MEMBERS.map(function(m,i){
+      var str = m.strength ? m.strength : "（事業紹介を準備中）";
+      var hp  = m.hp ? '<a class="hp" href="'+m.hp+'" target="_blank" rel="noopener">会社HP</a>' : '';
+      return '<div class="m"><div class="no">'+(i+1)+'</div><div class="body">'+
+             '<p class="name">'+m.name+'</p><p class="str">'+str+'</p>'+hp+'</div></div>';
+    }).join('');
+  })();
+
+  /* CTA配線 */
+  function wire(sel,url,newtab,fallbackSel){
+    document.querySelectorAll(sel).forEach(function(a){
+      var valid = url && url.indexOf('REPLACE_')!==0;
+      if(valid){ a.setAttribute('href',url); if(newtab){a.setAttribute('target','_blank');a.setAttribute('rel','noopener');} }
+      a.addEventListener('click',function(e){
+        if(!valid){ e.preventDefault(); document.querySelector(fallbackSel||'#contact').scrollIntoView({behavior:'smooth'}); }
+      });
+    });
+  }
+  wire('[data-cta="line"]',CONFIG.lineUrl,true,'#contact');
+  wire('[data-cta="land"]',CONFIG.landUrl,false,'#pillars');
+  var gl=document.getElementById('goLand'); if(gl&&CONFIG.landUrl){gl.setAttribute('href',CONFIG.landUrl);}
+  var gb=document.getElementById('goBatt'); if(gb&&CONFIG.battUrl){gb.setAttribute('href',CONFIG.battUrl);}
+
+  var note=document.getElementById('formNote');
+  document.getElementById('leadForm').addEventListener('submit',function(){
+    if(CONFIG.formEndpoint){ this.action=CONFIG.formEndpoint; this.method="POST"; this.submit(); }
+    else if(CONFIG.lineUrl && CONFIG.lineUrl.indexOf('REPLACE_')!==0){ window.open(CONFIG.lineUrl,'_blank','noopener'); }
+    else { document.getElementById('contact').scrollIntoView({behavior:'smooth'}); }
+  });
+  if(CONFIG.formEndpoint && note){ note.style.display='none'; }
+
+  document.getElementById('yr').textContent=new Date().getFullYear();
+</script>
+<!-- 計測タグ設置枠（要設定）：GA / Google広告 / Meta Pixel は </head>直前かここに貼付 -->
+</body>
+</html>
