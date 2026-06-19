@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="lsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f6fb0"/>
+      <stop offset="0.6" stop-color="#7fc4e0"/>
+      <stop offset="1" stop-color="#dff0e2"/>
+    </linearGradient>
+    <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a9b53"/>
+      <stop offset="1" stop-color="#1d6e36"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#lsky)"/>
+  <circle cx="270" cy="200" r="74" fill="#fff7df" opacity="0.85"/>
+  <!-- 雲 -->
+  <g fill="#ffffff" opacity="0.7">
+    <ellipse cx="820" cy="180" rx="120" ry="34"/>
+    <ellipse cx="700" cy="200" rx="80" ry="26"/>
+    <ellipse cx="960" cy="210" rx="90" ry="26"/>
+  </g>
+  <!-- 田畑の区画 -->
+  <path d="M0 520 H1200 V900 H0 Z" fill="url(#field)"/>
+  <g stroke="#10522a" stroke-width="2" opacity="0.45">
+    <path d="M0 600 L1200 560"/>
+    <path d="M0 700 L1200 640"/>
+    <path d="M0 820 L1200 740"/>
+    <path d="M300 520 L120 900"/>
+    <path d="M620 520 L560 900"/>
+    <path d="M900 520 L980 900"/>
+  </g>
+  <!-- 電柱と電線 -->
+  <g stroke="#3a4a40" stroke-width="5">
+    <line x1="1000" y1="360" x2="1000" y2="560"/>
+    <line x1="965" y1="392" x2="1035" y2="392"/>
+    <line x1="760" y1="420" x2="760" y2="580"/>
+    <line x1="733" y1="446" x2="787" y2="446"/>
+  </g>
+  <g stroke="#3a4a40" stroke-width="2" opacity="0.6" fill="none">
+    <path d="M760 446 C 850 430 920 408 1000 392"/>
+    <path d="M760 452 C 850 440 920 420 1000 404"/>
+  </g>
+</svg>

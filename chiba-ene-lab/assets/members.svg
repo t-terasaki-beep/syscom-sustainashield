@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="mbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c6e42"/>
+      <stop offset="1" stop-color="#073f2a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#mbg)"/>
+  <!-- つながりネットワーク（加盟企業の連携イメージ） -->
+  <g stroke="#7ef0c4" stroke-width="2" opacity="0.35">
+    <path d="M180 220 L520 360 L300 600 L700 700 L1080 520 L1380 680 M520 360 L900 240 L1080 520 M900 240 L1300 300 L1380 680 M700 700 L300 600"/>
+  </g>
+  <g fill="#bdfbe2">
+    <circle cx="180" cy="220" r="9" opacity="0.8"/>
+    <circle cx="520" cy="360" r="11" opacity="0.9"/>
+    <circle cx="300" cy="600" r="9" opacity="0.8"/>
+    <circle cx="700" cy="700" r="12" opacity="0.95"/>
+    <circle cx="900" cy="240" r="10" opacity="0.85"/>
+    <circle cx="1080" cy="520" r="12" opacity="0.95"/>
+    <circle cx="1300" cy="300" r="9" opacity="0.8"/>
+    <circle cx="1380" cy="680" r="10" opacity="0.85"/>
+  </g>
+  <g fill="#0ec38a" opacity="0.18">
+    <circle cx="1250" cy="240" r="220"/>
+    <circle cx="250" cy="760" r="180"/>
+  </g>
+</svg>
