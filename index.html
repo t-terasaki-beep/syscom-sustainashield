@@ -399,22 +399,46 @@ a{ color:inherit; text-decoration:none; }
   font-family:"Bebas Neue", sans-serif; letter-spacing:0.15em;
   z-index:2; border-radius:2px;
 }
-.card-img-1{ background:linear-gradient(135deg, var(--copper) 0%, #d99356 100%); }
-.card-img-2{ background:linear-gradient(135deg, var(--green) 0%, #3a8c69 100%); }
-.card-img-3{ background:linear-gradient(135deg, var(--blue) 0%, var(--sky) 100%); }
-.card-img-4{ background:linear-gradient(135deg, var(--yellow-deep) 0%, var(--yellow) 100%); }
-.card-img-5{ background:linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%); }
+.card-img-1{ background:linear-gradient(135deg, #7c4a1d 0%, var(--copper) 48%, #d99356 100%); }
+.card-img-2{ background:linear-gradient(135deg, #14402f 0%, var(--green) 52%, #44a076 100%); }
+.card-img-3{ background:linear-gradient(135deg, var(--navy) 0%, var(--blue) 55%, var(--sky) 100%); }
+.card-img-4{ background:linear-gradient(135deg, #b45309 0%, var(--yellow-deep) 55%, #fbbf24 100%); }
+.card-img-5{ background:linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 55%, var(--blue) 100%); }
+.card-img-6{ background:linear-gradient(135deg, #03102e 0%, var(--navy-deep) 55%, var(--navy) 100%); }
+.service-card .card-img::before{
+  content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(120% 100% at 85% -10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 55%),
+    radial-gradient(90% 80% at 0% 110%, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 55%),
+    repeating-linear-gradient(115deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 10px);
+}
 .service-card .card-img-tag{
-  position:absolute; bottom:14px; left:14px;
+  position:absolute; bottom:14px; left:14px; z-index:2;
   background:rgba(255,255,255,0.95); color:var(--navy);
   padding:4px 12px; font-size:10px; font-weight:700;
   letter-spacing:0.1em; border-radius:2px;
+  box-shadow:0 4px 12px -4px rgba(0,0,0,0.35);
 }
-.service-card .card-img-emoji{
+.service-card .card-icon{
   position:absolute; top:50%; left:50%;
-  transform:translate(-50%, -50%);
-  font-size:64px; opacity:0.95;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+  transform:translate(-50%, -54%);
+  width:78px; height:78px; border-radius:50%;
+  background:rgba(255,255,255,0.14);
+  border:1px solid rgba(255,255,255,0.4);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; z-index:1;
+  box-shadow:0 12px 32px -12px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition:transform 0.25s;
+}
+.service-card:hover .card-icon{ transform:translate(-50%, -54%) scale(1.07); }
+.service-card .card-icon svg{ width:36px; height:36px; }
+.service-card .card-img-watermark{
+  position:absolute; right:-20px; bottom:-26px;
+  width:140px; height:140px;
+  color:#fff; opacity:0.12;
+  transform:rotate(-10deg);
+  pointer-events:none;
 }
 .service-card .card-body{
   padding:24px 22px; flex:1; display:flex; flex-direction:column;
@@ -1315,6 +1339,47 @@ a{ color:inherit; text-decoration:none; }
 
 <!-- Services -->
 <section class="section services" id="services">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="ic-factory" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          <path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/>
+        </g>
+      </symbol>
+      <symbol id="ic-sun" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+          <path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+        </g>
+      </symbol>
+      <symbol id="ic-shield" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </g>
+      </symbol>
+      <symbol id="ic-bulb" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+          <path d="M9 18h6"/><path d="M10 22h4"/>
+        </g>
+      </symbol>
+      <symbol id="ic-water" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
+        </g>
+      </symbol>
+      <symbol id="ic-clipboard" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="8" y="2" width="8" height="4" rx="1"/>
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <path d="m9 14 2 2 4-4"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
   <div class="section-inner">
     <div class="section-eyebrow reveal">OUR SERVICES</div>
     <h2 class="section-title reveal">電気代から建物維持まで、<br><span class="accent">5つのソリューション</span></h2>
@@ -1325,7 +1390,8 @@ a{ color:inherit; text-decoration:none; }
       <!-- 1: 冷暖トリプルガードコート -->
       <a href="simulator/" class="service-card featured">
         <div class="card-img card-img-1">
-          <div class="card-img-emoji">🏭</div>
+          <svg class="card-img-watermark" aria-hidden="true"><use href="#ic-factory"/></svg>
+          <div class="card-icon"><svg aria-hidden="true"><use href="#ic-factory"/></svg></div>
           <div class="card-img-tag">SIMULATOR有</div>
         </div>
         <div class="card-body">
@@ -1339,7 +1405,8 @@ a{ color:inherit; text-decoration:none; }
       <!-- 2: 省エネ・創エネ ダブルプラン -->
       <a href="lp/" class="service-card">
         <div class="card-img card-img-2">
-          <div class="card-img-emoji">☀</div>
+          <svg class="card-img-watermark" aria-hidden="true"><use href="#ic-sun"/></svg>
+          <div class="card-icon"><svg aria-hidden="true"><use href="#ic-sun"/></svg></div>
           <div class="card-img-tag">主力プラン</div>
         </div>
         <div class="card-body">
@@ -1351,9 +1418,10 @@ a{ color:inherit; text-decoration:none; }
       </a>
 
       <!-- 3: 害虫ブロック -->
-      <a href="proposals/pest-block/" class="service-card">
+      <a href="lp/gaichu-block/" class="service-card">
         <div class="card-img card-img-3">
-          <div class="card-img-emoji">🛡</div>
+          <svg class="card-img-watermark" aria-hidden="true"><use href="#ic-shield"/></svg>
+          <div class="card-icon"><svg aria-hidden="true"><use href="#ic-shield"/></svg></div>
           <div class="card-img-tag">B2B特化</div>
         </div>
         <div class="card-body">
@@ -1371,7 +1439,8 @@ a{ color:inherit; text-decoration:none; }
       <!-- 4: 卒FITコンサル -->
       <a href="https://page.line.me/119upwsl" target="_blank" rel="noopener" class="service-card">
         <div class="card-img card-img-4">
-          <div class="card-img-emoji">💡</div>
+          <svg class="card-img-watermark" aria-hidden="true"><use href="#ic-bulb"/></svg>
+          <div class="card-icon"><svg aria-hidden="true"><use href="#ic-bulb"/></svg></div>
           <div class="card-img-tag">コンサルティング</div>
         </div>
         <div class="card-body">
@@ -1389,7 +1458,8 @@ a{ color:inherit; text-decoration:none; }
       <!-- 5: おひさまエコキュート -->
       <a href="https://page.line.me/119upwsl" target="_blank" rel="noopener" class="service-card">
         <div class="card-img card-img-5">
-          <div class="card-img-emoji">♨</div>
+          <svg class="card-img-watermark" aria-hidden="true"><use href="#ic-water"/></svg>
+          <div class="card-icon"><svg aria-hidden="true"><use href="#ic-water"/></svg></div>
           <div class="card-img-tag">月刊スマートハウス掲載</div>
         </div>
         <div class="card-body">
@@ -1406,8 +1476,9 @@ a{ color:inherit; text-decoration:none; }
 
       <!-- 6: 無料診断 -->
       <a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" class="service-card">
-        <div class="card-img" style="background:linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 100%);">
-          <div class="card-img-emoji">📋</div>
+        <div class="card-img card-img-6">
+          <svg class="card-img-watermark" aria-hidden="true"><use href="#ic-clipboard"/></svg>
+          <div class="card-icon"><svg aria-hidden="true"><use href="#ic-clipboard"/></svg></div>
           <div class="card-img-tag" style="background:var(--yellow); color:var(--navy-deep);">無料</div>
         </div>
         <div class="card-body">
@@ -1592,7 +1663,7 @@ a{ color:inherit; text-decoration:none; }
           <li><a href="simulator/">省エネシミュレーター</a></li>
           <li><a href="shanetsu-chiba/">千葉の遮熱（屋根遮熱・遮熱塗装）</a></li>
           <li><a href="lp/">省エネ・創エネ ダブルプラン</a></li>
-          <li><a href="proposals/pest-block/">害虫ブロック</a></li>
+          <li><a href="lp/gaichu-block/">害虫ブロック</a></li>
           <li><a href="service.html">全サービス一覧</a></li>
         </ul>
       </div>
