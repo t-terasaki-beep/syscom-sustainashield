@@ -100,6 +100,16 @@ a{ color:inherit; text-decoration:none; }
 input[type=range]{ width:100%; accent-color:var(--blue); height:4px; }
 .basis{ font-size:11px; color:#999; margin-top:6px; line-height:1.6; }
 
+.measures{ display:grid; gap:8px; }
+.measure{ display:flex; align-items:center; gap:11px; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; transition:all 0.18s; }
+.measure:hover{ border-color:var(--sky); background:#f7faff; }
+.measure.on{ border-color:var(--blue); background:#f2f7ff; }
+.measure input{ width:17px; height:17px; accent-color:var(--blue); flex-shrink:0; }
+.measure .mt{ flex:1; font-size:13.5px; font-weight:700; color:var(--navy); }
+.measure .mt small{ display:block; font-weight:500; color:#888; font-size:11px; margin-top:1px; }
+.measure .mp{ font-size:12.5px; font-weight:900; color:var(--blue); white-space:nowrap; }
+.measure-total{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding:10px 14px; background:var(--navy); color:#fff; border-radius:10px; font-size:13px; font-weight:700; }
+.measure-total .mt-val{ font-family:"Bebas Neue",sans-serif; font-size:22px; color:var(--yellow); }
 .addons{ display:grid; gap:10px; margin-top:4px; }
 .addon{ display:flex; gap:12px; align-items:flex-start; padding:13px 14px; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; transition:all 0.18s; }
 .addon:hover{ border-color:var(--sky); background:#f7faff; }
@@ -249,12 +259,14 @@ input[type=range]{ width:100%; accent-color:var(--blue); height:4px; }
       </div>
 
       <div class="field">
-        <div class="slider-row">
-          <label style="margin:0;">遮熱断熱塗装による空調削減率</label>
-          <span class="val"><span id="coatVal">10</span>%</span>
+        <label>施工する対策（特殊塗装）<span class="hint">（チェックで自動計算）</span></label>
+        <div class="measures" id="measures">
+          <label class="measure on"><input type="checkbox" class="m" data-label="窓ガラスコーティング" data-rate="25" checked><span class="mt">窓ガラスコーティング<small>窓からの熱の出入りを抑える</small></span><span class="mp">空調 −25%</span></label>
+          <label class="measure on"><input type="checkbox" class="m" data-label="屋根 遮熱断熱塗装" data-rate="7" checked><span class="mt">屋根 遮熱断熱塗装<small>冷暖トリプルガードコート（脂肪族ポリウレア）</small></span><span class="mp">空調 −7%</span></label>
+          <label class="measure on"><input type="checkbox" class="m" data-label="外壁 遮熱断熱塗装" data-rate="3" checked><span class="mt">外壁 遮熱断熱塗装<small>外壁面からの熱負荷を低減</small></span><span class="mp">空調 −3%</span></label>
         </div>
-        <input type="range" id="coatRate" min="0" max="20" value="10" step="1">
-        <div class="basis">冷暖トリプルガードコート（脂肪族ポリウレア）を屋根・外壁に施工した場合の空調コスト削減は<b>最大20%</b>を目安としています（当社実績ベース・建物条件により変動）。控えめに見るときは小さめに設定してください。</div>
+        <div class="measure-total"><span>合計の空調削減率（目安）</span><span class="mt-val"><span id="sumRate">35</span>%</span></div>
+        <div class="basis">各対策の削減率は当社の目安（窓25%／屋根7%／外壁3%・合計最大35%）です。建物条件で変動し、効果を保証するものではありません。施工しない対策はチェックを外してください。</div>
       </div>
 
       <div class="field" style="margin-bottom:6px;">
@@ -271,14 +283,15 @@ input[type=range]{ width:100%; accent-color:var(--blue); height:4px; }
     <div>
       <div class="card result">
         <h2 style="margin-bottom:14px;">② 削減の目安</h2>
-        <div class="annual-label">遮熱断熱塗装による 年間削減額（概算）</div>
+        <div class="annual-label">特殊塗装（窓・屋根・外壁）による 年間削減額（概算）</div>
         <div class="big-num"><span id="annualLow">—</span> 〜 <span id="annualHigh">—</span><span class="yen"> 円/年</span></div>
         <div class="range-note">月あたり <b id="monthRange">—</b> 円の目安です。</div>
 
         <div class="breakdown">
           <div class="row"><span>入力した電気代</span><b id="bRecap">80,000 円/月</b></div>
           <div class="row"><span>うち空調の推定電気代</span><b id="acCost">—</b></div>
-          <div class="row muted"><span>適用した空調削減率</span><b id="rateRecap">7〜10%</b></div>
+          <div id="measureBreakdown"></div>
+          <div class="row muted"><span>合計の空調削減率（目安）</span><b id="rateRecap">—</b></div>
         </div>
 
         <div class="addon-result" id="addonBox" style="display:none;">
@@ -382,22 +395,33 @@ input[type=range]{ width:100%; accent-color:var(--blue); height:4px; }
 (function(){
   var bill = document.getElementById('bill');
   var acRatio = document.getElementById('acRatio');
-  var coatRate = document.getElementById('coatRate');
   var acVal = document.getElementById('acVal');
-  var coatVal = document.getElementById('coatVal');
   var btypeWrap = document.getElementById('btype');
+  var measures = Array.prototype.slice.call(document.querySelectorAll('#measures input.m'));
 
   function yen(n){ return Math.round(n).toLocaleString('ja-JP'); }
+  function trim(n){ return n.toFixed(1).replace(/\.0$/,''); }
 
   function calc(){
     var b = Math.max(0, Number(bill.value) || 0);
     var ac = Number(acRatio.value);
-    var coat = Number(coatRate.value);
     acVal.textContent = ac;
-    coatVal.textContent = coat;
+
+    // 施工する対策（チェック）の合計削減率
+    var sum = 0, rows = '';
+    measures.forEach(function(m){
+      if(m.checked){
+        var rate = Number(m.getAttribute('data-rate'));
+        sum += rate;
+        rows += '<div class="row"><span>' + m.getAttribute('data-label') + '</span><b>−' + rate + '%</b></div>';
+      }
+    });
+    if(sum > 35) sum = 35;
+    document.getElementById('sumRate').textContent = sum;
+    document.getElementById('measureBreakdown').innerHTML = rows;
 
     var acCost = b * ac / 100;                 // 月の空調電気代（推定）
-    var saveHighMonth = acCost * coat / 100;   // 月の削減（上限：入力レート）
+    var saveHighMonth = acCost * sum / 100;    // 月の削減（チェック合計）
     var saveLowMonth  = saveHighMonth * 0.7;   // 控えめレンジ（70%）
     var annualLow  = saveLowMonth * 12;
     var annualHigh = saveHighMonth * 12;
@@ -407,7 +431,7 @@ input[type=range]{ width:100%; accent-color:var(--blue); height:4px; }
     document.getElementById('monthRange').textContent = yen(saveLowMonth) + ' 〜 ' + yen(saveHighMonth);
     document.getElementById('bRecap').textContent  = yen(b) + ' 円/月';
     document.getElementById('acCost').textContent  = yen(acCost) + ' 円/月';
-    document.getElementById('rateRecap').textContent = (coat*0.7).toFixed(1).replace(/\.0$/,'') + '〜' + coat + '%';
+    document.getElementById('rateRecap').textContent = sum ? (trim(sum*0.7) + '〜' + sum + '%') : '0%';
 
     // add-ons
     var picks = [];
@@ -433,6 +457,11 @@ input[type=range]{ width:100%; accent-color:var(--blue); height:4px; }
     calc();
   });
 
+  // 対策チェックの見た目＋再計算
+  measures.forEach(function(cb){
+    cb.addEventListener('change', function(){ cb.closest('.measure').classList.toggle('on', cb.checked); calc(); });
+  });
+
   // addon visual state
   document.querySelectorAll('.addon').forEach(function(l){
     var cb = l.querySelector('input');
@@ -442,7 +471,6 @@ input[type=range]{ width:100%; accent-color:var(--blue); height:4px; }
   ['input','change'].forEach(function(ev){
     bill.addEventListener(ev, calc);
     acRatio.addEventListener(ev, calc);
-    coatRate.addEventListener(ev, calc);
   });
 
   calc();
