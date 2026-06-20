@@ -1,462 +1,453 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>30秒でわかる！卒FIT自家消費 おひさまエコキュート診断｜シスコムサステナシールド</title>
-<meta name="description" content="卒FIT世帯向け。太陽光の余剰電力を売る（安い）より、昼にお湯を沸かして自家消費するおひさまエコキュート。30秒・無料で年間の概算メリットを診断。公式LINEで正式試算も。" />
-<meta name="theme-color" content="#0288D1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電気代削減シミュレーター｜シスコムサステナシールド</title>
+<meta name="description" content="工場・倉庫・店舗・ホテル・住宅の毎月の電気代から、遮熱断熱塗装（冷暖トリプルガードコート）・太陽光・蓄電池・卒FITでどれくらい電気代を減らせるかの概算目安をその場で試算。千葉県の省エネ・創エネワンストップ、シスコムサステナシールド。">
+<meta name="keywords" content="電気代,削減,シミュレーター,省エネ,遮熱断熱塗装,冷暖トリプルガードコート,太陽光,蓄電池,卒FIT,千葉,工場,倉庫">
+<meta property="og:title" content="電気代削減シミュレーター｜シスコムサステナシールド">
+<meta property="og:description" content="毎月の電気代から、省エネ・創エネでどれくらい減らせるかの概算目安をその場で試算。">
+<meta property="og:type" content="website">
+<meta name="robots" content="index,follow">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=RocknRoll+One&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../common.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+
 <style>
-  .diag-hero{background:linear-gradient(135deg,#0288D1,#01579B);color:#fff;padding:24px 20px 30px;text-align:center;position:relative;overflow:hidden}
-  .diag-hero::before,.diag-hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.15)}
-  .diag-hero::before{width:140px;height:140px;top:-50px;right:-30px}
-  .diag-hero::after{width:80px;height:80px;bottom:-30px;left:-20px}
-  .diag-hero > *{position:relative}
-  .diag-hero .badge-pop{display:inline-block;background:var(--r);color:#fff;font-size:11px;font-weight:900;padding:4px 12px;border-radius:999px;margin-bottom:8px;letter-spacing:.04em;animation:wob 1.6s ease-in-out infinite}
-  @keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
-  .diag-hero h1{margin:0 0 6px;font-size:23px;font-weight:900;line-height:1.4}
-  .diag-hero h1 .num{color:var(--y);font-family:"RocknRoll One";font-size:1.35em}
-  .diag-hero p{margin:0;font-size:13px;color:#E1F5FE;font-weight:600}
-  .diag-hero .promises{display:flex;justify-content:center;gap:6px;margin-top:14px;flex-wrap:wrap}
-  .diag-hero .promises span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+:root{
+  --navy:#0b2a6b;
+  --navy-deep:#061a47;
+  --blue:#1a56db;
+  --sky:#3b82f6;
+  --yellow:#fcd34d;
+  --yellow-deep:#f59e0b;
+  --ink:#0a0a0a;
+  --paper:#fafaf7;
+  --line:#e6e8ec;
+  --copper:#b87333;
+  --green:#2d6a4f;
+}
 
-  .dx-card-full{background:#fff;border-radius:18px;margin:20px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,.1);border:2px solid #B3E5FC}
-  .dx-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-  .dx-progress .label{font-size:12px;font-weight:900;color:var(--bl2);letter-spacing:.06em;flex-shrink:0}
-  .dx-bar{flex:1;height:8px;background:#E0E0E0;border-radius:999px;overflow:hidden}
-  .dx-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--y),#0288D1);width:14%;transition:width .4s ease}
-  .dx-step{display:none}
-  .dx-step.active{display:block;animation:fadeUp .4s ease}
-  @keyframes fadeUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
-  .dx-step .qnum{display:inline-block;background:var(--r);color:#fff;font-family:"RocknRoll One";font-size:14px;padding:2px 12px;border-radius:999px;margin-bottom:6px}
-  .dx-step h2{margin:0 0 4px;font-size:18px;color:var(--bl2);font-weight:900;line-height:1.4}
-  .dx-step p.h{margin:0 0 14px;font-size:12.5px;color:var(--sub);line-height:1.6}
-  .dx-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .dx-options.cols-3{grid-template-columns:repeat(3,1fr)}
-  .dx-options.cols-1{grid-template-columns:1fr}
-  .dx-opt{background:#E1F5FE;border:2px solid #81D4FA;border-radius:10px;padding:12px 8px;font-weight:700;color:var(--ink);font-size:13px;cursor:pointer;font-family:inherit;text-align:center;transition:all .15s ease}
-  .dx-opt:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1)}
-  .dx-opt.selected{background:#0288D1;border-color:#01579B;color:#fff;transform:scale(1.03)}
-  .dx-opt .ico{font-size:22px;display:block;margin-bottom:2px}
-  .dx-opt small{display:block;font-size:10px;color:var(--sub);font-weight:500;margin-top:2px}
-  .dx-opt.selected small{color:#E1F5FE}
-  .dx-skip{display:block;width:100%;text-align:center;background:transparent;border:0;color:var(--sub);font-weight:700;cursor:pointer;font-family:inherit;font-size:12px;margin-top:10px;padding:8px;text-decoration:underline}
-  .dx-actions{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed #EEE}
-  .dx-back{background:transparent;border:0;color:var(--sub);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{
+  font-family:"Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", sans-serif;
+  color:var(--ink); background:var(--paper);
+  line-height:1.75; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.serif{ font-family:"Noto Serif JP", "Hiragino Mincho ProN", serif; }
+.bebas{ font-family:"Bebas Neue", sans-serif; letter-spacing:0.05em; }
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
 
-  .dx-result{display:none}
-  .dx-result.show{display:block;animation:fadeUp .5s ease}
-  .dx-result .pre{font-size:11px;color:var(--sub);margin:0;text-align:center;letter-spacing:.06em}
-  .dx-result h2{font-size:14px;color:var(--bl2);margin:4px 0 16px;font-weight:900;text-align:center;line-height:1.5}
-  .dx-result h2 small{display:block;font-size:11px;color:var(--sub);font-weight:600;margin-top:2px}
-  .savings-card{background:linear-gradient(135deg,#E1F5FE,#81D4FA);border:3px solid #0288D1;border-radius:14px;padding:18px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden}
-  .savings-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.6),transparent 60%);animation:rotShine 5s linear infinite}
-  @keyframes rotShine{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-  .savings-card > *{position:relative}
-  .savings-card .lbl{font-size:11px;font-weight:900;color:var(--bl2);letter-spacing:.08em}
-  .savings-card .yen{font-family:"RocknRoll One";font-size:52px;color:#01579B;line-height:1;margin:6px 0 0;-webkit-text-stroke:1.2px #fff}
-  .savings-card .yen .u{font-size:20px;color:var(--ink);margin-left:4px;-webkit-text-stroke:0;font-family:"Noto Sans JP";font-weight:900}
-  .savings-card .ms{font-size:13px;color:var(--ink);font-weight:700;margin-top:6px}
-  .savings-card .ms b{color:var(--r);font-size:1.15em}
+/* === Top Bar === */
+.topbar{ background:var(--navy-deep); color:white; font-size:11px; letter-spacing:0.05em; padding:6px 0; }
+.topbar-inner{ max-width:1200px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.topbar a{ opacity:0.85; transition:opacity 0.2s; }
+.topbar a:hover{ opacity:1; }
+@media(max-width:640px){ .topbar{ font-size:10px; } }
 
-  .compare-bar{background:#fff;border:1px solid #EEE;border-radius:12px;padding:14px;margin-bottom:14px}
-  .compare-bar .ttl{font-size:12px;color:var(--sub);font-weight:700;margin-bottom:8px}
-  .bar-row{display:grid;grid-template-columns:96px 1fr 78px;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
-  .bar-row .lbl{font-weight:700;color:var(--ink-2)}
-  .bar-row .bar{background:#F5F5F5;border-radius:999px;height:18px;position:relative;overflow:hidden}
-  .bar-row .bar i{display:block;height:100%;border-radius:999px}
-  .bar-row.now .bar i{background:linear-gradient(90deg,#FFE0B2,#FB8C00)}
-  .bar-row.next .bar i{background:linear-gradient(90deg,#A5D6A7,#06C755)}
-  .bar-row .val{text-align:right;font-weight:900;color:var(--bl2);font-family:"RocknRoll One"}
+/* === Header === */
+.site-header{ background:white; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:100; backdrop-filter:saturate(180%) blur(20px); }
+.header-inner{ max-width:1200px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand-mark{ width:42px; height:42px; background:var(--navy); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--yellow); font-family:"Bebas Neue", sans-serif; font-size:22px; letter-spacing:0; }
+.brand-text .name{ font-weight:900; font-size:16px; color:var(--navy); letter-spacing:0.02em; }
+.brand-text .sub{ font-size:10px; color:var(--ink); opacity:0.6; letter-spacing:0.1em; margin-top:2px; }
+.gnav{ display:flex; gap:24px; align-items:center; }
+.gnav a{ font-size:13px; font-weight:500; color:var(--ink); transition:color 0.2s; position:relative; }
+.gnav a:hover{ color:var(--blue); }
+.gnav .cta-mini{ background:var(--navy); color:white; padding:10px 20px; border-radius:4px; font-size:13px; font-weight:700; }
+.gnav .cta-mini:hover{ background:var(--blue); color:white; }
+@media(max-width:900px){ .gnav{ gap:12px; } .gnav a:not(.cta-mini){ display:none; } }
 
-  .dx-detail{background:#F8FCFE;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:var(--ink-2);margin-bottom:14px}
-  .dx-detail b{color:var(--bl2);font-weight:900}
-  .lead-form{background:#E8F5E9;border:2px solid var(--line-g);border-radius:14px;padding:16px;margin-bottom:14px}
-  .lead-form h3{margin:0 0 4px;color:var(--bl2);font-size:14px;font-weight:900}
-  .lead-form p{margin:0 0 10px;font-size:12px;color:var(--ink-2);line-height:1.6}
-  .lead-form .privacy-mini{font-size:10px;color:var(--sub);margin-top:6px;text-align:center}
-  .lead-form .privacy-mini a{color:var(--bl2);text-decoration:underline}
-  .dx-restart{margin-top:8px;font-size:12px;color:var(--sub);background:transparent;border:0;cursor:pointer;font-family:inherit;text-decoration:underline}
+/* === Sim Hero === */
+.sim-hero{ position:relative; overflow:hidden; color:white; padding:64px 0 88px; background:linear-gradient(150deg,#061a47 0%, #0b2a6b 45%, #1a3a82 100%); isolation:isolate; }
+.sim-hero::after{ content:""; position:absolute; inset:0; z-index:0; opacity:0.18; background-image:repeating-linear-gradient(115deg, transparent 0 38px, rgba(255,255,255,0.08) 38px 39px); }
+.sim-hero-inner{ max-width:1100px; margin:0 auto; padding:0 20px; position:relative; z-index:1; }
+.sim-eyebrow{ font-family:"Bebas Neue", sans-serif; font-size:13px; letter-spacing:0.4em; color:var(--yellow); margin-bottom:14px; }
+.sim-hero h1{ font-family:"Noto Serif JP", serif; font-weight:900; font-size:clamp(26px,4.6vw,42px); line-height:1.35; margin-bottom:16px; }
+.sim-hero h1 .accent{ color:var(--yellow); }
+.sim-hero p{ font-size:15px; line-height:1.95; opacity:0.92; max-width:760px; }
+
+/* === Tool === */
+.tool{ max-width:1100px; margin:-56px auto 0; padding:0 20px 96px; position:relative; z-index:5; }
+.tool-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+@media(max-width:860px){ .tool-grid{ grid-template-columns:1fr; } }
+.card{ background:white; border:1px solid var(--line); border-radius:14px; padding:28px; box-shadow:0 20px 60px -28px rgba(6,26,71,0.5); }
+.card h2{ font-family:"Noto Serif JP", serif; font-size:19px; color:var(--navy); margin-bottom:6px; }
+.card .lead{ font-size:13px; color:#555; margin-bottom:22px; line-height:1.8; }
+
+.field{ margin-bottom:22px; }
+.field label{ display:block; font-size:13px; font-weight:700; color:var(--navy); margin-bottom:8px; }
+.field .hint{ font-size:11px; color:#888; font-weight:400; margin-left:6px; }
+.bill-input{ display:flex; align-items:center; gap:10px; }
+.bill-input input[type=number]{ flex:1; font-size:24px; font-weight:700; color:var(--ink); padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-family:inherit; min-width:0; }
+.bill-input input[type=number]:focus{ outline:none; border-color:var(--blue); }
+.bill-input .unit{ font-size:14px; color:#666; white-space:nowrap; }
+
+.btype{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+@media(max-width:520px){ .btype{ grid-template-columns:repeat(2,1fr); } }
+.btype button{ font-family:inherit; font-size:12.5px; font-weight:700; padding:11px 6px; border:1.5px solid var(--line); background:white; color:#444; border-radius:8px; cursor:pointer; transition:all 0.18s; }
+.btype button:hover{ border-color:var(--sky); }
+.btype button.active{ background:var(--navy); color:white; border-color:var(--navy); }
+
+.slider-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+.slider-row .val{ font-weight:900; color:var(--blue); font-size:15px; }
+input[type=range]{ width:100%; accent-color:var(--blue); height:4px; }
+.basis{ font-size:11px; color:#999; margin-top:6px; line-height:1.6; }
+
+.addons{ display:grid; gap:10px; margin-top:4px; }
+.addon{ display:flex; gap:12px; align-items:flex-start; padding:13px 14px; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; transition:all 0.18s; }
+.addon:hover{ border-color:var(--sky); background:#f7faff; }
+.addon.on{ border-color:var(--blue); background:#f2f7ff; }
+.addon input{ margin-top:3px; width:17px; height:17px; accent-color:var(--blue); flex-shrink:0; }
+.addon .t{ font-size:13.5px; font-weight:700; color:var(--navy); }
+.addon .d{ font-size:11.5px; color:#666; line-height:1.65; margin-top:2px; }
+
+/* === Result === */
+.result{ position:sticky; top:90px; }
+.result .big-num{ font-family:"Bebas Neue", sans-serif; font-size:clamp(40px,8vw,64px); line-height:1; color:var(--navy); letter-spacing:0.01em; }
+.result .big-num .yen{ font-family:"Zen Kaku Gothic New",sans-serif; font-size:0.42em; font-weight:900; color:var(--yellow-deep); }
+.result .annual-label{ font-size:12px; letter-spacing:0.12em; color:var(--blue); font-weight:700; margin-bottom:6px; }
+.result .range-note{ font-size:12px; color:#777; margin-top:8px; }
+.breakdown{ margin:22px 0 0; border-top:1px dashed var(--line); padding-top:18px; }
+.breakdown .row{ display:flex; justify-content:space-between; align-items:baseline; font-size:13px; padding:7px 0; }
+.breakdown .row span:first-child{ color:#555; }
+.breakdown .row b{ color:var(--ink); font-size:14px; }
+.breakdown .row.muted b{ color:#999; font-weight:500; }
+.addon-result{ margin-top:14px; padding:13px 15px; background:#fff8e6; border:1px solid #fde9b0; border-radius:10px; font-size:12.5px; color:#7a5a00; line-height:1.7; }
+.addon-result b{ color:var(--yellow-deep); }
+
+.disclaimer{ margin-top:18px; background:#f6f7f9; border:1px solid var(--line); border-radius:10px; padding:14px 16px; font-size:11.5px; color:#666; line-height:1.75; }
+.disclaimer b{ color:var(--navy); }
+
+.result-cta{ margin-top:20px; display:grid; gap:10px; }
+.result-cta a{ display:flex; align-items:center; justify-content:center; gap:8px; padding:16px; border-radius:8px; font-weight:700; font-size:14.5px; letter-spacing:0.04em; transition:all 0.22s; }
+.result-cta .c-primary{ background:var(--yellow); color:var(--navy-deep); box-shadow:0 8px 26px -10px rgba(245,158,11,0.7); }
+.result-cta .c-primary:hover{ transform:translateY(-2px); background:var(--yellow-deep); color:white; }
+.result-cta .c-line{ background:#06C755; color:white; }
+.result-cta .c-line:hover{ transform:translateY(-2px); filter:brightness(1.05); }
+
+/* === Final note / footer === */
+.context{ max-width:1100px; margin:0 auto; padding:0 20px 80px; }
+.context .box{ background:white; border:1px solid var(--line); border-radius:14px; padding:30px; }
+.context h3{ font-family:"Noto Serif JP", serif; color:var(--navy); font-size:18px; margin-bottom:12px; }
+.context ul{ list-style:none; display:grid; gap:10px; }
+.context li{ font-size:13.5px; color:#444; line-height:1.8; padding-left:22px; position:relative; }
+.context li::before{ content:"✓"; position:absolute; left:0; color:var(--yellow-deep); font-weight:900; }
+
+/* === Footer === */
+.footer{ background:var(--navy-deep); color:white; padding:64px 0 32px; }
+.footer-inner{ max-width:1200px; margin:0 auto; padding:0 20px; }
+.footer-grid{ display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:32px; margin-bottom:48px; }
+@media(max-width:900px){ .footer-grid{ grid-template-columns:1fr 1fr; gap:32px; } }
+@media(max-width:560px){ .footer-grid{ grid-template-columns:1fr; } }
+.footer-brand .name{ font-family:"Noto Serif JP", serif; font-size:20px; font-weight:800; color:white; margin-bottom:6px; }
+.footer-brand .desc{ font-size:12px; opacity:0.7; line-height:1.8; margin-bottom:16px; }
+.footer h4{ font-size:12px; color:var(--yellow); letter-spacing:0.15em; margin-bottom:16px; font-weight:700; }
+.footer ul{ list-style:none; }
+.footer ul li{ margin-bottom:10px; }
+.footer ul a{ font-size:13px; opacity:0.8; transition:opacity 0.2s; }
+.footer ul a:hover{ opacity:1; color:var(--yellow); }
+.footer-bottom{ border-top:1px solid rgba(255,255,255,0.1); padding-top:24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:11px; opacity:0.6; }
+.footer-bottom a:hover{ opacity:1; }
+.footer-social{ display:flex; gap:10px; margin-top:18px; }
+.social-icon{ width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.08); color:white; transition:all 0.25s; }
+.social-icon svg{ width:18px; height:18px; }
+.social-icon:hover{ transform:translateY(-2px); }
+.social-icon.line:hover{ background:#06C755; color:white; }
+.social-icon.facebook:hover{ background:#1877F2; color:white; }
+
+/* Floating LINE */
+.line-float{ position:fixed; right:18px; bottom:18px; z-index:200; background:#06C755; color:white; padding:13px 20px; border-radius:40px; font-weight:700; font-size:14px; box-shadow:0 10px 30px -8px rgba(6,199,85,0.7); display:flex; align-items:center; gap:8px; }
+.line-float:hover{ transform:translateY(-2px); }
+.line-float svg{ width:20px; height:20px; }
 </style>
 </head>
 <body>
-<div class="wrap">
 
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <span>京葉工業地域から、明日の千葉をつくる ｜ シスコムサステナシールド</span>
+    <span><a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener">お問い合わせ</a> ｜ <a href="../faq.html">よくあるご質問</a></span>
+  </div>
+</div>
+
+<!-- Header -->
 <header class="site-header">
-  <a href="../index.html" class="brand" style="text-decoration:none">
-    <span class="mark">S</span>
-    <span>シスコムサステナシールド<small>省エネ・創エネ ワンストップ</small></span>
-  </a>
-  <div class="actions">
-    <span class="area-tag">千葉県対応</span>
-    <button class="menu-btn" id="menuBtn" aria-label="メニュー" type="button"><span></span><span></span><span></span></button>
+  <div class="header-inner">
+    <a href="../" class="brand">
+      <div class="brand-mark">S</div>
+      <div class="brand-text">
+        <div class="name">シスコムサステナシールド</div>
+        <div class="sub">SYSCOM SUSTAINA SHIELD</div>
+      </div>
+    </a>
+    <nav class="gnav">
+      <a href="../#services">サービス</a>
+      <a href="../#why">選ばれる理由</a>
+      <a href="../company.html">会社案内</a>
+      <a href="./">シミュレーター</a>
+      <a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" class="cta-mini">無料診断</a>
+    </nav>
   </div>
 </header>
 
-<div class="side-menu" id="sideMenu">
-  <div class="panel">
-    <div class="panel-head"><h3>メニュー</h3><button id="sideMenuClose" type="button">×</button></div>
-    <nav>
-      <a href="../index.html"><span class="ic">🏠</span>トップ<span class="arr">›</span></a>
-      <a href="./" class="current"><span class="ic">📊</span>卒FIT自家消費診断<span class="arr">›</span></a>
-      <a href="../lp/"><span class="ic">🛡️</span>省エネ・創エネLP<span class="arr">›</span></a>
-      <a href="../terasaki_lp.html"><span class="ic">👤</span>代表プロフィール<span class="arr">›</span></a>
-    </nav>
-    <div class="panel-foot">
-      <a class="btn-line" href="https://line.me/R/ti/p/@829oslez" target="_blank" rel="noopener"><span class="icn">L</span><span><span class="lbl-mini">＼ 30秒で完了 ／</span>LINEで無料診断</span></a>
-    </div>
-  </div>
-</div>
-
-<!-- Hero -->
-<div class="diag-hero">
-  <span class="badge-pop">⚡ 卒FIT世帯むけ・30秒・無料</span>
-  <h1>余った太陽光、<br><span class="num">いくら</span>お得に変わる？</h1>
-  <p>7問でわかる「売る→使う」おひさまエコキュート診断</p>
-  <div class="promises">
-    <span>✓ 個人情報不要</span>
-    <span>✓ しつこい営業なし</span>
-    <span>✓ 完全無料</span>
-  </div>
-</div>
-
-<div class="dx-card-full" id="dxCard">
-  <div class="dx-progress">
-    <span class="label" id="dxStepLabel">Q1 / 7</span>
-    <div class="dx-bar"><i id="dxBar"></i></div>
-  </div>
-
-  <!-- Q1 太陽光 -->
-  <div class="dx-step active" data-step="1">
-    <span class="qnum">Q1</span>
-    <h2>太陽光発電はありますか？</h2>
-    <p class="h">余った電気を「お湯」に変えられるかの大前提です</p>
-    <div class="dx-options cols-1">
-      <button class="dx-opt" data-key="solar" data-val="yes">設置している</button>
-      <button class="dx-opt" data-key="solar" data-val="plan">これから検討したい</button>
-      <button class="dx-opt" data-key="solar" data-val="none">設置していない</button>
-    </div>
-  </div>
-
-  <!-- Q2 FIT状況 -->
-  <div class="dx-step" data-step="2">
-    <span class="qnum">Q2</span>
-    <h2>売電（FIT）の状況は？</h2>
-    <p class="h">FIT終了後＝卒FIT は、いちばん効果が出やすいタイミングです</p>
-    <div class="dx-options cols-1">
-      <button class="dx-opt" data-key="fit" data-val="done">卒FIT済み（10年終了）</button>
-      <button class="dx-opt" data-key="fit" data-val="soon">もうすぐ卒FIT</button>
-      <button class="dx-opt" data-key="fit" data-val="now">まだFIT期間中</button>
-      <button class="dx-opt" data-key="fit" data-val="unknown">わからない</button>
-    </div>
-  </div>
-
-  <!-- Q3 容量 -->
-  <div class="dx-step" data-step="3">
-    <span class="qnum">Q3</span>
-    <h2>太陽光の容量は？（だいたいで可）</h2>
-    <p class="h">余剰のボリュームで自家消費できる量が変わります</p>
-    <div class="dx-options">
-      <button class="dx-opt" data-key="cap" data-val="3">〜3kW</button>
-      <button class="dx-opt" data-key="cap" data-val="4.5">4〜5kW</button>
-      <button class="dx-opt" data-key="cap" data-val="6">5〜6kW</button>
-      <button class="dx-opt" data-key="cap" data-val="8">7kW〜</button>
-    </div>
-    <button class="dx-skip" data-key="cap" data-val="unknown">→ よく分からないので「だいたい」で答える</button>
-  </div>
-
-  <!-- Q4 家族 -->
-  <div class="dx-step" data-step="4">
-    <span class="qnum">Q4</span>
-    <h2>ご家族は何人ですか？</h2>
-    <p class="h">お湯の使用量（給湯の電力量）の目安を推計します</p>
-    <div class="dx-options">
-      <button class="dx-opt" data-key="size" data-val="1"><span class="ico">👤</span>1人</button>
-      <button class="dx-opt" data-key="size" data-val="2"><span class="ico">👫</span>2人</button>
-      <button class="dx-opt" data-key="size" data-val="3"><span class="ico">👨‍👩‍👧</span>3〜4人</button>
-      <button class="dx-opt" data-key="size" data-val="5"><span class="ico">👨‍👩‍👧‍👦</span>5人以上</button>
-    </div>
-  </div>
-
-  <!-- Q5 給湯設備 -->
-  <div class="dx-step" data-step="5">
-    <span class="qnum">Q5</span>
-    <h2>今の給湯設備は？</h2>
-    <p class="h">古い設備・ガス/灯油ほど、切替メリットが大きくなります</p>
-    <div class="dx-options cols-1">
-      <button class="dx-opt" data-key="heater" data-val="econew">エコキュート（10年未満）</button>
-      <button class="dx-opt" data-key="heater" data-val="ecoold">エコキュート（10年以上）</button>
-      <button class="dx-opt" data-key="heater" data-val="gas">ガス・灯油の給湯</button>
-      <button class="dx-opt" data-key="heater" data-val="unknown">わからない</button>
-    </div>
-  </div>
-
-  <!-- Q6 エリア -->
-  <div class="dx-step" data-step="6">
-    <span class="qnum">Q6</span>
-    <h2>お住まいエリアは千葉県のどちら？</h2>
-    <p class="h">日射量・地域条件を加味します</p>
-    <div class="dx-options cols-1">
-      <button class="dx-opt" data-key="area" data-val="nw">北西部<small>船橋・市川・松戸・柏・浦安・習志野・八千代 ほか</small></button>
-      <button class="dx-opt" data-key="area" data-val="ce">中央部<small>千葉市・市原・四街道・佐倉・八街・東金 ほか</small></button>
-      <button class="dx-opt" data-key="area" data-val="bs">房総・東部<small>木更津・茂原・成田・館山・銚子 ほか</small></button>
-    </div>
-  </div>
-
-  <!-- Q7 検討度 -->
-  <div class="dx-step" data-step="7">
-    <span class="qnum">Q7</span>
-    <h2>ご検討度は？</h2>
-    <p class="h">最適なご案内方法を判断するために伺います</p>
-    <div class="dx-options cols-1">
-      <button class="dx-opt" data-key="intent" data-val="now">いますぐ相談したい</button>
-      <button class="dx-opt" data-key="intent" data-val="soon">数ヶ月以内に検討したい</button>
-      <button class="dx-opt" data-key="intent" data-val="later">情報収集中</button>
-      <button class="dx-opt" data-key="intent" data-val="just">概算だけ知りたい</button>
-    </div>
-  </div>
-
-  <div class="dx-actions">
-    <button class="dx-back" id="dxBack" type="button">← 戻る</button>
-    <span style="font-size:11px;color:var(--sub)">タップで自動的に次へ</span>
-  </div>
-
-  <!-- ===== RESULT ===== -->
-  <div class="dx-result" id="dxResult">
-    <p class="pre">━━ 診断結果 ━━</p>
-    <h2 id="dxResultTitle">あなたの場合の概算メリット<small>「売る」より「使う」に変えたら</small></h2>
-
-    <div class="savings-card">
-      <div class="lbl" id="dxSaveLabel">想定 年間メリット（概算）</div>
-      <div class="yen"><span id="dxYearly">0</span><span class="u">円</span></div>
-      <div class="ms">15年でおよそ <b id="dxTotal">0</b> 円</div>
-    </div>
-
-    <div class="compare-bar">
-      <div class="ttl">余った電気の“価値”（年間・試算）</div>
-      <div class="bar-row now">
-        <span class="lbl">売電のまま</span>
-        <div class="bar"><i id="barNow"></i></div>
-        <span class="val"><span id="dxNow">0</span>円</span>
-      </div>
-      <div class="bar-row next">
-        <span class="lbl">お湯に自家消費</span>
-        <div class="bar"><i id="barNext"></i></div>
-        <span class="val"><span id="dxNext">0</span>円</span>
-      </div>
-    </div>
-
-    <div class="dx-detail">
-      <b>📊 試算根拠</b><br>
-      <span id="dxDetail"></span>
-    </div>
-
-    <div class="lead-form">
-      <h3>📨 正式な「実数」診断を公式LINEで！</h3>
-      <p>発電量・検針票をもとに、<strong>あなたの家だけの正確なメリット</strong>と最適プラン・補助金まで、省エネアドバイザーがご提案します。</p>
-      <a class="btn-line" href="https://line.me/R/ti/p/@829oslez" target="_blank" rel="noopener" style="margin-bottom:6px"><span class="icn">L</span><span><span class="lbl-mini">＼ 無料・しつこい営業なし ／</span>LINEで正式診断を受け取る</span></a>
-      <div class="privacy-mini">登録は無料／<a href="../tokushoho.html">特定商取引法</a>・<a href="../privacy.html">プライバシーポリシー</a></div>
-    </div>
-
-    <div style="text-align:center">
-      <button class="dx-restart" id="dxRestart" type="button">↻ もう一度診断する</button>
-    </div>
-  </div>
-</div>
-
-<!-- 補足 -->
-<section style="background:var(--bg);padding:30px 20px;margin-top:8px">
-  <div class="eyebrow">ABOUT THIS</div>
-  <h2 class="h2">この診断について</h2>
-  <p class="lead-c">7問・30秒で、卒FIT後に余剰電力を「自家消費」へ変えた場合の<strong>概算メリット</strong>を試算します。</p>
-
-  <div class="card card-y" style="margin-bottom:14px">
-    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">📌 試算の前提と精度</h3>
-    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
-      「夜間に買っていた給湯用の電気を、売電に回していた太陽光の余剰でまかなう」前提の概算です。<b>メリット ＝ 給湯の年間電力量 × 自家消費率 ×（夜間買電単価 − 売電単価）</b>。
-      給湯の消費電力はメーカー・環境省の一般的な目安、買電単価は経済産業省/ご契約先、売電単価は卒FIT後のご契約先を基準にした<strong>仮の値【要確認】</strong>です。実際の金額は発電量・お湯の使い方・契約プランで変わるため、<strong>正式な額はLINEの無料・実測診断で確定</strong>します。<br>
-      <span style="display:inline-block;margin-top:8px">💰 国の高効率給湯器補助金「<a href="https://kyutou-shoene2026.meti.go.jp/" target="_blank" rel="noopener" style="color:var(--bl2);font-weight:800">給湯省エネ2026事業</a>」では、エコキュート（ヒートポンプ給湯機）は<strong>1台7万円（基本額）〜最大10万円</strong>の補助対象。申請は2025年11月28日〜予算上限まで（遅くとも2026年12月31日）。要件・予算枠は公式でご確認ください。</span>
-    </p>
-  </div>
-
-  <div class="card" style="margin-bottom:14px">
-    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">🔒 個人情報の取り扱い</h3>
-    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
-      診断のみなら<strong>個人情報は不要</strong>です。お名前・ご連絡先をお預かりするのは、お見積り・診断のご依頼以降のみ。<a href="../privacy.html">プライバシーポリシー</a>に基づき安全に管理します。
-    </p>
-  </div>
-
-  <div class="card" style="margin-bottom:0">
-    <h3 style="margin:0 0 8px;font-size:15px;color:var(--bl2);font-weight:900">📞 執拗な営業はしません</h3>
-    <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.7">
-      電気工事27年の省エネアドバイザーが、データに基づきご提案します。診断結果のご相談は、お客様のペースで公式LINEからどうぞ。
+<!-- Sim Hero -->
+<section class="sim-hero">
+  <div class="sim-hero-inner">
+    <div class="sim-eyebrow">ELECTRICITY COST SIMULATOR</div>
+    <h1>毎月の電気代から、<br><span class="accent">どれだけ減らせるか</span>を試算する。</h1>
+    <p>
+      工場・倉庫・店舗・ホテル・住宅まで。毎月の電気代を入力するだけで、遮熱断熱塗装（冷暖トリプルガードコート）・太陽光・蓄電池・卒FITによる電気代削減の<strong>概算目安</strong>をその場で確認できます。
+      数字は<strong>あくまで目安</strong>です。正確な削減額は現地調査のうえ正式にお見積りします。
     </p>
   </div>
 </section>
 
-<footer class="site-footer">
-  <div class="grid">
-    <div>
-      <h4>シスコムサステナシールド</h4>
-      <ul>
-        <li>代表／省エネアドバイザー 寺嵜忠弘</li>
-        <li>元 株式会社シスコムネット 専務取締役</li>
-        <li>千葉県対応／電気工事27年</li>
-        <li>TEL 043-261-8033</li>
-      </ul>
-    </div>
-    <div>
-      <h4>メニュー</h4>
-      <ul style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
-        <li><a href="../index.html">トップ</a></li>
-        <li><a href="./">卒FIT診断</a></li>
-        <li><a href="../lp/">省エネ創エネLP</a></li>
-        <li><a href="../terasaki_lp.html">代表プロフィール</a></li>
-        <li><a href="../privacy.html">プライバシー</a></li>
-        <li><a href="../tokushoho.html">特商法</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="copy">© SYSCOM SUSTAINA SHIELD</div>
-</footer>
+<!-- Tool -->
+<div class="tool">
+  <div class="tool-grid">
 
+    <!-- INPUT -->
+    <div class="card">
+      <h2>① 条件を入力</h2>
+      <p class="lead">毎月の電気代と建物のタイプ、気になる対策を選んでください。スライダーは目安値です。実態に合わせて調整できます。</p>
+
+      <div class="field">
+        <label>毎月の電気代 <span class="hint">（税込のおおよその金額）</span></label>
+        <div class="bill-input">
+          <input type="number" id="bill" value="80000" min="0" step="1000" inputmode="numeric">
+          <span class="unit">円 / 月</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>建物のタイプ</label>
+        <div class="btype" id="btype">
+          <button data-ac="40" class="active">工場</button>
+          <button data-ac="40">倉庫・物流</button>
+          <button data-ac="35">店舗・オフィス</button>
+          <button data-ac="45">ホテル・宿泊</button>
+          <button data-ac="45">商業・施設</button>
+          <button data-ac="30">住宅</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="slider-row">
+          <label style="margin:0;">電気代に占める空調の割合</label>
+          <span class="val"><span id="acVal">40</span>%</span>
+        </div>
+        <input type="range" id="acRatio" min="15" max="55" value="40" step="1">
+        <div class="basis">目安：工場・倉庫など空調負荷の大きい建物では、空調が電気代の<b>30〜50%</b>を占めるケースがあります（建物・運用により変動）。</div>
+      </div>
+
+      <div class="field">
+        <div class="slider-row">
+          <label style="margin:0;">遮熱断熱塗装による空調削減率</label>
+          <span class="val"><span id="coatVal">10</span>%</span>
+        </div>
+        <input type="range" id="coatRate" min="0" max="20" value="10" step="1">
+        <div class="basis">冷暖トリプルガードコート（脂肪族ポリウレア）を屋根・外壁に施工した場合の空調コスト削減は<b>最大20%</b>を目安としています（当社実績ベース・建物条件により変動）。控えめに見るときは小さめに設定してください。</div>
+      </div>
+
+      <div class="field" style="margin-bottom:6px;">
+        <label>あわせて検討したい対策 <span class="hint">（任意）</span></label>
+        <div class="addons" id="addons">
+          <label class="addon"><input type="checkbox" id="ad-solar"><span><span class="t">太陽光発電（自家消費）</span><span class="d">昼間の電気を自家発電でまかない、買う電気を減らす。</span></span></label>
+          <label class="addon"><input type="checkbox" id="ad-batt"><span><span class="t">蓄電池</span><span class="d">安い時間帯・余剰電力をためてピークの買電を抑える。BCP（停電対策）にも。</span></span></label>
+          <label class="addon"><input type="checkbox" id="ad-fit"><span><span class="t">卒FIT（FIT期間の終了が近い）</span><span class="d">売電単価が下がる前に、自家消費・蓄電池への切替を検討。</span></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div>
+      <div class="card result">
+        <h2 style="margin-bottom:14px;">② 削減の目安</h2>
+        <div class="annual-label">遮熱断熱塗装による 年間削減額（概算）</div>
+        <div class="big-num"><span id="annualLow">—</span> 〜 <span id="annualHigh">—</span><span class="yen"> 円/年</span></div>
+        <div class="range-note">月あたり <b id="monthRange">—</b> 円の目安です。</div>
+
+        <div class="breakdown">
+          <div class="row"><span>入力した電気代</span><b id="bRecap">80,000 円/月</b></div>
+          <div class="row"><span>うち空調の推定電気代</span><b id="acCost">—</b></div>
+          <div class="row muted"><span>適用した空調削減率</span><b id="rateRecap">7〜10%</b></div>
+        </div>
+
+        <div class="addon-result" id="addonBox" style="display:none;">
+          <b>＋ 上乗せ削減の可能性：</b><span id="addonText"></span><br>
+          これらは建物・契約・日射・屋根条件で大きく変わるため、具体的な金額は<b>無料診断</b>で個別に試算します。
+        </div>
+
+        <div class="disclaimer">
+          <b>※ この試算は概算の目安です。</b>実際の削減額は建物の構造・断熱状況・空調の使い方・電力契約・季節などで変動します。効果を保証するものではありません。
+          正確な金額は<b>現地調査のうえ正式なお見積り</b>でご提示します。補助金の対象可否・金額も別途確認が必要です。
+        </div>
+
+        <div class="result-cta">
+          <a class="c-primary" href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener">この条件で無料診断を申し込む →</a>
+          <a class="c-line" href="https://page.line.me/119upwsl" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+            公式LINEで相談する
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<a class="float-line" href="https://line.me/R/ti/p/@829oslez" target="_blank" rel="noopener">
-  <span class="icn">L</span>
-  <span class="lbl"><small>＼ 30秒で概算メリットがわかる ／</small><b>LINEで無料診断する</b></span>
-  <span class="arr">▶</span>
+<!-- Context -->
+<div class="context">
+  <div class="box">
+    <h3>この試算でわかること・できないこと</h3>
+    <ul>
+      <li><b>わかること：</b>毎月の電気代のうち空調が占めるおおよその割合と、遮熱断熱塗装で削減できる電気代の概算レンジ。</li>
+      <li><b>太陽光・蓄電池・卒FITは「上乗せ」の可能性として表示します。</b>具体的な削減額は屋根面積・日射・電力契約・既設設備で変わるため、無料診断で個別に試算します。</li>
+      <li><b>できないこと：</b>金額の確定・補助金の可否断定はこのページではできません。正式なお見積り・補助金確認は別途、現地調査と専門家連携のうえで行います。</li>
+      <li>電気業界27年・千葉拠点のシスコムサステナシールドが、省エネ（断熱塗装）と創エネ（太陽光・蓄電池）を<b>ひとつの窓口</b>でご提案します。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="name serif">シスコムサステナシールド</div>
+        <div class="desc">千葉の企業のための<br>省エネ・創エネ ワンストップ</div>
+        <div style="font-size:11px; opacity:0.7; line-height:1.85;">
+          代表 寺嵜忠弘<br>
+          株式会社シスコムネット代理店<br>
+          脂肪族ポリウレア普及推進協議会会員
+        </div>
+        <div class="footer-social">
+          <a href="https://page.line.me/119upwsl" target="_blank" rel="noopener" class="social-icon line" aria-label="LINE公式アカウント" title="LINE公式アカウントで友だち追加">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+          </a>
+          <a href="https://www.facebook.com/tadahiro.terasaki" class="social-icon facebook" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4>サービス</h4>
+        <ul>
+          <li><a href="./">電気代削減シミュレーター</a></li>
+          <li><a href="../lp/">省エネ・創エネ ダブルプラン</a></li>
+          <li><a href="../proposals/pest-block/">害虫ブロック</a></li>
+          <li><a href="../service.html">全サービス一覧</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>会社情報</h4>
+        <ul>
+          <li><a href="../company.html">会社案内</a></li>
+          <li><a href="../terasaki_lp.html">代表者プロフィール</a></li>
+          <li><a href="../flow.html">ご利用の流れ</a></li>
+          <li><a href="../faq.html">よくあるご質問</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>お問い合わせ</h4>
+        <ul>
+          <li><a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener">無料診断 / 問い合わせ</a></li>
+          <li><a href="../shindan.html">かんたん診断</a></li>
+          <li><a href="../column.html">コラム</a></li>
+          <li><a href="../privacy.html">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 シスコムサステナシールド ／ 寺嵜忠弘</span>
+      <span><a href="../privacy.html">プライバシーポリシー</a> ｜ <a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener">お問い合わせ</a></span>
+    </div>
+  </div>
+</footer>
+
+<a class="line-float" href="https://page.line.me/119upwsl" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+  LINEで相談
 </a>
 
-<script src="../common.js"></script>
 <script>
 (function(){
-  var state = { solar:null, fit:null, cap:null, size:null, heater:null, area:null, intent:null };
-  var totalSteps = 7, currentStep = 1;
-  var bar = document.getElementById('dxBar');
-  var label = document.getElementById('dxStepLabel');
-  var backBtn = document.getElementById('dxBack');
-  var resultEl = document.getElementById('dxResult');
-  var restartBtn = document.getElementById('dxRestart');
-  var card = document.getElementById('dxCard');
+  var bill = document.getElementById('bill');
+  var acRatio = document.getElementById('acRatio');
+  var coatRate = document.getElementById('coatRate');
+  var acVal = document.getElementById('acVal');
+  var coatVal = document.getElementById('coatVal');
+  var btypeWrap = document.getElementById('btype');
 
-  // ===== 前提値（すべて目安・要確認。LINE正式診断で実数化）=====
-  var TN = 29.0;   // 夜間買電単価 円/kWh【要確認：契約プラン/経産省】
-  var TS = 8.5;    // 卒FIT売電単価 円/kWh【要確認：契約先】
-  var TS_FIT = 17.0; // FIT期間中の想定売電単価（高いのでメリット小）
-  var E_BY_SIZE = {'1':900,'2':1200,'3':1600,'5':2000}; // 給湯の年間消費電力 kWh【要確認：機種/環境省】
-  var R_BY_CAP  = {'3':0.6,'4.5':0.8,'6':0.9,'8':0.95,'unknown':0.75}; // 昼の余剰で給湯をまかなえる率
+  function yen(n){ return Math.round(n).toLocaleString('ja-JP'); }
 
-  function showStep(n){
-    document.querySelectorAll('.dx-step').forEach(function(el){
-      el.classList.toggle('active', parseInt(el.dataset.step,10) === n);
-    });
-    label.textContent = 'Q' + n + ' / ' + totalSteps;
-    bar.style.width = (n / totalSteps * 100) + '%';
-    backBtn.style.visibility = (n === 1) ? 'hidden' : 'visible';
-    resultEl.classList.remove('show');
-    document.querySelector('.dx-actions').style.display = '';
-  }
-  function selectOption(btn){
-    state[btn.dataset.key] = btn.dataset.val;
-    btn.parentElement.querySelectorAll('.dx-opt').forEach(function(b){b.classList.remove('selected')});
-    btn.classList.add('selected');
-    setTimeout(function(){
-      if(currentStep < totalSteps){ currentStep += 1; showStep(currentStep); }
-      else { renderResult(); }
-    }, 300);
-  }
-  document.querySelectorAll('.dx-opt,.dx-skip').forEach(function(b){
-    b.addEventListener('click', function(){ selectOption(b); });
-  });
-  backBtn.addEventListener('click', function(){
-    if(resultEl.classList.contains('show')){ resultEl.classList.remove('show'); showStep(currentStep); return; }
-    if(currentStep > 1){ currentStep -= 1; showStep(currentStep); }
-  });
-  restartBtn.addEventListener('click', function(){
-    state = { solar:null, fit:null, cap:null, size:null, heater:null, area:null, intent:null };
-    document.querySelectorAll('.dx-opt').forEach(function(b){b.classList.remove('selected')});
-    currentStep = 1; showStep(1);
-    card.scrollIntoView({behavior:'smooth',block:'start'});
-  });
+  function calc(){
+    var b = Math.max(0, Number(bill.value) || 0);
+    var ac = Number(acRatio.value);
+    var coat = Number(coatRate.value);
+    acVal.textContent = ac;
+    coatVal.textContent = coat;
 
-  function fmt(n){ return Math.round(n).toLocaleString('ja-JP'); }
-  function sl(s){return ({'1':'1人','2':'2人','3':'3〜4人','5':'5人以上'}[s])||'';}
-  function al(a){return ({nw:'北西部',ce:'中央部',bs:'房総・東部'}[a])||'千葉県';}
+    var acCost = b * ac / 100;                 // 月の空調電気代（推定）
+    var saveHighMonth = acCost * coat / 100;   // 月の削減（上限：入力レート）
+    var saveLowMonth  = saveHighMonth * 0.7;   // 控えめレンジ（70%）
+    var annualLow  = saveLowMonth * 12;
+    var annualHigh = saveHighMonth * 12;
 
-  function animN(el,t){
-    var dur=1400,start=performance.now();
-    function tick(now){
-      var p=Math.max(0,Math.min(1,(now-start)/dur));
-      var e=1-Math.pow(1-p,3);
-      el.textContent = fmt(t*e);
-      if(p<1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
+    document.getElementById('annualLow').textContent  = yen(annualLow);
+    document.getElementById('annualHigh').textContent = yen(annualHigh);
+    document.getElementById('monthRange').textContent = yen(saveLowMonth) + ' 〜 ' + yen(saveHighMonth);
+    document.getElementById('bRecap').textContent  = yen(b) + ' 円/月';
+    document.getElementById('acCost').textContent  = yen(acCost) + ' 円/月';
+    document.getElementById('rateRecap').textContent = (coat*0.7).toFixed(1).replace(/\.0$/,'') + '〜' + coat + '%';
 
-  function renderResult(){
-    var E = E_BY_SIZE[state.size] || 1600;
-    var noSolar = (state.solar === 'none');
-    var cap = state.cap || (noSolar ? '4.5' : 'unknown'); // 太陽光なしは5kW導入想定で試算
-    var r = R_BY_CAP[cap] || 0.75;
-
-    var ts = TS;
-    if(state.fit === 'now') ts = TS_FIT;           // FIT期間中は売電単価が高い→メリット小
-    var diff = Math.max(0.5, TN - ts);
-
-    var sellValue = E * r * ts;          // 売電のまま（その余剰を売った価値）
-    var selfValue = E * r * TN;          // お湯に自家消費（買電を減らせた価値）
-    var merit = Math.round((selfValue - sellValue) / 100) * 100;
-    if(merit < 0) merit = 0;
-
-    // 古い設備・ガス/灯油は買い替え価値が上乗せされやすい（メッセージで補足、概算には係数僅少）
-    var heaterBonus = (state.heater==='ecoold' || state.heater==='gas') ? 1.1 : 1.0;
-    merit = Math.round(merit * heaterBonus / 100) * 100;
-
-    animN(document.getElementById('dxYearly'), Math.max(merit,0));
-    document.getElementById('dxTotal').textContent = fmt(Math.max(merit,0) * 15);
-    document.getElementById('dxNow').textContent = fmt(sellValue);
-    document.getElementById('dxNext').textContent = fmt(selfValue);
-    var maxBar = Math.max(sellValue, selfValue, 1);
-    document.getElementById('barNow').style.width  = (sellValue/maxBar*100) + '%';
-    document.getElementById('barNext').style.width = (selfValue/maxBar*100) + '%';
-
-    // タイトル
-    var t = al(state.area) + ' / ' + sl(state.size) + 'ご家族';
-    document.querySelector('#dxResultTitle').firstChild.textContent =
-      noSolar ? '太陽光＋おひさまエコキュート導入時の概算' : (t + 'の概算メリット');
-    document.getElementById('dxSaveLabel').textContent =
-      noSolar ? '想定 年間メリット（太陽光5kW導入時の概算）' : '想定 年間メリット（概算）';
-
-    // 詳細
-    var d = '';
-    d += '<b>昼の余剰でまかなう給湯：</b>約 ' + fmt(E*r) + ' kWh/年（自家消費率 ' + Math.round(r*100) + '%）。<br>';
-    d += '<b>単価差：</b>夜間買電 約¥' + TN + ' − 売電 約¥' + ts + ' ＝ <b>¥' + diff.toFixed(1) + '/kWh</b>【要確認：契約先・経産省】。<br>';
-    d += '<b>→ 年間メリット 概算 ¥' + fmt(merit) + '</b>（売る→使うの差額）。<br>';
-    if(noSolar){
-      d += '💡 太陽光が未設置のため、<strong>太陽光＋おひさまエコキュートのセット導入</strong>を前提にした試算です。創エネから一体でご提案します。';
-    } else if(state.fit === 'now'){
-      d += '💡 いまはFIT期間中で売電単価が高いため、<strong>卒FIT後にメリットが大きく伸びます</strong>。';
-    } else if(state.heater==='ecoold' || state.heater==='gas'){
-      d += '💡 給湯設備の更新時期。<strong>おひさまエコキュートへの切替で省エネ＋自家消費</strong>を同時に実現できます。';
+    // add-ons
+    var picks = [];
+    if(document.getElementById('ad-solar').checked) picks.push('太陽光発電（自家消費）');
+    if(document.getElementById('ad-batt').checked)  picks.push('蓄電池');
+    if(document.getElementById('ad-fit').checked)   picks.push('卒FITの最適化');
+    var box = document.getElementById('addonBox');
+    if(picks.length){
+      box.style.display = 'block';
+      document.getElementById('addonText').textContent =
+        picks.join('・') + ' を組み合わせると、買う電気そのものを減らせるため、さらに電気代を抑えられる可能性があります。';
     } else {
-      d += '💡 卒FIT済み／間近なら、いまが切替の好機です。国の「給湯省エネ2026事業」でエコキュートは1台7万円〜最大10万円の補助対象。活用可否も一緒に確認します。';
+      box.style.display = 'none';
     }
-    document.getElementById('dxDetail').innerHTML = d;
-
-    document.querySelectorAll('.dx-step').forEach(function(el){el.classList.remove('active')});
-    document.querySelector('.dx-actions').style.display='none';
-    bar.style.width='100%';
-    label.textContent='診断結果';
-    resultEl.classList.add('show');
-    setTimeout(function(){ card.scrollIntoView({behavior:'smooth',block:'start'}); }, 50);
   }
+
+  // building type sets ac ratio default
+  btypeWrap.addEventListener('click', function(e){
+    var btn = e.target.closest('button'); if(!btn) return;
+    btypeWrap.querySelectorAll('button').forEach(function(x){ x.classList.remove('active'); });
+    btn.classList.add('active');
+    acRatio.value = btn.getAttribute('data-ac');
+    calc();
+  });
+
+  // addon visual state
+  document.querySelectorAll('.addon').forEach(function(l){
+    var cb = l.querySelector('input');
+    cb.addEventListener('change', function(){ l.classList.toggle('on', cb.checked); calc(); });
+  });
+
+  ['input','change'].forEach(function(ev){
+    bill.addEventListener(ev, calc);
+    acRatio.addEventListener(ev, calc);
+    coatRate.addEventListener(ev, calc);
+  });
+
+  calc();
 })();
 </script>
+
 </body>
 </html>
