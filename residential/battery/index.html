@@ -13,7 +13,7 @@
 <meta name="robots" content="index,follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/kadai.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://syscom-sustaina-shield.com/"}, {"@type": "ListItem", "position": 2, "name": "住まいの困りごと", "item": "https://syscom-sustaina-shield.com/residential/"}, {"@type": "ListItem", "position": 3, "name": "蓄電池は必要か・停電で何時間", "item": "https://syscom-sustaina-shield.com/residential/battery/"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "停電で何時間使えますか", "acceptedAnswer": {"@type": "Answer", "text": "動かす機器の合計消費電力と蓄電池の実効容量で決まり、太陽光があれば昼間に充電できる分が加わります。製品の定格容量をそのまま時間に換算せず、お宅の重要負荷で計算してお伝えします。固定の時間を約束することはありません。"}}, {"@type": "Question", "name": "太陽光がなくても蓄電池は意味がありますか", "acceptedAnswer": {"@type": "Answer", "text": "夜間に貯めて昼間に使う、停電に備えるという使い方はできますが、貯めた分を使い切れば終わりです。必要kWhが小さければ、蓄電池以外の備えで足りることもあります。"}}, {"@type": "Question", "name": "全負荷型と特定負荷型はどちらがよいですか", "acceptedAnswer": {"@type": "Answer", "text": "停電時に家全体で使いたいか、決めた回路だけでよいかで決まります。全負荷型は費用が高くなる傾向があり、特定負荷型は回路の選び方が重要です。重要負荷を決めてから選びます。"}}, {"@type": "Question", "name": "補助金はありますか", "acceptedAnswer": {"@type": "Answer", "text": "国・県・市の制度は年度・予算・要件で変わります。対象になり得るかは、機種と申請時期を確認したうえで最新条件をもとにご案内します。"}}]}</script>
@@ -59,15 +59,13 @@
 
 <section class="section first" id="anata">
   <div class="wrap">
-    <div class="eyebrow">あなたの場合は</div>
-    <h2 class="h2">あなたの場合は</h2>
+    <h2 class="h2">あなたの場合は どれに近いですか</h2>
     <p class="lead">近いものを選ぶと、その項目へ移動します。選ばなくても、下へ進めば解決策と相談先まで読めます。</p>
     <div class="chips"><a href="#c-hours">停電で何時間もつか知りたい</a><a href="#c-solar">太陽光があるので検討中</a><a href="#c-nosolar">太陽光はないが停電が不安</a><a href="#c-type">全負荷と特定負荷の違いが分からない</a><a href="#c-need">そもそも必要か迷っている</a></div>
   </div>
 </section>
 <section class="section alt" id="scene">
   <div class="wrap">
-    <div class="eyebrow">気づきの場面</div>
     <h2 class="h2">「停電が不安」の中身を 分けてみる</h2>
     <div class="scene">
       <div class="tag">例えばこんな場面</div>
@@ -78,7 +76,6 @@
 </section>
 <section class="section" id="genin">
   <div class="wrap">
-    <div class="eyebrow">考えられる原因</div>
     <h2 class="h2">要否を決める 5つの順番</h2>
     <p class="lead">上から順に決めると、容量と型が自然に絞られます。</p>
     <div class="cause-grid"><div class="cause" id="c-need"><h3>重要負荷を決める</h3><p>停電時に止めたくない機器。冷蔵庫・照明・通信・医療機器・給湯・冷暖房など。全部ではなく、優先順位をつけます。</p></div><div class="cause" id="c-hours"><h3>必要kWhを出す</h3><p>機器の消費電力（W）と使う時間（h）を掛け、合計します。下の目安計算で試せます。停電が何時間続く想定かも決めます。</p></div><div class="cause" id="c-solar"><h3>太陽光の有無</h3><p>太陽光があれば昼間に充電でき、長い停電でも使い続けられる可能性があります。なければ、貯めた分を使い切ったら終わりです。</p></div><div class="cause" id="c-type"><h3>全負荷型か特定負荷型か</h3><p>全負荷型は家全体に給電でき200V機器も使える製品がありますが費用が高め。特定負荷型はあらかじめ決めた回路だけに給電します。</p></div><div class="cause" id="c-nosolar"><h3>停電時の運用</h3><p>出力上限（同時に使える機器の合計）、切替の方法、夜間の使い方。容量が足りても出力が足りないことがあります。</p></div></div>
@@ -86,7 +83,6 @@
 </section>
 <section class="section alt" id="kakunin">
   <div class="wrap">
-    <div class="eyebrow">まず確認するもの</div>
     <h2 class="h2">まず確認するもの</h2>
     <p class="lead">次を書き出しておくと、容量と型の判断が早くなります。</p>
     <div class="check"><ul><li>停電時に止めたくない機器と、その優先順位</li><li>各機器の消費電力（本体のラベルや取扱説明書に記載）</li><li>停電が何時間続く想定で備えるか</li><li>太陽光の有無（設置年・容量・パワーコンディショナの自立運転の有無）</li><li>分電盤の写真（回路数と200V回路の有無）</li><li>医療機器など、絶対に止められないものの有無</li></ul><p class="hint">消費電力が分からない機器は、機種名を教えていただければ確認します。</p></div>
@@ -94,7 +90,6 @@
 </section>
 <section class="section" id="paths">
   <div class="wrap">
-    <div class="eyebrow">解決策の分かれ道</div>
     <h2 class="h2">解決策の分かれ道</h2>
     <p class="lead">必要kWhと太陽光の有無で、蓄電池・付けない選択肢・組み合わせに分かれます。</p>
     <div class="paths"><div class="path main"><div class="role">主な解決策</div><h3>必要kWhと太陽光の有無から容量と型を決める</h3><p>重要負荷と時間から必要kWhを出し、太陽光の有無で全負荷型・特定負荷型・容量を絞ります。停電時の出力上限と運用まで含めて選びます。</p><div class="fit"><b>向く：</b>必要kWhが大きい、太陽光あり、長時間の停電に備えたい<br><b>向かない：</b>必要kWhが小さい、太陽光なしで数時間の備えで十分</div><a class="more" href="#soudan">停電時に動かしたい機器から容量を聞く</a></div><div class="path"><div class="role">代わりの選択肢</div><h3>蓄電池を付けない備え</h3><p>必要kWhが小さい場合。ポータブル電源、太陽光の自立運転コンセント、車のシガーソケット、情報と水の確保など、費用の小さい備えで足りることがあります。</p><div class="fit"><b>向く：</b>冷蔵庫・照明・通信程度、停電が数時間の想定<br><b>向かない：</b>医療機器や冷暖房を長時間</div><a class="more" href="#soudan">付けない場合の備え方を聞く</a></div><div class="path"><div class="role">代わりの選択肢</div><h3>太陽光・卒FITと合わせて考える</h3><p>太陽光がある家や卒FITを迎える家は、昼間の余剰電力を貯める使い方と停電の備えを同時に比較できます。</p><div class="fit"><b>向く：</b>太陽光あり、卒FIT前後<br><b>向かない：</b>太陽光なし</div><a class="more" href="../../sotsu-fit/">卒FIT後の選択肢を比べる</a></div></div>
@@ -103,7 +98,6 @@
 </section>
 <section class="section alt" id="hiyou">
   <div class="wrap">
-    <div class="eyebrow">費用の決まり方</div>
     <h2 class="h2">費用の決まり方</h2>
     <p class="lead">蓄電池の費用は容量だけでは決まりません。</p>
     <ul class="cost-list"><li><b>容量（kWh）と出力（kW）</b> 貯められる量と、同時に使える機器の合計。どちらも要件に合わせます</li><li><b>全負荷型か特定負荷型か</b> 家全体に給電するか、決めた回路だけか。切替盤の工事範囲が変わります</li><li><b>太陽光との接続</b> 既設の太陽光と接続する場合、パワーコンディショナの型と保証の扱い</li><li><b>設置場所と工事</b> 屋外か屋内か、基礎、配線距離、分電盤の改修</li><li><b>保証と更新</b> 容量保証の年数と条件、将来の更新</li><li><b>補助制度</b> 国・県・市の制度は年度・予算・要件で変わります。最新条件を確認してご案内します</li></ul>
@@ -112,7 +106,6 @@
 </section>
 <section class="section" id="calc">
   <div class="wrap">
-    <div class="eyebrow">目安計算</div>
     <h2 class="h2">停電時に必要な電力量の 目安計算</h2>
     <p class="lead">止めたくない機器の消費電力（W）と使う時間（h）を入れると、必要な電力量（kWh）の合計が出ます。あくまで計算の目安で、実際に使える時間は製品の実効容量・出力上限・気温で変わります。</p>
     <div class="calc">
@@ -139,7 +132,6 @@
 </section>
 <section class="section trust" id="trust">
   <div class="wrap">
-    <div class="eyebrow">寺嵜の約束</div>
     <h2 class="h2">まず測る 不要なら不要と言う</h2>
     <p class="lead">サーモカメラ・電力データ・現地条件を確認してから提案します。設備交換を前提にしません。</p>
     <div class="trust-grid"><div class="trust-item"><h3>まず測る</h3><p>写真・検針票・使用状況から、どこにお金と熱が逃げているかを確認します。感覚や一般論ではなく、お宅の条件で判断します。</p></div><div class="trust-item"><h3>不要なら不要と言う</h3><p>確認した結果、今の設備を使い続けるのが最善なら、そうお伝えします。修理で済むなら交換は勧めません。</p></div><div class="trust-item"><h3>交換を前提にしない</h3><p>今ある設備・屋根・契約を活かせる可能性から順に検討します。費用の大きい選択肢は、比較材料をそろえてからご判断いただけます。</p></div></div>
@@ -147,14 +139,12 @@
 </section>
 <section class="section" id="faq">
   <div class="wrap">
-    <div class="eyebrow">よくあるご質問</div>
     <h2 class="h2">よくあるご質問</h2>
     <div class="faq-item"><h3>停電で何時間使えますか</h3><p>動かす機器の合計消費電力と蓄電池の実効容量で決まり、太陽光があれば昼間に充電できる分が加わります。製品の定格容量をそのまま時間に換算せず、お宅の重要負荷で計算してお伝えします。固定の時間を約束することはありません。</p></div><div class="faq-item"><h3>太陽光がなくても蓄電池は意味がありますか</h3><p>夜間に貯めて昼間に使う、停電に備えるという使い方はできますが、貯めた分を使い切れば終わりです。必要kWhが小さければ、蓄電池以外の備えで足りることもあります。</p></div><div class="faq-item"><h3>全負荷型と特定負荷型はどちらがよいですか</h3><p>停電時に家全体で使いたいか、決めた回路だけでよいかで決まります。全負荷型は費用が高くなる傾向があり、特定負荷型は回路の選び方が重要です。重要負荷を決めてから選びます。</p></div><div class="faq-item"><h3>補助金はありますか</h3><p>国・県・市の制度は年度・予算・要件で変わります。対象になり得るかは、機種と申請時期を確認したうえで最新条件をもとにご案内します。</p></div>
   </div>
 </section>
 <section class="section alt" id="next">
   <div class="wrap">
-    <div class="eyebrow">次の一歩</div>
     <h2 class="h2">次の一歩</h2>
     <p class="lead">自分で確認する、家族や社内で話す、寺嵜と整理する。どこから始めても構いません。</p>
     <div class="steps3"><div class="step3"><div class="n">01</div><h3>自分で確認する</h3><p>停電時に止めたくない機器を書き出し、上の目安計算で必要kWhを出してみてください。数が小さければ、蓄電池以外の備えで足りるかもしれません。</p></div><div class="step3"><div class="n">02</div><h3>家族で話す</h3><p>どこまで備えるか（冷蔵庫と照明だけか、冷暖房や通信までか）を家族で決めておくと、容量と型の判断が早くなります。</p></div><div class="step3"><div class="n">03</div><h3>寺嵜と整理する</h3><p>重要負荷と太陽光の有無をもとに、蓄電池が要るか、要るなら容量と型、要らないなら代わりの備えをお伝えします。</p></div></div>
@@ -173,7 +163,6 @@
 </section>
 <section class="section related" id="related">
   <div class="wrap">
-    <div class="eyebrow">次に知りたいこと</div>
     <h2 class="h2">次に知りたいこと</h2>
     <div class="related-grid">
       <div class="related-col"><h4>根拠・事例</h4><ul><li><a href="../../faq.html">よくあるご質問</a></li><li><a href="../../sotsu-fit/">卒FIT後の選択肢（蓄電池・エコキュート・V2H）</a></li></ul></div>
