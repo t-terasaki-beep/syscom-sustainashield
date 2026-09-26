@@ -12,7 +12,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Montserrat:wght@600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -1073,46 +1073,49 @@ a{ color:inherit; text-decoration:none; }
 /* ===== 困りごと入口（P0-1 法人HUB / 2026-09-26）配色正本：白基調・スカイブルー#00AEEF罫・オレンジ#102F40 CTA ===== */
 .kd{ background:#ffffff; padding:72px 0; border-top:3px solid #00AEEF; }
 @media(max-width:640px){ .kd{ padding:48px 0; } }
+/* kd-*：困りごと入口（2026-09-26 明るい・今時の型：淡水色の帯＋白い角丸カード＋丸ボタン。kadai.css と同じ値） */
+.kd{ background:#E8F7FD; }
 .kd-inner{ max-width:1200px; margin:0 auto; padding:0 20px; }
-.kd .section-eyebrow{ color:#0087BA; letter-spacing:.08em; }
-.kd .section-title{ color:#102F40; font-family:"Noto Serif JP","Hiragino Mincho ProN",serif; font-weight:800; }
-.kd .section-title .accent{ color:#0087BA; }
+.kd .section-eyebrow{ font-family:"Montserrat","Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#0093CF; }
+.kd .section-title, .kd-trust .section-title{ font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif; font-weight:900; letter-spacing:.04em; color:#102F40; position:relative; padding-bottom:16px; }
+.kd .section-title::after, .kd-trust .section-title::after{ content:""; position:absolute; left:0; bottom:0; width:30px; height:3px; background:#00AEEF; border-radius:2px; }
 .kd-title .l{ display:inline-block; }
 .kd-title br.pc{ display:none; }
 @media(min-width:861px){ .kd-title br.pc{ display:inline; } }
 @media(max-width:640px){ .kd-title{ font-size:26px; } }
-.kd-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:0 40px; margin-top:26px; border-top:1px solid #E1E8EC; }
-@media(max-width:700px){ .kd-grid{ grid-template-columns:1fr; gap:0; } }
-.kd-card{ display:flex; flex-direction:column; padding:22px 0 20px 18px; border-bottom:1px solid #E1E8EC; border-left:3px solid #00AEEF; margin-top:-1px; transition:background .15s; }
-.kd-card:hover{ background:#EEF3F6; }
-.kd-card .kd-num{ font-size:12px; letter-spacing:0.14em; color:#0087BA; font-weight:700; }
-.kd-card h3{ font-family:"Noto Serif JP","Hiragino Mincho ProN",serif; font-size:19px; line-height:1.5; color:#102F40; margin:4px 0 10px; font-weight:700; }
-.kd-card dl{ font-size:13.5px; color:#4F6472; line-height:1.75; display:grid; grid-template-columns:auto 1fr; column-gap:10px; row-gap:3px; margin:0; }
+.kd-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:24px; }
+@media(min-width:701px){ .kd-grid{ grid-template-columns:repeat(2,1fr); gap:16px; } }
+.kd-card{ display:flex; flex-direction:column; padding:20px 18px 18px; background:#fff; border-radius:20px; transition:transform .15s; }
+.kd-card:active{ transform:scale(.99); }
+.kd-card .kd-num{ font-family:"Montserrat",sans-serif; font-size:12px; letter-spacing:.08em; color:#0093CF; font-weight:700; }
+.kd-card h3{ font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif; font-size:19px; line-height:1.45; color:#102F40; margin:6px 0 12px; font-weight:700; padding-left:12px; border-left:3px solid #00AEEF; }
+.kd-card dl{ font-size:13.5px; color:#4F6472; line-height:1.75; display:grid; grid-template-columns:auto 1fr; column-gap:10px; row-gap:4px; margin:0; }
 .kd-card dt{ font-weight:700; color:#102F40; white-space:nowrap; }
 .kd-card dt::after{ content:"："; }
 .kd-card dd{ margin:0; }
-.kd-card .kd-go{ margin-top:auto; padding-top:12px; font-size:14px; font-weight:700; color:#102F40; text-decoration:underline; text-underline-offset:4px; text-decoration-color:#00AEEF; }
+.kd-card .kd-go{ margin-top:auto; padding-top:14px; font-size:14px; font-weight:700; color:#0093CF; display:flex; align-items:center; gap:6px; }
+.kd-card .kd-go::after{ content:""; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(-45deg); }
 .kd-note{ font-size:13px; color:#4F6472; margin-top:18px; }
-.kd-note a{ color:#0087BA; font-weight:700; border-bottom:1px solid #00AEEF; }
-.kd-trust{ background:#ffffff; color:#102F40; padding:56px 0 64px; border-top:1px solid #E1E8EC; }
-@media(max-width:640px){ .kd-trust{ padding:40px 0 44px; } }
-.kd-trust .section-eyebrow{ color:#0087BA; letter-spacing:.08em; }
-.kd-trust .section-title{ color:#102F40; font-family:"Noto Serif JP","Hiragino Mincho ProN",serif; font-weight:800; }
+.kd-note a{ color:#0093CF; font-weight:700; }
+.kd-trust{ background:#ffffff; color:#102F40; padding:56px 0 64px; }
+@media(max-width:640px){ .kd-trust{ padding:44px 0 48px; } }
+.kd-trust .section-eyebrow{ font-family:"Montserrat","Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#0093CF; }
 .kd-trust .section-sub{ color:#4F6472; }
-.kd-trust-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0 32px; margin-top:24px; border-top:1px solid #E1E8EC; }
-@media(max-width:760px){ .kd-trust-grid{ grid-template-columns:1fr; gap:0; } }
-.kd-trust-item{ padding:18px 0 18px 16px; border-left:3px solid #00AEEF; border-bottom:1px solid #E1E8EC; }
-.kd-trust-item h3{ font-family:"Noto Serif JP","Hiragino Mincho ProN",serif; font-size:17px; color:#102F40; margin-bottom:6px; font-weight:700; }
-.kd-trust-item p{ font-size:14px; color:#4F6472; line-height:1.8; }
-.kd-face{ display:flex; gap:20px; align-items:center; margin-top:26px; padding-top:22px; border-top:3px solid #00AEEF; }
+.kd-trust-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:24px; counter-reset:kdt; }
+@media(min-width:761px){ .kd-trust-grid{ grid-template-columns:repeat(3,1fr); gap:16px; } }
+.kd-trust-item{ padding:20px 18px; background:#F3FBFE; border-radius:20px; counter-increment:kdt; }
+.kd-trust-item::before{ content:"0" counter(kdt); font-family:"Montserrat",sans-serif; font-size:12px; letter-spacing:.08em; color:#0093CF; font-weight:700; display:block; margin-bottom:6px; }
+.kd-trust-item h3{ font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif; font-size:18px; color:#102F40; margin-bottom:8px; font-weight:700; line-height:1.45; }
+.kd-trust-item p{ font-size:14px; color:#4F6472; line-height:1.85; }
+.kd-face{ display:flex; gap:20px; align-items:center; margin-top:24px; padding:24px 20px; background:#F3FBFE; border-radius:24px; }
 .kd-face img{ width:96px; height:96px; border-radius:50%; object-fit:cover; object-position:center top; flex:0 0 96px; }
 .kd-face .t{ font-size:15px; color:#102F40; line-height:1.8; }
-.kd-face .t b{ display:block; font-family:"Noto Serif JP","Hiragino Mincho ProN",serif; font-size:18px; font-weight:700; margin-bottom:4px; }
-.kd-face .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-.kd-face .btns a{ display:inline-flex; align-items:center; justify-content:center; padding:13px 22px; border-radius:4px; font-weight:700; font-size:15px; }
+.kd-face .t b{ display:block; font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif; font-size:19px; font-weight:700; margin-bottom:4px; line-height:1.45; }
+.kd-face .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.kd-face .btns a{ display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:12px 24px; border-radius:999px; font-weight:700; font-size:15px; }
 .kd-face .b1{ background:#102F40; color:#fff; } .kd-face .b1:hover{ background:#1B4A63; }
-.kd-face .b2{ background:#fff; color:#102F40; border:1.5px solid #B9C6CF; }
-@media(max-width:560px){ .kd-face{ flex-direction:column; align-items:flex-start; } }
+.kd-face .b2{ background:#06C755; color:#fff; } .kd-face .b2:hover{ background:#05B04C; }
+@media(max-width:560px){ .kd-face{ flex-direction:column; align-items:flex-start; } .kd-face .btns{ flex-direction:column; width:100%; } .kd-face .btns a{ width:100%; } }
 </style>
 </head>
 <body>

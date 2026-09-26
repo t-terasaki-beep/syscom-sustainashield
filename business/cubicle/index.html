@@ -13,7 +13,7 @@
 <meta name="robots" content="index,follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/kadai.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://syscom-sustaina-shield.com/"}, {"@type": "ListItem", "position": 2, "name": "困りごとから探す（法人）", "item": "https://syscom-sustaina-shield.com/#komarigoto"}, {"@type": "ListItem", "position": 3, "name": "キュービクルの更新", "item": "https://syscom-sustaina-shield.com/business/cubicle/"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "設置から何年で更新が必要ですか", "acceptedAnswer": {"@type": "Answer", "text": "機器ごとにメーカーの更新推奨時期の目安がありますが、使用環境と点検結果で実際の状態は異なります。年数だけで判断せず、銘板と点検報告書をもとに機器ごとに整理します。"}}, {"@type": "Question", "name": "停電なしで更新できますか", "acceptedAnswer": {"@type": "Answer", "text": "受変電設備の更新では停電を伴う作業が基本です。工程分割や仮設電源で停電時間を短くできる場合がありますが、停電なしと断定することはありません。現地条件を確認したうえでお伝えします。"}}, {"@type": "Question", "name": "一部の機器だけ替えられますか", "acceptedAnswer": {"@type": "Answer", "text": "盤の構造・スペース・他機器との組合せによります。銘板と結線図から可否の見通しを立て、部分更新が合理的な場合はその案をお出しします。"}}, {"@type": "Question", "name": "点検業者の見積が高い気がします", "acceptedAnswer": {"@type": "Answer", "text": "範囲と工程の前提を確認してから比較します。同じ前提で並べたうえで、不要な範囲が含まれていればそのままお伝えします。"}}]}</script>
@@ -33,9 +33,27 @@
       <a href="../../simulator/">シミュレーター</a>
       <a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" class="cta-mini">無料診断</a>
     </nav>
+    <button class="menu-btn" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
   </div>
 </header>
-<div class="wrap crumb" aria-label="パンくず"><a href="../../">ホーム</a> <span><a href="../../#komarigoto">困りごとから探す（法人）</a></span> <span>キュービクルの更新</span></div>
+<div class="drawer-bg" aria-hidden="true"></div>
+<nav class="drawer" id="drawer" aria-label="メニュー">
+      <div><div class="d-title">法人の困りごと</div><ul>
+        <li><a href="../../#komarigoto">困りごとから探す</a></li>
+        <li><a href="../../business/atsui/">工場・倉庫が暑い</a></li>
+        <li><a href="../../business/denkidai/">電気代・デマンドが高い</a></li>
+        <li><a href="../../business/cubicle/">キュービクルの更新</a></li>
+        <li><a href="../../shanetsu-chiba/">千葉の遮熱（専門ページ）</a></li>
+      </ul></div>
+      <div><div class="d-title">会社情報</div><ul>
+        <li><a href="../../company.html">会社案内</a></li>
+        <li><a href="../../faq.html">よくあるご質問</a></li>
+        <li><a href="../../residential/">ご家庭の方はこちら</a></li>
+      </ul></div>
+      <a class="d-tel" href="tel:+81-90-9326-4456">090-9326-4456<small>9:00〜18:00 お電話でも承ります</small></a>
+      <a class="btn btn-gold" href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" data-event="cta_click" data-cta-type="drawer_consult" data-cta-position="drawer">無料診断・相談する</a>
+</nav>
+<div class="crumb" aria-label="パンくず"><a href="../../">ホーム</a> <span><a href="../../#komarigoto">困りごとから探す（法人）</a></span> <span>キュービクルの更新</span></div>
 <section class="hero">
   <div class="hero-inner">
     <div>
@@ -59,6 +77,7 @@
 
 <section class="section first" id="anata">
   <div class="wrap">
+    <div class="en">YOUR CASE</div>
     <h2 class="h2">あなたの場合は どれに近いですか</h2>
     <p class="lead">近いものを選ぶと、その項目へ移動します。選ばなくても、下へ進めば解決策と相談先まで読めます。</p>
     <div class="chips"><a href="#c-inspect">点検で指摘を受けた</a><a href="#c-age">設置から年数が経っている</a><a href="#c-outage">停電を何時間できるか分からない</a><a href="#c-cost">費用の目安が分からない</a><a href="#c-partial">一部だけ替えられるか知りたい</a></div>
@@ -66,6 +85,7 @@
 </section>
 <section class="section alt" id="scene">
   <div class="wrap">
+    <div class="en">SCENE</div>
     <h2 class="h2">「全部替えないと危ない」と言われたときに</h2>
     <div class="scene">
       <div class="tag">例えばこんな場面</div>
@@ -76,6 +96,7 @@
 </section>
 <section class="section" id="genin">
   <div class="wrap">
+    <div class="en">CAUSE</div>
     <h2 class="h2">更新前に知りたい 4つのこと</h2>
     <p class="lead">不安の正体は、たいてい次の4つが分からないことです。</p>
     <div class="cause-grid"><div class="cause" id="c-age"><h3>更新の目安</h3><p>設置年・製造年、メーカーの更新推奨時期、点検での指摘、使用環境（塩害・粉じん・温度）で判断します。年数だけで一括更新とは決めません。</p></div><div class="cause" id="c-cost"><h3>費用の決まり方</h3><p>容量、機器構成（変圧器・遮断器・コンデンサ・保護継電器など）、工事範囲、停電作業の有無、搬入条件、廃棄で決まります。</p></div><div class="cause" id="c-outage"><h3>停電時間</h3><p>全更新なら長時間の停電が必要なことがあります。機器単位の更新や工程の分割、仮設電源の利用で短縮できる場合があります。</p></div><div class="cause" id="c-partial"><h3>部分更新の可否</h3><p>劣化した機器だけを更新できるか、盤の構造・スペース・他機器との組合せで決まります。銘板と結線図があれば見通しが立ちます。</p></div><div class="cause" id="c-inspect"><h3>点検指摘の読み方</h3><p>指摘は「今すぐ」「計画的に」「経過観察」に分かれます。どの区分かで、更新の順番と時期が変わります。</p></div></div>
@@ -83,6 +104,7 @@
 </section>
 <section class="section alt" id="kakunin">
   <div class="wrap">
+    <div class="en">CHECK</div>
     <h2 class="h2">まず確認するもの</h2>
     <p class="lead">次の資料がそろうと、更新範囲と工程の見通しが立ちます。写真だけでも構いません。</p>
     <div class="check"><ul><li>銘板の写真（メーカー・型式・製造年・容量）。変圧器・遮断器・コンデンサなど機器ごと</li><li>設置年と、これまでの更新・修理の履歴</li><li>単線結線図（なければ盤内の全景写真）</li><li>直近の点検報告書（指摘事項と区分）</li><li>契約電力と、負荷の増減予定</li><li>停電できる曜日・時間帯と、止められない設備</li></ul><p class="hint">資料が見つからない場合は、盤の外観と銘板の写真から確認を始めます。危険な位置での撮影はしないでください。扉を開ける必要がある場合は当社が対応します。</p></div>
@@ -90,6 +112,7 @@
 </section>
 <section class="section" id="paths">
   <div class="wrap">
+    <div class="en">SOLUTIONS</div>
     <h2 class="h2">更新範囲の分かれ道</h2>
     <p class="lead">点検指摘・製造年・停電条件から、更新の範囲と順番を決めます。</p>
     <div class="paths"><div class="path main"><div class="role">主な解決策</div><h3>点検報告と銘板から更新範囲を決める</h3><p>指摘機器と製造年をもとに、部分更新・全更新・機器単位更新・工程分割のどれが合うかを整理し、停電時間と費用の見通しを並べます。</p><div class="fit"><b>向く：</b>更新の要否や範囲が分からない、複数の見積で迷っている<br><b>向かない：</b>すでに範囲と工程が確定している</div><a class="more" href="#soudan">銘板・点検報告で更新範囲を確認する</a></div><div class="path"><div class="role">代わりの選択肢</div><h3>更新と同時に契約・負荷を見直す</h3><p>更新のタイミングで、契約電力・力率・デマンドの状況も確認すると、容量の選定と電気代の両方に効きます。</p><div class="fit"><b>向く：</b>負荷の増減予定がある、基本料金が高い<br><b>向かない：</b>負荷が安定している</div><a class="more" href="../denkidai/">電気代・デマンドが高い</a></div><div class="path"><div class="role">代わりの選択肢</div><h3>自家消費太陽光と同時に検討する</h3><p>屋根面積があり昼間稼働の事業所では、受変電設備の更新と合わせて自家消費太陽光の接続を検討すると、工事の重複を避けられます。</p><div class="fit"><b>向く：</b>屋根が使える、昼間の使用が多い<br><b>向かない：</b>夜間中心、屋根が使えない</div><a class="more" href="../../lp/#order">太陽光と蓄電池の説明を見る</a></div></div>
@@ -98,6 +121,7 @@
 </section>
 <section class="section alt" id="hiyou">
   <div class="wrap">
+    <div class="en">COST</div>
     <h2 class="h2">費用の決まり方</h2>
     <p class="lead">費用は機器構成と工事条件で大きく変わるため、一律の金額は掲載していません。</p>
     <ul class="cost-list"><li><b>容量と機器構成</b> 変圧器の容量・台数、遮断器・コンデンサ・保護継電器の有無</li><li><b>更新範囲</b> 部分更新か全更新か、盤ごとの交換か機器単位か</li><li><b>停電作業</b> 停電の可否・時間帯、仮設電源の要否</li><li><b>搬入・設置条件</b> クレーンの可否、通路、屋上か地上か、基礎の状態</li><li><b>廃棄・処分</b> 旧機器の撤去と処分（PCB含有の有無確認を含む）</li><li><b>補助金</b> 省エネ性能の高い変圧器などは対象になる制度が存在する年度があります。要件は都度確認します</li></ul>
@@ -106,6 +130,7 @@
 </section>
 <section class="section trust" id="trust">
   <div class="wrap">
+    <div class="en">OUR PROMISE</div>
     <h2 class="h2">まず測る 不要なら不要と言う</h2>
     <p class="lead">サーモカメラ・電力データ・現地条件を確認してから提案します。設備交換を前提にしません。</p>
     <div class="trust-grid"><div class="trust-item"><h3>まず測る</h3><p>サーモカメラで屋根・天井・窓の温度分布を、電力データで負荷の時間帯を確認します。感覚や一般論ではなく、御社の建物の数字で判断します。</p></div><div class="trust-item"><h3>不要なら不要と言う</h3><p>測った結果、設備交換や工事が最善でない場合は、そのままお伝えします。運用の見直しや部分対応で済むなら、その提案で終わります。</p></div><div class="trust-item"><h3>交換を前提にしない</h3><p>既設の設備・屋根・契約を活かせる可能性から順に検討します。費用の大きい選択肢は、比較材料をそろえてからご判断いただきます。</p></div></div>
@@ -113,12 +138,14 @@
 </section>
 <section class="section" id="faq">
   <div class="wrap">
+    <div class="en">FAQ</div>
     <h2 class="h2">よくあるご質問</h2>
     <div class="faq-item"><h3>設置から何年で更新が必要ですか</h3><p>機器ごとにメーカーの更新推奨時期の目安がありますが、使用環境と点検結果で実際の状態は異なります。年数だけで判断せず、銘板と点検報告書をもとに機器ごとに整理します。</p></div><div class="faq-item"><h3>停電なしで更新できますか</h3><p>受変電設備の更新では停電を伴う作業が基本です。工程分割や仮設電源で停電時間を短くできる場合がありますが、停電なしと断定することはありません。現地条件を確認したうえでお伝えします。</p></div><div class="faq-item"><h3>一部の機器だけ替えられますか</h3><p>盤の構造・スペース・他機器との組合せによります。銘板と結線図から可否の見通しを立て、部分更新が合理的な場合はその案をお出しします。</p></div><div class="faq-item"><h3>点検業者の見積が高い気がします</h3><p>範囲と工程の前提を確認してから比較します。同じ前提で並べたうえで、不要な範囲が含まれていればそのままお伝えします。</p></div>
   </div>
 </section>
 <section class="section alt" id="next">
   <div class="wrap">
+    <div class="en">NEXT STEP</div>
     <h2 class="h2">次の一歩</h2>
     <p class="lead">自分で確認する、家族や社内で話す、寺嵜と整理する。どこから始めても構いません。</p>
     <div class="steps3"><div class="step3"><div class="n">01</div><h3>自分で確認する</h3><p>直近の点検報告書の指摘欄を見て、「今すぐ」「計画的に」「経過観察」のどれに区分されているかを確認してください。銘板の写真も撮っておくと早いです。</p></div><div class="step3"><div class="n">02</div><h3>社内で話す</h3><p>停電できる曜日・時間帯と、絶対に止められない設備を一覧にしておくと、工程の分け方が決めやすくなります。</p></div><div class="step3"><div class="n">03</div><h3>寺嵜と整理する</h3><p>銘板・点検報告・結線図をもとに、更新の範囲と順番、停電時間の見通しを整理してお伝えします。相談は無料です。</p></div></div>
@@ -137,6 +164,7 @@
 </section>
 <section class="section related" id="related">
   <div class="wrap">
+    <div class="en">RELATED</div>
     <h2 class="h2">次に知りたいこと</h2>
     <div class="related-grid">
       <div class="related-col"><h4>根拠・事例</h4><ul><li><a href="../../terasaki_lp.html">代表者プロフィール（電気工事27年の経歴）</a></li><li><a href="../../company.html">会社案内</a></li></ul></div>
@@ -168,5 +196,17 @@
     <div class="footer-bottom"><span>© 2026 シスコムサステナシールド ／ 寺嵜忠弘</span><span><a href="../../privacy.html">プライバシーポリシー</a></span></div>
   </div>
 </footer>
+<div class="sticky-cta" aria-label="相談する">
+  <a class="s1" href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" data-event="cta_click" data-cta-type="sticky_consult" data-cta-position="sticky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>相談する</a>
+  <a class="s2" href="https://page.line.me/119upwsl" target="_blank" rel="noopener" data-event="line_click" data-cta-position="sticky" data-line-account="@119upwsl"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>LINEで送る</a>
+</div>
+<script>
+(function(){var b=document.body,btn=document.querySelector('.menu-btn'),bg=document.querySelector('.drawer-bg');if(!btn)return;
+function t(o){b.classList.toggle('is-drawer',o);btn.setAttribute('aria-expanded',o?'true':'false')}
+btn.addEventListener('click',function(){t(!b.classList.contains('is-drawer'))});
+if(bg)bg.addEventListener('click',function(){t(false)});
+document.querySelectorAll('.drawer a').forEach(function(a){a.addEventListener('click',function(){t(false)})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')t(false)});})();
+</script>
 </body>
 </html>

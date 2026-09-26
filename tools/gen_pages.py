@@ -13,7 +13,35 @@ LINE_B = "https://page.line.me/119upwsl"          # 法人 @119upwsl
 LINE_R = "https://line.me/R/ti/p/@631cqlgf"       # 住宅総合 @631cqlgf
 LINE_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>'
 
-FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">'
+# 書体（2026-09-26 方針：Noto Sans JP 本文400・見出し700 ＋ Montserrat 英字ラベル・番号）
+FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">'
+
+# セクション見出しの上に置く英字ラベル（id → ラベル）。見出しの型＝英字ラベル → 日本語見出し → 短罫
+EN_LABELS = {
+    "anata": "YOUR CASE", "komarigoto": "YOUR CASE", "scene": "SCENE", "genin": "CAUSE", "kakunin": "CHECK",
+    "paths": "SOLUTIONS", "hiyou": "COST", "trust": "OUR PROMISE", "faq": "FAQ", "next": "NEXT STEP",
+    "related": "RELATED", "soudan-hub": "CONSULT", "direct": "DIRECT",
+}
+import re as _re
+def add_en_labels(out):
+    def rep(m):
+        label = EN_LABELS.get(m.group(2))
+        if not label:
+            return m.group(0)
+        return f'{m.group(1)}<div class="en">{label}</div>\n    <h2 class="h2">'
+    return _re.sub(r'(<section class="[^"]*" id="([^"]+)">\s*<div class="wrap">\s*)<h2 class="h2">', rep, out)
+
+MENU_SVG_TEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>'
+MAIL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>'
+
+DRAWER_JS = '''<script>
+(function(){var b=document.body,btn=document.querySelector('.menu-btn'),bg=document.querySelector('.drawer-bg');if(!btn)return;
+function t(o){b.classList.toggle('is-drawer',o);btn.setAttribute('aria-expanded',o?'true':'false')}
+btn.addEventListener('click',function(){t(!b.classList.contains('is-drawer'))});
+if(bg)bg.addEventListener('click',function(){t(false)});
+document.querySelectorAll('.drawer a').forEach(function(a){a.addEventListener('click',function(){t(false)})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')t(false)});})();
+</script>'''
 
 def esc(s):
     return html.escape(s, quote=True)
@@ -68,6 +96,38 @@ def header(p):
     crumb = ' '.join(
         (f'<a href="{rel}{u.lstrip("/")}">{esc(n)}</a>' if i == 0 else f'<span><a href="{rel}{u.lstrip("/")}">{esc(n)}</a></span>') if i < len(p["crumbs"]) - 1 else f'<span>{esc(n)}</span>'
         for i, (n, u) in enumerate(p["crumbs"]))
+    # スマホ用ドロワー（ハンバーガー）：見出し → リンク → 電話 → 相談ボタン
+    if p["audience"] == "business":
+        drawer = f'''<div><div class="d-title">法人の困りごと</div><ul>
+        <li><a href="{rel}#komarigoto">困りごとから探す</a></li>
+        <li><a href="{rel}business/atsui/">工場・倉庫が暑い</a></li>
+        <li><a href="{rel}business/denkidai/">電気代・デマンドが高い</a></li>
+        <li><a href="{rel}business/cubicle/">キュービクルの更新</a></li>
+        <li><a href="{rel}shanetsu-chiba/">千葉の遮熱（専門ページ）</a></li>
+      </ul></div>
+      <div><div class="d-title">会社情報</div><ul>
+        <li><a href="{rel}company.html">会社案内</a></li>
+        <li><a href="{rel}faq.html">よくあるご質問</a></li>
+        <li><a href="{rel}residential/">ご家庭の方はこちら</a></li>
+      </ul></div>
+      <a class="d-tel" href="{TEL}">{TEL_DISP}<small>9:00〜18:00 お電話でも承ります</small></a>
+      <a class="btn btn-gold" href="{FORMS}" target="_blank" rel="noopener" data-event="cta_click" data-cta-type="drawer_consult" data-cta-position="drawer">無料診断・相談する</a>'''
+    else:
+        drawer = f'''<div><div class="d-title">住まいの困りごと</div><ul>
+        <li><a href="{rel}residential/#komarigoto">困りごとから探す</a></li>
+        <li><a href="{rel}residential/ecocute/">エコキュートの交換・故障</a></li>
+        <li><a href="{rel}residential/solar/">太陽光は元が取れるか</a></li>
+        <li><a href="{rel}residential/battery/">蓄電池は必要か・停電で何時間</a></li>
+        <li><a href="{rel}sotsu-fit/">卒FIT後どうするか</a></li>
+      </ul></div>
+      <div><div class="d-title">サービス・会社情報</div><ul>
+        <li><a href="{rel}service.html">給湯器・エコキュート</a></li>
+        <li><a href="{rel}company.html">会社案内</a></li>
+        <li><a href="{rel}faq.html">よくあるご質問</a></li>
+        <li><a href="{rel}">法人の方はこちら</a></li>
+      </ul></div>
+      <a class="d-tel" href="{TEL}">{TEL_DISP}<small>9:00〜18:00 お電話でも承ります</small></a>
+      <a class="btn btn-gold" href="{rel}contact.html" data-event="cta_click" data-cta-type="drawer_consult" data-cta-position="drawer">相談する</a>'''
     return f'''<div class="topbar"><div class="topbar-inner">{top}</div></div>
 <header class="site-header">
   <div class="header-inner">
@@ -78,9 +138,14 @@ def header(p):
     <nav class="gnav">
       {nav}
     </nav>
+    <button class="menu-btn" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
   </div>
 </header>
-<div class="wrap crumb" aria-label="パンくず">{crumb}</div>
+<div class="drawer-bg" aria-hidden="true"></div>
+<nav class="drawer" id="drawer" aria-label="メニュー">
+      {drawer}
+</nav>
+<div class="crumb" aria-label="パンくず">{crumb}</div>
 '''
 
 def footer(p):
@@ -119,6 +184,17 @@ def footer(p):
           <li><a href="{rel}privacy.html">プライバシーポリシー</a></li>
         </ul>'''
         desc = "千葉のご家庭の<br>暑さ寒さ・電気代・設備・停電の相談窓口"
+    # 画面下の固定バー（スマホのみ表示）：相談する ｜ LINEで送る
+    if p["audience"] == "business":
+        sticky = f'''<div class="sticky-cta" aria-label="相談する">
+  <a class="s1" href="{FORMS}" target="_blank" rel="noopener" data-event="cta_click" data-cta-type="sticky_consult" data-cta-position="sticky">{MAIL_SVG}相談する</a>
+  <a class="s2" href="{LINE_B}" target="_blank" rel="noopener" data-event="line_click" data-cta-position="sticky" data-line-account="@119upwsl">{LINE_SVG}LINEで送る</a>
+</div>'''
+    else:
+        sticky = f'''<div class="sticky-cta" aria-label="相談する">
+  <a class="s1" href="{rel}contact.html" data-event="cta_click" data-cta-type="sticky_consult" data-cta-position="sticky">{MAIL_SVG}相談する</a>
+  <a class="s2" href="{LINE_R}" target="_blank" rel="noopener" data-event="line_click" data-cta-position="sticky" data-line-account="@631cqlgf">{LINE_SVG}LINEで送る</a>
+</div>'''
     return f'''<footer class="footer">
   <div class="wrap">
     <div class="footer-grid">
@@ -129,6 +205,8 @@ def footer(p):
     <div class="footer-bottom"><span>© 2026 シスコムサステナシールド ／ 寺嵜忠弘</span><span><a href="{rel}privacy.html">プライバシーポリシー</a></span></div>
   </div>
 </footer>
+{sticky}
+{DRAWER_JS}
 </body>
 </html>
 '''
@@ -306,7 +384,7 @@ def kadai_page(p):
 </section>
 '''
     out += footer(p)
-    return out
+    return add_en_labels(out)
 
 # ============================================================
 # ページ定義
@@ -736,12 +814,12 @@ def residential_hub():
   </div>
 </section>
 
-<section class="section first" id="komarigoto">
+<section class="section alt first" id="komarigoto">
   <div class="wrap">
     <h2 class="h2">あなたの場合は どれに近いですか</h2>
     <p class="lead">8つの困りごとから選ぶと、考えられる原因・主な解決策・まず確認するものと、次に読むページへ進みます。</p>
     <div class="kadai-grid">{cards_html}</div>
-    <p class="note">どれにも当てはまらない場合や、複数が重なる場合は、そのまま <a href="../contact.html" style="color:var(--blue);font-weight:700">お問い合わせ</a> からお聞かせください。</p>
+    <p class="note">どれにも当てはまらない場合や、複数が重なる場合は、そのまま <a href="../contact.html">お問い合わせ</a> からお聞かせください。</p>
   </div>
 </section>
 
@@ -794,7 +872,7 @@ def residential_hub():
   </div>
 </section>
 '''
-    return p, head(p) + header(p) + body + footer(p)
+    return p, add_en_labels(head(p) + header(p) + body + footer(p))
 
 def write(path, content):
     full = os.path.join(ROOT, path)

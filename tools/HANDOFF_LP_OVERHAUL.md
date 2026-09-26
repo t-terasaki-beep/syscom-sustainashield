@@ -35,3 +35,32 @@
 ## 制約（FACT）
 - 本番 syscom-sustaina-shield.com、メーカー・競合7サイト、Notion画像アップロード(api.notion.com) は cloud から到達不可
 - 数値・実績・価格・補助額・削減率は新規に断定しない。会話は「例えばこんな場面」と明示
+
+---
+# 追記 2026-09-26（cloud session_01DoGtJVzwQ3ynpMu3RJBJR9）｜vivid準拠デザインを本体化（kadai.css v2）
+
+## この回でできたこと（FACT）
+- 新規コンテナから vivid-grp.co.jp と本番 syscom-sustaina-shield.com の両方に到達できた（curl 200／Chromium 描画 OK）
+- 本番の全98ページ（sitemap 80件＋既知URL）を取得しSHA256を記録：`/home/user/sustaina-backup/prod_20260926T141243Z/`（このセッションのコンテナ内。寺嵜PC側にも同じ手順で取得すること）
+- vivid-grp.co.jp を 390px で実測。値は Notion「サステナシールド全LP｜気づきと対話を生む全面改修」2026-09-26 追記と本セッション報告に記録
+- `assets/kadai.css` を vivid 実測値ベースで全面書き換え（旧版は `assets/kadai-r1.css` に保持）。`assets/kadai-bright.css` は役目を終えたので参考のみ
+- `tools/gen_pages.py`：FONTS を Noto Sans JP＋Montserrat に変更、ハンバーガー＋ドロワー、画面下固定バー（相談する｜LINEで送る）、セクション英字ラベル（EN_LABELS）を追加し 7 ページを再生成
+- `index.html`（法人HUB）は kd-* 区画のみ同じ見え方へ（帯＋白カード＋丸ボタン）。ヘッダー・写真ヒーロー・その他の旧セクションは触っていない
+- 検査：11ページ 390px／1280px 横スクロール 0、JSエラー 0、読込失敗 0。既存の `.hero-overlay-sun`（index）と `.kpi-box`（/lp/）の右はみ出しは本件以前からのもので今回未修正
+
+## デザインの値（kadai.css v2）
+- 地色 白／帯 #E8F7FD（白と交互）／カード内淡色 #F3FBFE／罫 #D9E8EF
+- アクセント スカイ #00AEEF・#0093CF（見出し短罫 30×3、英字ラベル、番号、リンク、カード見出しの左罫）
+- CTA `--cta` 1色。既定＝濃紺 #102F40。`html[data-cta="sky"]`＝#0093CF、`html[data-cta="coral"]`＝#FA7748（vivid値）、`html[data-accent="teal"]`＝アクセントを vivid の #38B3D0 系へ
+- 書体 Noto Sans JP 本文400・見出し700／Montserrat 600-700（英字ラベル・番号・電話番号）
+- 角丸 カード20px・相談ブロック24px・ボタン999（高さ SP52px／PC60px、右端矢印）。影・グラデーション・絵文字なし
+- スマホ：ヘッダー白 sticky 64px＋ハンバーガー（右からドロワー）、下部固定バー 56px 2分割（相談する＝--cta／LINEで送る＝#06C755）
+
+## 未決（寺嵜判断）
+1. CTA色：A 濃紺（既定）／B スカイ／C コーラル（vivid値）。比較画像は `sustaina-lp-review/compare.html`
+2. アクセントを R1 の #00AEEF のままにするか、vivid の #38B3D0 に寄せるか（D案）
+3. R1 配色正本「スカイブルーは罫のみ・淡色ベタ塗り禁止」と本案（淡水色帯・スカイ塗りの英字ラベル）の矛盾 → 採用時は R1 改訂として記録
+4. 法人HUB index.html のヘッダー・ヒーロー・旧セクションを同じ型に揃えるか（別作業・大きい）
+
+## 検査スクリプト
+Google Fonts が到達できる環境では `tools/preview/fontroute.js` は不要（差し込むと @fontsource 未導入のためフォントが落ちる）。到達できない環境のみ使う。
