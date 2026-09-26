@@ -1,0 +1,94 @@
+/* ==========================================================
+   ss-bright-v1.css — 住宅ページ「明るい・今時」上書きレイヤー（2026-09-26）
+   対象：/residential/ 配下（corporate.css・hub.css・ss-mobile-menu.js を使うページ）
+   使い方：各ページの </head> 直前に1行だけ追加
+     <link rel="stylesheet" href="/assets/ss-bright-v1.css?v=1">
+   戻し方：その1行を消す（またはこのファイルを空にする）。HTML本文・既存CSSは変更しない
+   値の出典：vivid-grp.co.jp 390px 実測＋PR #8 kadai.css v2 と同じトークン
+   ========================================================== */
+:root{
+  --ssb-sky:#00AEEF; --ssb-sky-deep:#0093CF;
+  --ssb-band:#E8F7FD; --ssb-band-light:#F3FBFE;
+  --ssb-ink:#102F40; --ssb-sub:#4F6472; --ssb-line:#D9E8EF; --ssb-line-strong:#B9D3DF;
+  --ssb-cta:#102F40; --ssb-cta-deep:#1B4A63;
+  --ssb-r-card:20px;
+}
+html[data-cta="sky"]{--ssb-cta:#0093CF;--ssb-cta-deep:#0079AD}
+html[data-cta="coral"]{--ssb-cta:#FA7748;--ssb-cta-deep:#E8602F}
+
+body{color:var(--ssb-ink);letter-spacing:.03em;-webkit-font-smoothing:antialiased}
+
+/* ---------- ヘッダー：白・sticky ---------- */
+.corp-header,.site-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--ssb-line)}
+.corp-brand,.brand{color:var(--ssb-ink)}
+.corp-brand small,.brand small{color:var(--ssb-sub)}
+.corp-links a:hover,.header-row nav a:hover{color:var(--ssb-sky-deep)}
+.service-nav{background:var(--ssb-band-light)}
+.service-nav a:hover,.service-nav a[aria-current]{color:var(--ssb-sky-deep);border-color:var(--ssb-sky);background:var(--ssb-band)}
+/* スマホのメニューバー（ss-mobile-menu.js）：濃紺の帯 → 白地＋細枠の丸ボタン */
+html body .ssmm-bar{background:#fff;border-bottom:1px solid var(--ssb-line)}
+html body .ssmm-b{background:#fff !important;color:var(--ssb-ink) !important;border:1.5px solid var(--ssb-line-strong) !important;border-radius:999px !important;box-shadow:none !important}
+html body .ssmm-b .ic i{background:var(--ssb-ink) !important}
+html body .ssmm-p{background:var(--ssb-band-light)}
+html body .ssmm-t{color:var(--ssb-sky-deep)}
+html body .ssmm-l a{border:0 !important;border-radius:14px !important}
+html body .ssmm-l a[aria-current]{background:var(--ssb-ink) !important;color:#fff !important}
+html body .ssmm-l a:after{color:var(--ssb-sky-deep);opacity:1}
+
+/* ---------- 見出しの型：ラベル → 見出し → 短罫 ---------- */
+.eyebrow,.home-kicker,.k-eyebrow{display:inline-block;background:var(--ssb-band);color:var(--ssb-sky-deep) !important;border:0 !important;border-radius:999px;padding:4px 12px !important;font-size:12px !important;font-weight:700;letter-spacing:.04em;margin-bottom:12px !important}
+.eyebrow span{display:none}
+.pale .eyebrow,.feature .eyebrow,.detail-link .eyebrow,.video-section .eyebrow{background:#fff}
+.content-block h2,.video-section h2,.detail-link h2,.services h2,.approach h2{position:relative;padding-bottom:16px;letter-spacing:.04em;text-wrap:balance}
+.content-block h2::after,.video-section h2::after,.detail-link h2::after,.services h2::after,.approach h2::after{content:"";position:absolute;left:0;bottom:0;width:30px;height:3px;background:var(--ssb-sky);border-radius:2px}
+.detail-link h2::after{left:50%;transform:translateX(-50%)}
+.service-hero h1,.home-hero h1,h1{letter-spacing:.04em}
+
+/* ---------- 帯：淡い水色と白の交互 ---------- */
+.pale{background:var(--ssb-band);border-radius:var(--ssb-r-card)}
+.detail-link{background:var(--ssb-band)}
+.video-section{background:var(--ssb-band);border-radius:var(--ssb-r-card)}
+.feature{background:var(--ssb-band);border-color:transparent}
+.hero{background:#fff}
+.home-hero{background:var(--ssb-band-light)}
+.home-shade{background:linear-gradient(90deg,#fff 0%,#ffffffed 25%,#ffffffa3 43%,#ffffff00 66%)}
+@media(max-width:760px){.home-shade{background:linear-gradient(#fff 0%,#fff 58%,#ffffff00 78%)}.pale{border-radius:0}}
+
+/* ---------- カード：白・角丸20・影なし ---------- */
+.concerns li{background:#fff;border-left:0;border-radius:14px;padding:16px 18px 16px 44px;position:relative}
+.concerns li::before{content:"";position:absolute;left:18px;top:21px;width:14px;height:14px;border:2px solid var(--ssb-sky);border-radius:50%}
+.three article{background:var(--ssb-band-light);border-top:0;border-radius:var(--ssb-r-card);padding:20px 18px}
+.step,.steps span{color:var(--ssb-sky-deep);font-size:14px !important;letter-spacing:.08em;font-family:"Montserrat","Noto Sans JP",sans-serif}
+.scope{background:var(--ssb-band-light);border-radius:var(--ssb-r-card)}
+.related a{background:#fff;border:1.5px solid var(--ssb-line);border-radius:var(--ssb-r-card);transition:border-color .15s}
+.related a:hover{background:#fff;border-color:var(--ssb-sky)}
+.related strong{position:relative;padding-left:12px;border-left:3px solid var(--ssb-sky);line-height:1.45}
+.service-card{border:1.5px solid var(--ssb-line);border-radius:var(--ssb-r-card);box-shadow:none}
+.service-card:hover{background:#fff;border-color:var(--ssb-sky)}
+.story-card{background:var(--ssb-band-light);border-top:1.5px solid var(--ssb-line)}
+.quick-links{box-shadow:none;border-color:var(--ssb-line);border-radius:var(--ssb-r-card)}
+.card-link span,.quick-links svg,.icon svg{color:var(--ssb-sky-deep)}
+.icon{background:var(--ssb-band)}
+.steps article{background:var(--ssb-band-light);border-top:0;border-radius:var(--ssb-r-card);padding:20px 18px}
+.service-hero img{border-radius:24px}
+.video-art{border-radius:16px;background:var(--ssb-ink)}
+.video-art span{color:var(--ssb-sky)}
+
+/* ---------- ボタン：丸・1色 ---------- */
+.button,.home-button{background:var(--ssb-cta) !important;color:#fff !important;border-radius:999px !important;box-shadow:none !important;min-height:52px;padding:14px 28px !important;font-weight:700 !important;font-size:16px !important;display:inline-flex;align-items:center;justify-content:center;gap:12px;text-align:center}
+.button span{color:#fff;opacity:.85;font-size:12.5px !important;font-weight:500}
+.button:hover,.home-button:hover{background:var(--ssb-cta-deep) !important}
+.detail-link .button{flex-direction:column;gap:2px}
+.hub-detail{background:var(--ssb-cta) !important;border-radius:12px !important;text-align:center;padding:12px 14px !important;font-size:14px;line-height:1.5}
+@media(min-width:651px){.hub-detail{border-radius:999px !important}}
+.outline{border:1.5px solid var(--ssb-sky-deep);color:var(--ssb-sky-deep);border-radius:999px;padding:11px 22px}
+.text-link,.hub-video{color:var(--ssb-sky-deep) !important}
+@media(max-width:760px){.button,.home-button{width:100%;max-width:420px}}
+
+/* ---------- アクセント色の置き換え（ティール → スカイ） ---------- */
+.home-kicker{border-bottom:0}
+.corp-header a:focus-visible,.button:focus-visible,a:focus-visible{outline-color:var(--ssb-sky-deep)}
+.service-card:focus-within{outline-color:var(--ssb-sky-deep)}
+
+/* ---------- フッター：白 → 下段ネイビー帯はそのまま ---------- */
+.corp-footer,footer{background:var(--ssb-ink)}
