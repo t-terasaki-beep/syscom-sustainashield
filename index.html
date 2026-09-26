@@ -1070,35 +1070,48 @@ a{ color:inherit; text-decoration:none; }
 .rdn-fab a:hover{filter:brightness(1.06)}
 @media(max-width:560px){.rdn-fab a{padding:12px 18px;font-size:13px}}
 
-/* ===== 困りごと入口（P0-1 法人HUB / 2026-09-26） ===== */
-.kd{ background:var(--paper); padding:72px 0; }
+/* ===== 困りごと入口（P0-1 法人HUB / 2026-09-26）配色正本：白基調・スカイブルー#00AEEF罫・オレンジ#FF6B00 CTA ===== */
+.kd{ background:#ffffff; padding:72px 0; border-top:3px solid #00AEEF; }
 @media(max-width:640px){ .kd{ padding:48px 0; } }
 .kd-inner{ max-width:1200px; margin:0 auto; padding:0 20px; }
-.kd-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:28px; }
-@media(max-width:1000px){ .kd-grid{ grid-template-columns:repeat(2,1fr); } }
-@media(max-width:560px){ .kd-grid{ grid-template-columns:1fr; } }
-.kd-card{ display:flex; flex-direction:column; background:white; border:1px solid var(--line); border-radius:12px; padding:18px 18px 16px; transition:box-shadow .2s,transform .2s; }
-.kd-card:hover{ box-shadow:0 18px 40px -24px rgba(6,26,71,0.5); transform:translateY(-2px); }
-.kd-card .kd-num{ font-family:"Bebas Neue",sans-serif; font-size:13px; letter-spacing:0.2em; color:var(--yellow-deep); }
-.kd-card h3{ font-size:16px; line-height:1.5; color:var(--navy); margin:6px 0 10px; font-weight:800; }
-.kd-card dl{ font-size:12.5px; color:#555; line-height:1.7; display:grid; grid-template-columns:auto 1fr; column-gap:8px; row-gap:3px; margin:0; }
-.kd-card dt{ font-weight:700; color:var(--navy); white-space:nowrap; }
+.kd .section-eyebrow{ color:#0087BA; }
+.kd .section-eyebrow::before{ content:""; display:inline-block; width:10px; height:10px; border-radius:50%; background:#00AEEF; margin-right:10px; vertical-align:middle; }
+.kd .section-title{ color:#102F40; font-family:"Zen Kaku Gothic New","Noto Sans JP",sans-serif; }
+.kd .section-title .accent{ color:#0087BA; }
+.kd-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:0 40px; margin-top:26px; border-top:1px solid #E1E8EC; }
+@media(max-width:700px){ .kd-grid{ grid-template-columns:1fr; gap:0; } }
+.kd-card{ display:flex; flex-direction:column; padding:22px 0 20px 18px; border-bottom:1px solid #E1E8EC; border-left:3px solid #00AEEF; margin-top:-1px; transition:background .15s; }
+.kd-card:hover{ background:#EEF3F6; }
+.kd-card .kd-num{ font-size:12px; letter-spacing:0.14em; color:#0087BA; font-weight:700; }
+.kd-card h3{ font-size:19px; line-height:1.5; color:#102F40; margin:4px 0 10px; font-weight:900; }
+.kd-card dl{ font-size:13.5px; color:#4F6472; line-height:1.75; display:grid; grid-template-columns:auto 1fr; column-gap:10px; row-gap:3px; margin:0; }
+.kd-card dt{ font-weight:700; color:#102F40; white-space:nowrap; }
 .kd-card dt::after{ content:"："; }
 .kd-card dd{ margin:0; }
-.kd-card .kd-go{ margin-top:auto; padding-top:12px; font-size:13px; font-weight:700; color:var(--blue); }
+.kd-card .kd-go{ margin-top:auto; padding-top:12px; font-size:14px; font-weight:700; color:#D95A00; }
 .kd-card .kd-go::after{ content:" →"; }
-.kd-note{ font-size:12.5px; color:#666; margin-top:16px; }
-.kd-note a{ color:var(--blue); font-weight:700; }
-.kd-trust{ background:var(--navy-deep); color:white; padding:64px 0; }
-@media(max-width:640px){ .kd-trust{ padding:44px 0; } }
-.kd-trust .section-eyebrow{ color:var(--yellow); }
-.kd-trust .section-title{ color:white; }
-.kd-trust .section-sub{ color:rgba(255,255,255,0.88); }
-.kd-trust-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:24px; }
-@media(max-width:760px){ .kd-trust-grid{ grid-template-columns:1fr; } }
-.kd-trust-item{ border:1px solid rgba(255,255,255,0.16); border-radius:12px; padding:18px; }
-.kd-trust-item h3{ font-size:15px; color:var(--yellow); margin-bottom:6px; }
-.kd-trust-item p{ font-size:13.5px; opacity:0.9; line-height:1.8; }
+.kd-note{ font-size:13px; color:#4F6472; margin-top:18px; }
+.kd-note a{ color:#0087BA; font-weight:700; border-bottom:1px solid #00AEEF; }
+.kd-trust{ background:#ffffff; color:#102F40; padding:56px 0 64px; border-top:1px solid #E1E8EC; }
+@media(max-width:640px){ .kd-trust{ padding:40px 0 44px; } }
+.kd-trust .section-eyebrow{ color:#0087BA; }
+.kd-trust .section-eyebrow::before{ content:""; display:inline-block; width:10px; height:10px; border-radius:50%; background:#00AEEF; margin-right:10px; vertical-align:middle; }
+.kd-trust .section-title{ color:#102F40; }
+.kd-trust .section-sub{ color:#4F6472; }
+.kd-trust-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0 32px; margin-top:24px; border-top:1px solid #E1E8EC; }
+@media(max-width:760px){ .kd-trust-grid{ grid-template-columns:1fr; gap:0; } }
+.kd-trust-item{ padding:18px 0 18px 16px; border-left:3px solid #00AEEF; border-bottom:1px solid #E1E8EC; }
+.kd-trust-item h3{ font-size:17px; color:#102F40; margin-bottom:6px; font-weight:900; }
+.kd-trust-item p{ font-size:14px; color:#4F6472; line-height:1.8; }
+.kd-face{ display:flex; gap:20px; align-items:center; margin-top:26px; padding-top:22px; border-top:3px solid #00AEEF; }
+.kd-face img{ width:96px; height:96px; border-radius:50%; object-fit:cover; object-position:center top; flex:0 0 96px; }
+.kd-face .t{ font-size:15px; color:#102F40; line-height:1.8; }
+.kd-face .t b{ display:block; font-size:18px; font-weight:900; margin-bottom:4px; }
+.kd-face .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+.kd-face .btns a{ display:inline-flex; align-items:center; justify-content:center; padding:13px 22px; border-radius:4px; font-weight:700; font-size:15px; }
+.kd-face .b1{ background:#FF6B00; color:#fff; } .kd-face .b1:hover{ background:#D95A00; }
+.kd-face .b2{ background:#fff; color:#102F40; border:1.5px solid #102F40; }
+@media(max-width:560px){ .kd-face{ flex-direction:column; align-items:flex-start; } }
 </style>
 </head>
 <body>
@@ -1180,7 +1193,7 @@ a{ color:inherit; text-decoration:none; }
 <!-- ▼ 困りごと入口（P0-1 法人HUB / 2026-09-26） -->
 <section class="kd" id="komarigoto">
   <div class="kd-inner">
-    <div class="section-eyebrow reveal">YOUR CASE</div>
+    <div class="section-eyebrow reveal">困りごとから探す</div>
     <h2 class="section-title reveal">現場の暑さも 電気代も<br><span class="accent">それぞれの事情から</span>一緒に考える</h2>
     <p class="section-sub reveal">工場 倉庫 店舗 ビルの設備と省エネ。使う人、管理する人、予算を考える人の希望を整理してご提案します。商品ではなく困りごとから選ぶと、考えられる原因・主な解決策・まず確認するものと、次に読むページへ進みます。</p>
     <div class="kd-grid">
@@ -1239,13 +1252,19 @@ a{ color:inherit; text-decoration:none; }
 
 <section class="kd-trust" id="trust">
   <div class="kd-inner">
-    <div class="section-eyebrow reveal">OUR PROMISE</div>
+    <div class="section-eyebrow reveal">寺嵜の約束</div>
     <h2 class="section-title reveal">まず測る 不要なら不要と言う</h2>
     <p class="section-sub reveal">サーモカメラ・電力データ・現地条件を確認してから提案します。設備交換を前提にしません。</p>
     <div class="kd-trust-grid">
       <div class="kd-trust-item reveal"><h3>まず測る</h3><p>サーモカメラで屋根・天井・窓の温度分布を、電力データで負荷の時間帯を確認します。感覚や一般論ではなく、御社の建物の数字で判断します。</p></div>
       <div class="kd-trust-item reveal"><h3>不要なら不要と言う</h3><p>測った結果、設備交換や工事が最善でない場合は、そのままお伝えします。運用の見直しや部分対応で済むなら、その提案で終わります。</p></div>
       <div class="kd-trust-item reveal"><h3>交換を前提にしない</h3><p>既設の設備・屋根・契約を活かせる可能性から順に検討します。費用の大きい選択肢は、比較材料をそろえてからご判断いただきます。</p></div>
+    </div>
+    <div class="kd-face reveal">
+      <img src="assets/terasaki-profile.jpg" alt="代表 寺嵜忠弘">
+      <div class="t"><b>何を選ぶかより 何から始めるかを一緒に整理します</b>代表 寺嵜忠弘 ｜ 電気業界27年 ｜ 千葉拠点。高い設備から勧めることはありません。必要のない工事は必要ないとお伝えします。
+        <div class="btns"><a class="b1" href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" data-event="cta_click" data-cta-type="hub_consult" data-cta-position="hub">電気明細や写真を見てもらう</a><a class="b2" href="https://page.line.me/119upwsl" target="_blank" rel="noopener" data-event="line_click" data-cta-position="hub" data-line-account="@119upwsl">図面・写真をLINEで送る</a></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1565,7 +1584,7 @@ a{ color:inherit; text-decoration:none; }
 
     <div class="profile-card reveal">
       <div class="profile-photo">
-        <img src="images/terasaki-profile.jpg" alt="寺嵜忠弘 / 代表 / 省エネアドバイザー">
+        <img src="assets/terasaki-profile.jpg" alt="寺嵜忠弘 / 代表 / 省エネアドバイザー">
         <div class="photo-tag">REPRESENTATIVE</div>
       </div>
       <div class="profile-info">
