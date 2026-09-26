@@ -22,7 +22,7 @@
    → 「明るい・今時」試作を assets/kadai-bright.css（上書きCSS、未適用）として作成。太いゴシック・角丸カード・淡水色の交互背景・丸ボタン・画面下固定バー
 
 ## 未決・次にやること
-1. vivid-grp.co.jp の実物確認。このコンテナはネットワーク拒否だったため、子セッション session_01DoGtJVzwQ3ynpMu3RJBJR9 に調査を依頼済み。get_session / list_events で結果を回収する（新規コンテナは許可ドメインが効く想定）
+1. vivid-grp.co.jp の実物確認。このコンテナは拒否。新規に起動した子セッション session_01DoGtJVzwQ3ynpMu3RJBJR9 でも「proxy blocks port 443」で拒否（2026-09-26 12:06 UTC）。寺嵜は「許可した」と言っているが、環境 env_01GM5u1MEpPzSN7ASdp4WH9y の Network access に反映されていない可能性が高い。次セッションではまず curl で到達確認し、駄目なら環境設定の再確認かスクリーンショット提供を依頼する
 2. 調査結果を基に「再更新候補」を提示 → 採用されたら assets/kadai-bright.css の方向で kadai.css を書き換え、tools/gen_pages.py を調整して再生成、index.html の .kd-* も揃える
 3. CTA色の確定（濃紺／ゴールド／深緑／vivid準拠）
 4. 実写写真の配置（寺嵜決定・許諾済みのみ）
