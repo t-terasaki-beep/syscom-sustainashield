@@ -1078,6 +1078,10 @@ a{ color:inherit; text-decoration:none; }
 .kd .section-eyebrow::before{ content:""; display:inline-block; width:10px; height:10px; border-radius:50%; background:#00AEEF; margin-right:10px; vertical-align:middle; }
 .kd .section-title{ color:#102F40; font-family:"Zen Kaku Gothic New","Noto Sans JP",sans-serif; }
 .kd .section-title .accent{ color:#0087BA; }
+.kd-title .l{ display:inline-block; }
+.kd-title br.pc{ display:none; }
+@media(min-width:861px){ .kd-title br.pc{ display:inline; } }
+@media(max-width:640px){ .kd-title{ font-size:26px; } }
 .kd-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:0 40px; margin-top:26px; border-top:1px solid #E1E8EC; }
 @media(max-width:700px){ .kd-grid{ grid-template-columns:1fr; gap:0; } }
 .kd-card{ display:flex; flex-direction:column; padding:22px 0 20px 18px; border-bottom:1px solid #E1E8EC; border-left:3px solid #00AEEF; margin-top:-1px; transition:background .15s; }
@@ -1194,7 +1198,7 @@ a{ color:inherit; text-decoration:none; }
 <section class="kd" id="komarigoto">
   <div class="kd-inner">
     <div class="section-eyebrow reveal">困りごとから探す</div>
-    <h2 class="section-title reveal">現場の暑さも 電気代も<br><span class="accent">それぞれの事情から</span>一緒に考える</h2>
+    <h2 class="section-title reveal kd-title"><span class="l">現場の暑さも 電気代も</span><br class="pc"><span class="l accent">それぞれの事情から</span> <span class="l">一緒に考える</span></h2>
     <p class="section-sub reveal">工場 倉庫 店舗 ビルの設備と省エネ。使う人、管理する人、予算を考える人の希望を整理してご提案します。商品ではなく困りごとから選ぶと、考えられる原因・主な解決策・まず確認するものと、次に読むページへ進みます。</p>
     <div class="kd-grid">
       <a class="kd-card reveal" href="business/atsui/">

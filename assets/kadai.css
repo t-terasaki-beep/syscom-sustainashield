@@ -49,7 +49,11 @@ b,strong{font-weight:700}
 .hero-inner{max-width:1040px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
 @media(max-width:860px){.hero-inner{grid-template-columns:1fr;gap:26px}}
 .hero .eyebrow{margin-bottom:14px}
-.hero h1{font-weight:900;font-size:clamp(26px,3.8vw,38px);line-height:1.4;margin-bottom:16px;letter-spacing:.01em;color:var(--ink)}
+.hero h1{font-weight:900;font-size:clamp(24px,3.2vw,34px);line-height:1.45;margin-bottom:16px;letter-spacing:0;color:var(--ink)}
+.hero h1 .l{display:inline-block}
+.hero h1 br.pc{display:none}
+@media(min-width:861px){.hero h1 br.pc{display:inline}}
+@media(max-width:400px){.hero h1{font-size:24px}}
 .hero h1 .accent{color:var(--sky-deep)}
 .hero .lead{max-width:640px}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
