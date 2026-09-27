@@ -6,11 +6,11 @@
    戻し方：その1行を消す（またはこのファイルを空にする）
    ========================================================== */
 body{background:#F3FBFE !important}
-/* ヒーロー：濃い緑の重ね → 研究会トップと同じ菜の花の写真＋青のグラデーション */
-html body .hero{background:linear-gradient(90deg,rgba(0,64,120,.66) 0%,rgba(0,88,150,.42) 48%,rgba(0,110,180,.05) 85%),url('/chiba-ene-lab/assets/lab-hero.jpg') center 62%/cover no-repeat !important;background-color:#3A8FD0 !important}
+/* ヒーロー（:not(#ss-x) はページ内の長いセレクタに負けないための詳細度上げ）：濃い緑の重ね → 研究会トップと同じ菜の花の写真＋青のグラデーション */
+html body .hero:not(#ss-x){background:linear-gradient(90deg,rgba(0,64,120,.66) 0%,rgba(0,88,150,.42) 48%,rgba(0,110,180,.05) 85%),url('/chiba-ene-lab/assets/lab-hero.jpg') center 62%/cover no-repeat !important;background-color:#3A8FD0 !important}
 html body .hero::after{background:radial-gradient(700px 320px at 85% -10%,rgba(255,201,51,.28),transparent 60%) !important}
 html body .hero h1 .hl{color:#FFC933 !important}
-@media(max-width:640px){html body .hero{background:linear-gradient(180deg,rgba(0,64,120,.72) 0%,rgba(0,88,150,.5) 60%,rgba(0,110,180,.15) 100%),url('/chiba-ene-lab/assets/lab-hero.jpg') 62% 100%/cover no-repeat !important}}
+@media(max-width:640px){html body .hero:not(#ss-x){background:linear-gradient(180deg,rgba(0,64,120,.72) 0%,rgba(0,88,150,.5) 60%,rgba(0,110,180,.15) 100%),url('/chiba-ene-lab/assets/lab-hero.jpg') 62% 100%/cover no-repeat !important}}
 /* 小見出し・ボタン：研究会トップと同じ色 */
 html body .eyebrow{color:#0079AD !important}
 html body .btn-out{color:#0079AD !important;border-color:#0093CF !important;background:#fff !important}
@@ -49,4 +49,7 @@ html body .topbar{border-bottom:3px solid #FFC933 !important}
 .lab-also li a:after{content:"→";color:#0079AD}
 @media(max-width:640px){.lab-also .in{grid-template-columns:1fr}}
 /* スマホではヘッダーを上に貼り付けない（本文を広く見せる。画面下の電話・LINEバーはそのまま） */
-@media(max-width:700px){.lab-hd{position:static !important}}
+@media(max-width:700px){.lab-hd{position:static !important}
+  /* 5つのリンクを2行に折り返して全部見せる（横にはみ出さないので、スマホ用メニューのスクリプトにも置き換えられない） */
+  .lab-hd nav{flex-wrap:wrap;overflow:visible;padding-bottom:2px}
+  .lab-hd nav a{padding:5px 11px}}
