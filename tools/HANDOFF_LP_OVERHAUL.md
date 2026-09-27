@@ -75,3 +75,14 @@ Google Fonts が到達できる環境では `tools/preview/fontroute.js` は不�
   - 保存先 assets/photos/。割り当ては tools/gen_pages.py の HERO_PHOTOS。どれも実際の施工・測定写真ではないので、キャプション先頭に「写真はイメージです。」、alt に「（イメージ）」を自動付与。実写が手に入ったら HERO_PHOTOS の差し替えだけで済む
 - 検査：11ページ×390/1280px 横スクロール0・JSエラー0・読込失敗0・写真プレースホルダー残0
 - 注意：白文字×#0093CF のコントラスト比は約3.5で、WCAG AA（本文4.5）に届かない。ボタン文字は太字15〜16px。気になる場合は既定を #0079AD（約4.8）に一段濃くする
+
+---
+
+## 2026-09-27 20:09 JST 本番公開済み（寺嵜L3承認）
+- 本番はお名前.com（nginx）。GitHub Pages ではないので、PR マージでは公開されない。公開は FTP で、寺嵜さんが実行時にパスワードを入力するスクリプトを使った
+- 公開物・原本バックアップ・検査・戻し手順：`Desktop/_run/DEPLOY_LP_20260927/`（build_upload.py → upload/、qa_staging.js、publish.ps1 -Mode publish|rollback）
+- 公開した16ファイル：住宅9ページ＋/assets/ss-bright-v1.css（本番原本に1行追加）、新規 /business/cubicle/＋kadai.css・terasaki-profile.jpg・photos/cubicle-check.jpg、トップ「詳しい解説ページ」欄にキュービクルのカード、sitemap に1件
+- 公開しなかったもの：/business/atsui/・/business/denkidai/（本番の /business/roof-heat/・/energy-cost-reduction/ と検索意図が重なる）、PR の法人HUB・遮熱・/lp/・住宅HUB等の HTML（本番が別デザインで新しい）
+- 公開後の本番検査：11ページ×390/1280px 横スクロール0・JSエラー0・内部リンク切れ0
+- 既存不具合：/api/approved-cases.php が 500（公開前から）
+- 次：①事例APIの500 ②atsui/denkidai の中身を既存ページへ追記 ③7日後の相談件数比較 ④FTPパスワード変更
