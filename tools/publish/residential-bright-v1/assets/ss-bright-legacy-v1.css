@@ -93,3 +93,19 @@ html body footer,html body .ss-ft{background:var(--ink) !important}
 .ss-mcta .t,.ss-mcta.ss-mcta-3 .t{background:var(--ssl-cta) !important;color:#fff !important}
 .ss-mcta .l,.ss-mcta.ss-mcta-3 .l{background:#06C755 !important;color:#fff !important}
 .ss-mcta.ss-mcta-3 .f{background:#fff !important;color:var(--ink) !important;border:1.5px solid #B9D3DF !important}
+
+/* ---------- 2026-09-27 追加：遮熱系ページ ---------- */
+/* ヒーローと相談欄のオレンジのボタン（.c1）→ スカイの丸ボタン */
+.hero-cta a.c1,.btns a.c1,a.c1[href*="forms.gle"]{background:var(--ssl-cta) !important;border-color:var(--ssl-cta) !important;color:#fff !important;border-radius:999px !important}
+/* スマホではヘッダーの電話番号と「戸建ての方」を隠す（ロゴ文字が縦に押しつぶされるのを防ぐ。メニュー内と下部バーに同じ導線あり） */
+@media(max-width:760px){.ss-hd .nav .tel,.ss-hd .nav .sw,.ss-hd .nav .opt{display:none !important}}
+/* 濃紺ヒーローの本文が #444 固定で読めない不具合（公開前から）→ 白に。濃紺ヒーローを持つのは .hero-inner のページだけ */
+.hero .hero-inner .lead{color:rgba(255,255,255,.92) !important}
+/* スマホのメニューバー（ss-mobile-menu.js）：濃紺の帯 → 白地＋細枠の丸ボタン（住宅HUBと同じ） */
+html body .ssmm-bar{background:#fff !important;border-bottom:1px solid var(--line)}
+html body .ssmm-b{background:#fff !important;color:var(--ink) !important;border:1.5px solid #B9D3DF !important;border-radius:999px !important;box-shadow:none !important}
+html body .ssmm-b .ic i{background:var(--ink) !important}
+html body .ssmm-p{background:var(--ssl-band-light)}
+html body .ssmm-t{color:var(--sky-d)}
+html body .ssmm-l a[aria-current]{background:var(--ink) !important;color:#fff !important}
+html body .ssmm-tel{background:var(--ssl-cta) !important;border-color:var(--ssl-cta) !important;color:#fff !important;border-radius:999px !important}

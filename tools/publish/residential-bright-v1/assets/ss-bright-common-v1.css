@@ -1,0 +1,85 @@
+/* ==========================================================
+   ss-bright-common-v1.css — 法人特設ページ・住宅の詳しい説明ページ・コラム・ツールを
+   住宅HUB（明るい型）の色に揃える共通の上書きレイヤー（2026-09-27）
+   対象テンプレート：corporate-batch-v8（x8-）／corporate-lp-v1・v5（v5-・biz-lp）／pasona-lp（p-）／column.css／単独ページ
+   使い方：各ページの </head> 直前に1行だけ追加
+     <link rel="stylesheet" href="/assets/ss-bright-common-v1.css?v=1">
+   戻し方：その1行を消す（またはこのファイルを空にする）。HTML本文・既存CSSは変更しない
+   方針：ゴールド・オレンジ・黄色・濃紺のボタンと見出し装飾を、スカイ #0093CF の丸ボタン・淡い水色へ。
+         LINE・YouTube・メーカー名・「必須」など意味のある色は変えない
+   ========================================================== */
+:root{
+  --ssx-sky:#00AEEF; --ssx-sky-deep:#0093CF; --ssx-sky-dd:#0079AD;
+  --ssx-band:#E8F7FD; --ssx-band-light:#F3FBFE;
+  --ssx-ink:#102F40; --ssx-line:#D9E8EF; --ssx-line-strong:#B9D3DF;
+  --ssx-cta:#0093CF; --ssx-cta-deep:#0079AD;
+}
+
+/* ---------- スマホのメニューバー（ss-mobile-menu.js） ---------- */
+html:root:root body .ssmm-bar{background:#fff !important;border-bottom:1px solid var(--ssx-line)}
+html:root:root body .ssmm-b{background:#fff !important;color:var(--ssx-ink) !important;border:1.5px solid var(--ssx-line-strong) !important;border-radius:999px !important;box-shadow:none !important}
+html:root:root body .ssmm-b .ic i{background:var(--ssx-ink) !important}
+html:root:root body .ssmm-p{background:var(--ssx-band-light)}
+html:root:root body .ssmm-t{color:var(--ssx-sky-deep)}
+html:root:root body .ssmm-l a[aria-current]{background:var(--ssx-ink) !important;color:#fff !important}
+html:root:root body .ssmm-tel{background:var(--ssx-cta) !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
+
+/* ---------- ヘッダーの相談ボタン：濃紺・オレンジ → スカイの丸ボタン ---------- */
+html:root:root body .head-consult,html:root:root body .p-header-cta,html:root:root body .biz-lp-header .biz-consult,html:root:root body a.cta-mini,
+html:root:root body .gnav .cta-mini,html:root:root body .hnav a.go,html:root:root body a.talk,html:root:root body .solarnav a.talk{
+  background:var(--ssx-cta) !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
+html:root:root body a[href*="#contact"][style*="#143649" i],html:root:root body a[style*="#143649" i]{background:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
+
+/* ---------- 主ボタン：ゴールド・オレンジ・黄色 → スカイの丸ボタン ---------- */
+html:root:root body .btn.gold,html:root:root body .btn-gold,html:root:root body .btn-org,html:root:root body .btn-cp,html:root:root body a.button.gold,html:root:root body .button.gold,
+html:root:root body .gc-btn.gold,html:root:root body .p-btn,html:root:root body .x8-button,html:root:root body .v5-button,html:root:root body button.go,html:root:root body button.roi-go,
+html:root:root body .b.b-form,html:root:root body a.contact-btn,html:root:root body .tq7-ask a,html:root:root body .mcta a.t,
+html:root:root body a[style*="#FF6B00" i],html:root:root body a[style*="#C6A45F" i],html:root:root body a[style*="#D18A38" i]{
+  background:var(--ssx-cta) !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important;box-shadow:none !important}
+html:root:root body .btn.gold:hover,html:root:root body .btn-gold:hover,html:root:root body .btn-org:hover,html:root:root body .p-btn:hover,html:root:root body .x8-button:hover,html:root:root body .v5-button:hover{background:var(--ssx-cta-deep) !important}
+/* 住宅の詳しい説明ページで primary がゴールドのもの */
+html:root:root body .p-wrap .btn.btn-primary,html:root:root body .btn-row .btn.btn-primary,html:root:root body a.btn.btn-primary[style*="#B"]{background:var(--ssx-cta) !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
+
+/* ---------- 濃紺のボタン：資料・PDFなどの補助ボタンは白地の枠ボタンに ---------- */
+html:root:root body .btn.btn-navy,html:root:root body .btn-navy{background:#fff !important;color:var(--ssx-sky-dd) !important;border:1.5px solid var(--ssx-sky-deep) !important;border-radius:999px !important}
+
+/* ---------- スマホ下部の固定バー ---------- */
+html:root:root body .mcta{background:rgba(255,255,255,.96) !important;border-top:1px solid var(--ssx-line) !important}
+html:root:root body .mcta a{border-radius:999px !important}
+
+/* ---------- 表の見出し：濃紺ベタ → 淡い水色 ---------- */
+html:root:root body table th,html:root:root body table thead,html:root:root body table thead th{background:var(--ssx-band) !important;color:var(--ssx-ink) !important;border-color:var(--ssx-line) !important}
+html:root:root body .s25-equation{background:var(--ssx-band) !important;color:var(--ssx-ink) !important}
+html:root:root body .s25-equation *{color:var(--ssx-ink) !important}
+
+/* ---------- 見出しまわりの装飾：オレンジ・ゴールドの罫と小見出し → スカイ ---------- */
+html:root:root body .rule,html:root:root body div.rule{background:var(--ssx-sky) !important}
+html:root:root body .eyebrow,html:root:root body span.eyebrow,html:root:root body p.eyebrow,html:root:root body .ey,html:root:root body .eb{color:var(--ssx-sky-dd) !important}
+html:root:root body .p-wrap b,html:root:root body .p-section b[class=""]{color:inherit}
+html:root:root body .flow-step .n,html:root:root body .point .num,html:root:root body .r .n,html:root:root body .gc-step .k,html:root:root body .calc-top .k,html:root:root body .cin .ct,
+html:root:root body .vhead .vbadge,html:root:root body .in .dot{background:var(--ssx-cta) !important;color:#fff !important}
+html:root:root body .hero-stat .n{color:var(--ssx-sky-dd) !important}
+html:root:root body .accent,html:root:root body td.price-cell{color:var(--ssx-sky-dd) !important}
+
+/* ---------- コラム（節約の虎の巻） ---------- */
+html:root:root body .footer h4,html:root:root body footer h4{color:#8FDBF7 !important}
+html:root:root body .play span,html:root:root body span.play{background:var(--ssx-cta) !important}
+
+/* ---------- 追加（検査で見つかった残り） ---------- */
+/* 特設ページのヘッダー右端「寺嵜 直通で相談」（x8- / v5- / r4- ヘッダー） */
+html:root:root body :is(.x8-header,.v5-header,.r4-header,.biz-lp-header) nav a:last-child{background:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important;border-color:var(--ssx-cta) !important}
+/* オレンジの小ボタン */
+html:root:root body :is(.btn-o,.btn-main,.btn.btn-o,.btn.btn-main){background:var(--ssx-cta) !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
+/* 画面下の固定バー（濃紺 → 白地） */
+html:root:root body :is(.x8-page,.x8-support,body) > .sticky,html:root:root body div.sticky{background:rgba(255,255,255,.96) !important;border-top:1px solid var(--ssx-line) !important;box-shadow:0 -4px 16px rgba(16,47,64,.08) !important}
+html:root:root body div.sticky a{border-radius:999px !important}
+html:root:root body .ss-mcta{background:rgba(255,255,255,.96) !important;border-top:1px solid var(--ssx-line)}
+html:root:root body .ss-mcta a{border-radius:999px !important}
+html:root:root body .ss-mcta .t{background:var(--ssx-cta) !important;color:#fff !important}
+html:root:root body .ss-mcta .l{background:#06C755 !important;color:#fff !important}
+/* 資料ライブラリのカテゴリ見出しの濃紺の丸 */
+html:root:root body .cat-head .cx{background:var(--ssx-cta) !important}
+/* 主ボタン（btn-primary / btn-cta）もスカイに統一 */
+html:root:root body :is(a.btn.btn-primary,a.btn.btn-cta,button.btn.btn-primary){background:var(--ssx-cta) !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
+/* 特設窓口の電話ボタン（黄色のグラデーション）→ スカイ */
+html:root:root body :is(a.btn.btn-tel,.btn.btn-tel){background:var(--ssx-cta) !important;background-image:none !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
