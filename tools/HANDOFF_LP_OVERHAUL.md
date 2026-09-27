@@ -64,3 +64,14 @@
 
 ## 検査スクリプト
 Google Fonts が到達できる環境では `tools/preview/fontroute.js` は不要（差し込むと @fontsource 未導入のためフォントが落ちる）。到達できない環境のみ使う。
+
+---
+
+## 2026-09-27 追記（寺嵜PCローカルセッション）
+- **CTA色＝スカイで確定**（寺嵜決定）。assets/kadai.css と公開パッケージ ss-bright-v1.css の既定を #0093CF／hover #0079AD に変更。濃紺は `data-cta="navy"`、コーラルは `data-cta="coral"` で切替。法人HUB index.html の寺嵜ブロック主ボタン（直書き濃紺）もスカイへ。公開パッケージの SHA256SUMS は css 分を更新済み
+- **ヒーロー写真7枠を配置**（寺嵜指示：本番掲載済みの写真を流用、足りない分は ChatGPT で生成）
+  - 本番流用5枚：工場・倉庫が暑い＝/images/coating.jpg、住宅HUB＝oh01-ohisama-hero-v2、エコキュート＝ec01-ecocute-hero-v2、太陽光＝/residential/solar/assets/hero-solar.jpg、蓄電池＝b01-annual-data-three-destinations-v2
+  - ChatGPT 生成2枚（2026-09-27）：電気代・デマンド＝office-demand.jpg、キュービクル＝cubicle-check.jpg
+  - 保存先 assets/photos/。割り当ては tools/gen_pages.py の HERO_PHOTOS。どれも実際の施工・測定写真ではないので、キャプション先頭に「写真はイメージです。」、alt に「（イメージ）」を自動付与。実写が手に入ったら HERO_PHOTOS の差し替えだけで済む
+- 検査：11ページ×390/1280px 横スクロール0・JSエラー0・読込失敗0・写真プレースホルダー残0
+- 注意：白文字×#0093CF のコントラスト比は約3.5で、WCAG AA（本文4.5）に届かない。ボタン文字は太字15〜16px。気になる場合は既定を #0079AD（約4.8）に一段濃くする

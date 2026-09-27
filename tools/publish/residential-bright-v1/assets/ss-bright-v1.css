@@ -10,10 +10,10 @@
   --ssb-sky:#00AEEF; --ssb-sky-deep:#0093CF;
   --ssb-band:#E8F7FD; --ssb-band-light:#F3FBFE;
   --ssb-ink:#102F40; --ssb-sub:#4F6472; --ssb-line:#D9E8EF; --ssb-line-strong:#B9D3DF;
-  --ssb-cta:#102F40; --ssb-cta-deep:#1B4A63;
+  --ssb-cta:#0093CF; --ssb-cta-deep:#0079AD;   /* 2026-09-27 寺嵜決定：スカイ */
   --ssb-r-card:20px;
 }
-html[data-cta="sky"]{--ssb-cta:#0093CF;--ssb-cta-deep:#0079AD}
+html[data-cta="navy"]{--ssb-cta:#102F40;--ssb-cta-deep:#1B4A63}
 html[data-cta="coral"]{--ssb-cta:#FA7748;--ssb-cta-deep:#E8602F}
 
 body{color:var(--ssb-ink);letter-spacing:.03em;-webkit-font-smoothing:antialiased}

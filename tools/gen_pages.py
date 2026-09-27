@@ -43,6 +43,33 @@ document.querySelectorAll('.drawer a').forEach(function(a){a.addEventListener('c
 document.addEventListener('keydown',function(e){if(e.key==='Escape')t(false)});})();
 </script>'''
 
+# ---- ヒーロー写真（2026-09-27）------------------------------------------
+# 本番サイトに掲載済みの写真を流用（寺嵜指示）。足りない枠は生成画像で補う。
+# どちらも実際の施工・測定の写真ではないため、キャプション先頭に「写真はイメージです」を必ず付ける。
+# 写真が未配置の枠は従来のプレースホルダーを出す。
+HERO_PHOTOS = {
+    # file: (assets/photos/ のファイル名, object-position)
+    "business/atsui/index.html":     ("warehouse-roof.jpg", "center 40%"),
+    "business/denkidai/index.html":  ("office-demand.jpg", "center"),
+    "business/cubicle/index.html":   ("cubicle-check.jpg", "center"),
+    "residential/index.html":        ("home-family.jpg", "60% center"),
+    "residential/ecocute/index.html": ("ecocute-consult.jpg", "45% center"),
+    "residential/solar/index.html":  ("home-solar.jpg", "center"),
+    "residential/battery/index.html": ("home-battery.jpg", "58% center"),
+}
+IMAGE_NOTE = "写真はイメージです。"
+
+def hero_figure(file, rel, alt, caption):
+    ph = HERO_PHOTOS.get(file)
+    if ph and os.path.exists(os.path.join(ROOT, "assets", "photos", ph[0])):
+        return (f'<figure class="hero-photo has-img"><img src="{rel}assets/photos/{ph[0]}" alt="{esc(alt.replace("の実写", ""))}（イメージ）" '
+                f'width="1200" height="750" loading="eager" decoding="async" style="object-position:{ph[1]}"></figure>\n'
+                f'      <div class="hero-caption">{esc(IMAGE_NOTE + caption.removeprefix("写真1 "))}</div>')
+    return (f'<figure class="hero-photo" aria-label="{esc(alt)}">\n'
+            f'        <div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M7 5l1.5-2h7L17 5"/></svg><span>{esc(alt)}</span><span style="font-size:12px;color:var(--muted)">写真を準備中</span></div>\n'
+            f'      </figure>\n'
+            f'      <div class="hero-caption">{esc(caption)}</div>')
+
 def esc(s):
     return html.escape(s, quote=True)
 
@@ -271,10 +298,7 @@ def kadai_page(p):
       <div class="hero-meta">{p["hero_meta"]}</div>
     </div>
     <div>
-      <figure class="hero-photo" aria-label="{esc(p["photo_alt"])}">
-        <div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M7 5l1.5-2h7L17 5"/></svg><span>{esc(p["photo_alt"])}</span><span style="font-size:12px;color:var(--muted)">実写写真を配置（寺嵜決定・許諾済みのみ）</span></div>
-      </figure>
-      <div class="hero-caption">{esc(p["photo_caption"])}</div>
+      {hero_figure(p["file"], p["rel"], p["photo_alt"], p["photo_caption"])}
     </div>
   </div>
 </section>
@@ -393,7 +417,7 @@ PAGES = []
 
 # ---------- P0-3 法人 1: 工場・倉庫が暑い ----------
 PAGES.append(dict(
-    file="business/atsui/index.html", photo_alt="工場・倉庫の屋根と作業場の実写（サーモ画像可）", photo_caption="写真1 屋根裏・天井・窓の温度分布。実測が入り次第、測定日・外気温・屋根材を併記", path="/business/atsui/", rel="../../", audience="business",
+    file="business/atsui/index.html", photo_alt="工場・倉庫の屋根と作業場の実写", photo_caption="写真1 現地では屋根裏・天井・窓の温度分布をサーモカメラで測り、測定日・外気温・屋根材を記録します", path="/business/atsui/", rel="../../", audience="business",
     title="工場・倉庫が暑い／空調が効かない 原因を測ってから対策を選ぶ｜千葉｜シスコムサステナシールド",
     og_title="工場・倉庫が暑い／空調が効かない 原因を測ってから対策を選ぶ",
     desc="千葉の工場・倉庫・店舗の暑さは、屋根・窓・換気・空調・機器発熱のどれが原因かで対策が変わります。サーモカメラと現地条件で確認し、遮熱・窓・空調・換気から必要なものだけをご提案。屋根が原因でなければ遮熱は勧めません。",
@@ -806,10 +830,7 @@ def residential_hub():
       <div class="hero-meta">対応：<b>千葉県内のご家庭</b> ｜ 相談は無料 ｜ 今すぐ工事を頼みたい方は <a href="../contact.html" style="text-decoration:underline">お問い合わせ</a> へ</div>
     </div>
     <div>
-      <figure class="hero-photo" aria-label="千葉の戸建て住宅と家族の実写">
-        <div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M7 5l1.5-2h7L17 5"/></svg><span>千葉の戸建て住宅の実写</span><span style="font-size:12px;color:var(--muted)">実写写真を配置（寺嵜決定・許諾済みのみ）</span></div>
-      </figure>
-      <div class="hero-caption">写真1 住宅の写真。架空の施工実績や口コミは載せません</div>
+      {hero_figure("residential/index.html", "../", "千葉の戸建て住宅と家族", "架空の施工実績や口コミは載せません")}
     </div>
   </div>
 </section>

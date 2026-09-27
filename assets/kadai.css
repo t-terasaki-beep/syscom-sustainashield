@@ -3,7 +3,7 @@
    方針（2026-09-26 寺嵜指示「今時・明るい・スマホ版を見習え」参考: vivid-grp.co.jp 実測）
    ・白基調。淡い水色の帯（--band）と白を交互に置き、罫線ではなく色差と余白で区切る
    ・アクセントはスカイブルー1色（見出し短罫・英字ラベル・番号・リンク）
-   ・CTAは1色（--cta）。デフォルト濃紺 #102F40。html[data-cta="sky"|"coral"] で切替可
+   ・CTAは1色（--cta）。デフォルト スカイ #0093CF（2026-09-27 寺嵜決定）。html[data-cta="navy"|"coral"] で切替可
    ・角丸 20px の白カード、丸ボタン（radius 999 / 高さ 52px）、影・グラデーション・絵文字は使わない
    ・書体 Noto Sans JP（本文400・見出し700）＋ Montserrat（英字ラベル・番号）
    ・スマホ：ヘッダー白 sticky 64px＋ハンバーガー、画面下に「相談する｜LINEで送る」2分割の固定バー
@@ -14,13 +14,13 @@
   --band:#E8F7FD; --band-light:#F3FBFE;
   --ink:#102F40; --sub:#4F6472; --muted:#7A8A94;
   --line:#D9E8EF; --line-strong:#B9D3DF;
-  --cta:#102F40; --cta-deep:#1B4A63; --cta-text:#FFFFFF;
+  --cta:#0093CF; --cta-deep:#0079AD; --cta-text:#FFFFFF;
   --lineapp:#06C755; --lineapp-deep:#05B04C;
   --white:#FFFFFF; --photo:#DCEEF8;
   --en:"Montserrat","Noto Sans JP",sans-serif;
   --r-card:20px; --r-pill:999px;
 }
-html[data-cta="sky"]{--cta:#0093CF;--cta-deep:#0079AD}
+html[data-cta="navy"]{--cta:#102F40;--cta-deep:#1B4A63}
 html[data-cta="coral"]{--cta:#FA7748;--cta-deep:#E8602F}
 html[data-accent="teal"]{--sky:#38B3D0;--sky-deep:#2A9DB8;--band:#E5FBFF;--band-light:#F2FDFF}
 

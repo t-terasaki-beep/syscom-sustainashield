@@ -1,4 +1,4 @@
-7fed9c6a1f24c78f32f5453a34f047de79798e002c795f737f1ce3d4215fd360  ./assets/ss-bright-v1.css
+1d607b9fafd3a84789b12e8b45f9642344f894151c326ce70065e567799e9106  ./assets/ss-bright-v1.css
 00d197736c57eecd7b7ede24407c8edc9f0fc63ec59f8a31d165c64b864ac92b  ./residential/battery/index.html
 71e98162e7d9dd856ad9a4376a67aff2f887c4c8dba7eefaaa18f6539a61167a  ./residential/ecocute/index.html
 08138da30922f1c305a9c6caff034607242b93a84e7c429b7f1725b4ce80a3f8  ./residential/guide/ohisama/index.html
