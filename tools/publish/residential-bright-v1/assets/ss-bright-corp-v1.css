@@ -1,0 +1,82 @@
+/* ==========================================================
+   ss-bright-corp-v1.css — 法人TOP（/）を住宅HUB（明るい型）に揃える上書きレイヤー（2026-09-27）
+   対象：/ のみ（body.corporate-hub-v6。corporate-v1.css と corporate-hub-v6.css の上に重ねる）
+   使い方：/index.html の </head> 直前に1行だけ追加
+     <link rel="stylesheet" href="/assets/ss-bright-corp-v1.css?v=1">
+   戻し方：その1行を消す（またはこのファイルを空にする）。HTML本文・既存CSSは変更しない
+   値の出典：ss-bright-v1.css（住宅HUB）と同じトークン。CTAはスカイ #0093CF（2026-09-27 寺嵜決定）
+   ヒーロー写真：本番掲載済み /images/reduce.jpg（晴れた日のガラス張りの建物）に差し替え。雨上がりの暗い写真はやめる
+   ========================================================== */
+:root{
+  --ssc-sky:#00AEEF; --ssc-sky-deep:#0093CF; --ssc-sky-dd:#0079AD;
+  --ssc-band:#E8F7FD; --ssc-band-light:#F3FBFE;
+  --ssc-ink:#102F40; --ssc-sub:#4F6472; --ssc-line:#D9E8EF; --ssc-line-strong:#B9D3DF;
+  --ssc-cta:#0093CF; --ssc-cta-deep:#0079AD; --ssc-line-green:#06C755;
+}
+body.corporate-hub-v6{color:var(--ssc-ink);letter-spacing:.03em}
+.corporate-hub-v6 h1,.corporate-hub-v6 h2{letter-spacing:.04em}
+
+/* ---------- ヘッダー：白・丸いボタン ---------- */
+.corporate-hub-v6 .site-head{border-bottom:1px solid var(--ssc-line)}
+.corporate-hub-v6 .head-consult{background:var(--ssc-cta) !important;color:#fff !important;border-radius:999px !important;padding:10px 20px !important}
+.corporate-hub-v6 .head-consult:hover{background:var(--ssc-cta-deep) !important}
+.corporate-hub-v6 .service-nav{background:var(--ssc-band-light)}
+.corporate-hub-v6 .service-nav a:hover{background:var(--ssc-band);color:var(--ssc-sky-deep)}
+
+/* スマホのメニューバー（ss-mobile-menu.js）：濃紺の帯 → 白地＋細枠の丸ボタン（住宅HUBと同じ） */
+html body .ssmm-bar{background:#fff;border-bottom:1px solid var(--ssc-line)}
+html body .ssmm-b{background:#fff !important;color:var(--ssc-ink) !important;border:1.5px solid var(--ssc-line-strong) !important;border-radius:999px !important;box-shadow:none !important}
+html body .ssmm-b .ic i{background:var(--ssc-ink) !important}
+html body .ssmm-p{background:var(--ssc-band-light)}
+html body .ssmm-t{color:var(--ssc-sky-deep)}
+html body .ssmm-l a{border:0 !important;border-radius:14px !important}
+html body .ssmm-l a[aria-current]{background:var(--ssc-ink) !important;color:#fff !important}
+html body .ssmm-l a:after{color:var(--ssc-sky-deep);opacity:1}
+html body .ssmm-tel{background:var(--ssc-cta) !important;border-color:var(--ssc-cta) !important;color:#fff !important;border-radius:999px !important}
+
+/* ---------- ヒーロー：濃紺ベタ＋暗い写真 → 淡い水色＋明るい写真 ---------- */
+.corporate-hub-v6 .hero-home{
+  background:linear-gradient(90deg,rgba(243,251,254,1) 0%,rgba(243,251,254,.97) 42%,rgba(243,251,254,.55) 62%,rgba(243,251,254,0) 82%),url('/images/reduce.jpg') right center/cover no-repeat !important;
+  color:var(--ssc-ink) !important;min-height:520px}
+.corporate-hub-v6 .hero-home h1{color:var(--ssc-ink)}
+.corporate-hub-v6 .hero-home p{color:var(--ssc-ink)}
+.corporate-hub-v6 .hero-home .eyebrow{color:var(--ssc-sky-deep) !important;background:#fff}
+.corporate-hub-v6 .hero-home .note{color:var(--ssc-sub) !important}
+@media(max-width:760px){
+  .corporate-hub-v6 .hero-home{
+    background:linear-gradient(180deg,#F3FBFE 0%,#F3FBFE 58%,rgba(243,251,254,0) 72%),url('/images/reduce.jpg') center bottom/100% auto no-repeat,#F3FBFE !important;
+    min-height:0 !important;display:block !important;padding:32px 0 min(62vw,250px) !important}
+}
+
+/* ---------- ラベル：丸いラベル（住宅HUBと同じ） ---------- */
+.corporate-hub-v6 .eyebrow{display:inline-block;background:var(--ssc-band);color:var(--ssc-sky-deep);border-radius:999px;padding:5px 13px;font-size:12.5px;font-weight:700;letter-spacing:.04em}
+.corporate-hub-v6 .pale .eyebrow{background:#fff}
+
+/* ---------- 見出し下の短い罫 ---------- */
+.corporate-hub-v6 .section h2{position:relative;padding-bottom:16px}
+.corporate-hub-v6 .section h2::after{content:"";position:absolute;left:0;bottom:0;width:30px;height:3px;background:var(--ssc-sky);border-radius:2px}
+.corporate-hub-v6 #for-home p{margin:0}
+
+/* ---------- ボタン：スカイの丸ボタン（ゴールド・濃紺をやめる） ---------- */
+.corporate-hub-v6 .btn{background:var(--ssc-cta);border-color:var(--ssc-cta);color:#fff;border-radius:999px;padding:14px 26px}
+.corporate-hub-v6 .btn:hover{background:var(--ssc-cta-deep);border-color:var(--ssc-cta-deep)}
+.corporate-hub-v6 .btn.gold{background:var(--ssc-cta);border-color:var(--ssc-cta);color:#fff}
+.corporate-hub-v6 .btn.outline{background:#fff;color:var(--ssc-ink);border:1.5px solid var(--ssc-line-strong)}
+.corporate-hub-v6 .btn.outline:hover{border-color:var(--ssc-sky-deep);color:var(--ssc-sky-deep);background:#fff}
+
+/* ---------- 帯・カード ---------- */
+.corporate-hub-v6 .pale{background:var(--ssc-band-light)}
+.corporate-hub-v6 .card{border:0;border-radius:20px;box-shadow:0 6px 24px -14px rgba(16,47,64,.25)}
+.corporate-hub-v6 .card a{color:var(--ssc-sky-dd)}
+.corporate-hub-v6 .split img{border-radius:20px}
+.corporate-hub-v6 .section-intro{color:var(--ssc-sub)}
+
+/* ---------- お問い合わせ帯：濃紺 → 淡い水色、LINEは緑 ---------- */
+.corporate-hub-v6 .contact{background:var(--ssc-band);color:var(--ssc-ink)}
+.corporate-hub-v6 .contact .btn.gold{background:var(--ssc-line-green);border-color:var(--ssc-line-green);color:#fff}
+.corporate-hub-v6 .contact .btn.outline{background:#fff}
+
+/* ---------- フッター：住宅HUBと同じ濃紺 ---------- */
+.corporate-hub-v6 .footer{background:var(--ssc-ink);color:#fff;width:100%;max-width:none;padding:30px max(24px,calc((100% - 1180px)/2))}
+.corporate-hub-v6 .footer a,.corporate-hub-v6 .footer p{color:#fff}
+.corporate-hub-v6 a:focus-visible{outline-color:var(--ssc-sky)}

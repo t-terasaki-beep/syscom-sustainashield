@@ -1,0 +1,63 @@
+/* 明るい・今時のスマホ型（試作・上書き） */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap');
+:root{--sky:#00AEEF;--sky-deep:#0093CF;--orange:#0093CF;--orange-deep:#0079AD;--ink:#1B2B36;--sub:#5B6B76;--line:#E3ECF2;--soft:#F1F8FC;--photo:#DCEEF8}
+body{font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif !important;font-weight:500;line-height:1.85}
+h1,.h2,.kadai-card h3,.cause h3,.path h3,.trust-item h3,.step3 h3,.faq-item h3,.cta-box h3,.footer .name,.nogo h3{font-family:"Zen Kaku Gothic New",sans-serif !important;font-weight:900 !important;letter-spacing:.01em}
+.topbar{display:none}
+.site-header{border-bottom:0;box-shadow:0 2px 12px rgba(27,43,54,.06)}
+.gnav .cta-mini{background:var(--sky-deep);border-radius:999px;padding:10px 16px}
+.crumb{display:none}
+/* ヒーロー：写真を先頭に大きく */
+.hero{padding:0 0 28px;border-bottom:0}
+.hero-inner{display:flex;flex-direction:column-reverse;gap:18px;padding:0}
+.hero-inner>div:first-child{padding:0 20px}
+.hero-photo{min-height:250px;border-radius:0 0 28px 28px;background:linear-gradient(160deg,#DCEEF8,#F6FBFE)}
+.hero-caption{margin:8px 20px 0;border-left:0;padding-left:0;font-size:11.5px}
+.hero .eyebrow{display:inline-block;background:var(--soft);color:var(--sky-deep);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;margin-bottom:12px}
+.hero h1{font-size:27px;line-height:1.45}
+.hero .lead{font-size:15px}
+.hero-cta{flex-direction:column;gap:10px}
+.btn{border-radius:999px;padding:16px 22px;font-weight:900;width:100%}
+.btn-gold{background:var(--sky-deep);color:#fff;box-shadow:0 8px 20px -10px rgba(0,147,207,.7)}
+.btn-ghost{border:2px solid var(--sky-deep);color:var(--sky-deep)}
+.btn-line{border:2px solid #06C755;color:#0a7a3a}
+.hero-meta{font-size:12.5px;color:var(--sub)}
+/* セクション：淡い水色と白を交互に、罫線をやめる */
+.section{border-top:0;padding:36px 0}
+.section:nth-of-type(even){background:var(--soft)}
+.h2{font-size:22px;line-height:1.5}
+.lead{font-size:14.5px}
+/* カード：角丸・影・アイコン風の丸番号 */
+.kadai-grid,.cause-grid,.paths,.trust-grid,.steps3,.cost-list,.related-grid{border-top:0;gap:12px}
+.kadai-card,.cause,.path,.trust-item,.step3{background:#fff;border:0 !important;border-radius:18px;padding:18px 18px 16px;box-shadow:0 6px 24px -14px rgba(27,43,54,.25);margin-top:0}
+.kadai-card .num,.step3 .n{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--sky-deep);font-family:"Zen Kaku Gothic New",sans-serif;font-size:13px;letter-spacing:0}
+.kadai-card h3{font-size:18px;margin:8px 0 8px}
+.kadai-card .go,.path a.more{color:var(--sky-deep);text-decoration:none;font-weight:900}
+.kadai-card .go::after,.path a.more::after{content:" ›";font-size:18px}
+.path.main{outline:2px solid var(--sky);outline-offset:-2px}
+.path.main .role{color:var(--sky-deep)}
+.chips a{border:0;background:#fff;border-radius:999px;box-shadow:0 4px 14px -8px rgba(27,43,54,.35);color:var(--ink)}
+.scene{border:0;border-radius:18px;background:#fff;padding:18px;box-shadow:0 6px 24px -14px rgba(27,43,54,.25)}
+.scene .tag{color:var(--sky-deep)}
+.check{border:0;background:#fff;border-radius:18px;padding:16px 18px;box-shadow:0 6px 24px -14px rgba(27,43,54,.25)}
+.check li::before{border-radius:50%;border-color:var(--sky)}
+.nogo{border:0;background:#FFF6E8;border-radius:18px;padding:16px 18px}
+.nogo h3{color:#9A5B00}
+.cost-list li{background:#fff;border:0;border-radius:14px;padding:12px 14px}
+.trust{border-top:0;background:var(--soft)}
+.faq-item{background:#fff;border:0 !important;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 4px 14px -10px rgba(27,43,54,.2)}
+.cta-box{border-top:0;background:#fff;border-radius:22px;padding:22px 18px;box-shadow:0 10px 30px -16px rgba(27,43,54,.3)}
+.cta-box .btns{flex-direction:column}
+.cta-box .btns .btn{min-width:0}
+.related{background:#fff}
+.related-col a{border-bottom:0;color:var(--sky-deep)}
+.footer{border-top:0;background:#1B2B36;color:#fff;padding-bottom:110px}
+.footer .desc,.footer li a,.footer-bottom{color:#C9D6DF}
+.footer h4{color:#7FD3F5}
+/* 画面下の固定ボタン */
+body::after{content:"";display:block;height:0}
+.sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:200;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr 44px;gap:8px}
+.sticky-cta a{display:flex;align-items:center;justify-content:center;border-radius:999px;font-weight:900;font-size:14px;padding:12px 6px;text-decoration:none}
+.sticky-cta .s1{background:var(--sky-deep);color:#fff}
+.sticky-cta .s2{background:#06C755;color:#fff}
+.sticky-cta .s3{background:#fff;border:2px solid var(--line);color:var(--ink);padding:0}
