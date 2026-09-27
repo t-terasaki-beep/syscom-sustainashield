@@ -79,6 +79,10 @@ html body .ssmm-l a:after{color:var(--ssb-sky-deep);opacity:1}
 .button span{color:#fff;opacity:.85;font-size:12.5px !important;font-weight:500}
 .button:hover,.home-button:hover{background:var(--ssb-cta-deep) !important}
 .detail-link .button{flex-direction:column;gap:2px}
+/* 2026-09-27 CTAスカイ統一：スマホのメニュー帯「電話で相談」と、悩みカードの「詳しい説明を読む」も同じ1色に */
+html body .ssmm-tel{background:var(--ssb-cta) !important;border-color:var(--ssb-cta) !important;color:#fff !important;border-radius:999px !important}
+.k-btn{background:var(--ssb-cta) !important;color:#fff !important;border-radius:999px !important}
+.k-btn:hover{background:var(--ssb-cta-deep) !important}
 .hub-detail{background:var(--ssb-cta) !important;border-radius:12px !important;text-align:center;padding:12px 14px !important;font-size:14px;line-height:1.5}
 @media(min-width:651px){.hub-detail{border-radius:999px !important}}
 .outline{border:1.5px solid var(--ssb-sky-deep);color:var(--ssb-sky-deep);border-radius:999px;padding:11px 22px}
