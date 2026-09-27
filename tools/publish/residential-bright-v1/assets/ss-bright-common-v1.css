@@ -83,3 +83,16 @@ html:root:root body .cat-head .cx{background:var(--ssx-cta) !important}
 html:root:root body :is(a.btn.btn-primary,a.btn.btn-cta,button.btn.btn-primary){background:var(--ssx-cta) !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
 /* 特設窓口の電話ボタン（黄色のグラデーション）→ スカイ */
 html:root:root body :is(a.btn.btn-tel,.btn.btn-tel){background:var(--ssx-cta) !important;background-image:none !important;border-color:var(--ssx-cta) !important;color:#fff !important;border-radius:999px !important}
+
+/* ---------- 住宅の詳しい説明ページ（pasona）：濃い青緑のヒーロー → 住宅HUBと同じ淡い水色 ---------- */
+html:root:root body.pasona-page .hero{background:linear-gradient(180deg,#F3FBFE,#E8F7FD) !important;color:var(--ssx-ink) !important}
+html:root:root body.pasona-page .hero :is(h1,.lead,.sub,.hero-trust,p){color:var(--ssx-ink) !important}
+html:root:root body.pasona-page .hero .lead b{color:var(--ssx-sky-dd) !important}
+html:root:root body.pasona-page .hero .kicker{background:#fff !important;color:var(--ssx-sky-dd) !important;border-color:var(--ssx-line-strong) !important}
+html:root:root body.pasona-page .hero .hero-deco{opacity:.35}
+html:root:root body.pasona-page .hero .btn-ghost{color:var(--ssx-ink) !important;border:1.5px solid var(--ssx-line-strong) !important;background:#fff !important;border-radius:999px !important}
+/* LINEの相談ボタンはLINEの緑に */
+html:root:root body :is(a.btn.btn-line,.btn-line)[href*="line.me"]{background:#06C755 !important;border-color:#06C755 !important;color:#fff !important;border-radius:999px !important}
+/* 住宅の詳しい説明ページの下部バー（.p-sticky）：相談ボタンをスカイの丸ボタンに */
+html:root:root body .p-sticky a{border-radius:999px !important}
+html:root:root body .p-sticky a[href="#contact"]{background:var(--ssx-cta) !important;border-color:var(--ssx-cta) !important;color:#fff !important}

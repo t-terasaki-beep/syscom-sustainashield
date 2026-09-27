@@ -109,3 +109,16 @@ html body .ssmm-p{background:var(--ssl-band-light)}
 html body .ssmm-t{color:var(--sky-d)}
 html body .ssmm-l a[aria-current]{background:var(--ink) !important;color:#fff !important}
 html body .ssmm-tel{background:var(--ssl-cta) !important;border-color:var(--ssl-cta) !important;color:#fff !important;border-radius:999px !important}
+
+/* ---------- 2026-09-27 追加：ヘッダーを住宅HUB・法人TOPと同じ構成に ---------- */
+/* 最上部の帯は「戸建て／法人」の重複リンクだけなので出さない */
+.ss-top{display:none !important}
+/* ヘッダーは ロゴ＋文字リンク＋相談ボタン だけに（電話は画面下の固定バー・相談欄にある） */
+.ss-hd .nav .tel{display:none !important}
+.ss-hd .nav .sw{border:0 !important;padding:0 !important;min-height:44px;color:var(--ink) !important;font-weight:700 !important;background:none !important}
+.ss-hd .nav .sw:hover{color:var(--sky-d) !important}
+/* サービスの帯：1行・中央ぞろえ（はみ出した「業種別・特設ページ」も同じ行に） */
+.ss-sub{display:flex !important;justify-content:center;align-items:center;flex-wrap:nowrap;overflow-x:auto;gap:0 4px;border-bottom:1px solid var(--line) !important}
+.ss-sub .in{display:flex !important;flex-wrap:nowrap;align-items:center;margin:0 !important;max-width:none !important;padding:0 !important;gap:0 4px}
+.ss-sub a{white-space:nowrap;padding:0 14px !important}
+@media(max-width:760px){.ss-sub{justify-content:flex-start}}
