@@ -1,0 +1,18 @@
+/* ==========================================================
+   ss-enelab-bright-v1.css — 千葉エネルギー研究会の特設ページ（用地募集・系統用蓄電池）を
+   研究会トップ（菜の花のヒーロー・スカイ×菜の花イエロー）と同じ明るさに揃える上書きレイヤー（2026-09-28）
+   使い方：/chiba-land-search/ と /grid-battery/ の </head> 直前に1行
+     <link rel="stylesheet" href="/assets/ss-enelab-bright-v1.css?v=1">
+   戻し方：その1行を消す（またはこのファイルを空にする）
+   ========================================================== */
+body{background:#F3FBFE !important}
+/* ヒーロー：濃い緑の重ね → 研究会トップと同じ菜の花の写真＋青のグラデーション */
+html body .hero{background:linear-gradient(90deg,rgba(0,64,120,.66) 0%,rgba(0,88,150,.42) 48%,rgba(0,110,180,.05) 85%),url('/chiba-ene-lab/assets/lab-hero.jpg') center 62%/cover no-repeat !important;background-color:#3A8FD0 !important}
+html body .hero::after{background:radial-gradient(700px 320px at 85% -10%,rgba(255,201,51,.28),transparent 60%) !important}
+html body .hero h1 .hl{color:#FFC933 !important}
+@media(max-width:640px){html body .hero{background:linear-gradient(180deg,rgba(0,64,120,.72) 0%,rgba(0,88,150,.5) 60%,rgba(0,110,180,.15) 100%),url('/chiba-ene-lab/assets/lab-hero.jpg') 62% 100%/cover no-repeat !important}}
+/* 小見出し・ボタン：研究会トップと同じ色 */
+html body .eyebrow{color:#0079AD !important}
+html body .btn-out{color:#0079AD !important;border-color:#0093CF !important;background:#fff !important}
+/* 研究会トップへ戻る導線（ヘッダーのロゴ） */
+html body .topbar{border-bottom:3px solid #FFC933 !important}
