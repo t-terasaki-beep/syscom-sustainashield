@@ -174,7 +174,7 @@ def main():
     extras = [("assets/ss-media-set-v1.css", "assets/ss-media-set-v1.css"),
               ("assets/ss-media-set-v1.js", "assets/ss-media-set-v1.js"),
               ("videos/index.html", "videos/index.html"),
-              ("column/index.html", "column/index.html")]
+              ("column/index.html", "column/index.html")] + [("column/img/"+f, "column/img/"+f) for f in sorted(os.listdir(os.path.join(KIT, "column", "img")))]
     dl_exists = os.path.exists(os.path.join(site, "download", "index.html"))
     if not dl_exists or a.replace_download:
         extras.append(("download/index.html", "download/index.html"))
