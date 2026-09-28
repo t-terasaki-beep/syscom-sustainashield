@@ -89,7 +89,7 @@ def block_html(url, theme_key, m):
         '<h2 class="ssm-h2" id="ssm-h">%sを 動画と資料で確かめる</h2>'
         '<p class="ssm-lead">文章だけでは伝わりにくいところを、TERAちゃんねるの解説動画と資料で補います。</p>'
         '<div class="ssm-grid">%s%s</div>'
-        '<a class="ssm-more" href="/videos/">テーマ別の解説動画をすべて見る</a>'
+        '<a class="ssm-more" href="/videos/">テーマ別の解説動画をすべて見る</a><a class="ssm-more" style="margin-top:8px" href="/column/">寺嵜のコラムを読む</a>'
         '</div></section>\n%s'
         % (MARK_BEGIN, html.escape(t["label"]), "".join(cards), doc_card, MARK_END))
 
@@ -173,7 +173,8 @@ def main():
     # 共通ファイル
     extras = [("assets/ss-media-set-v1.css", "assets/ss-media-set-v1.css"),
               ("assets/ss-media-set-v1.js", "assets/ss-media-set-v1.js"),
-              ("videos/index.html", "videos/index.html")]
+              ("videos/index.html", "videos/index.html"),
+              ("column/index.html", "column/index.html")]
     dl_exists = os.path.exists(os.path.join(site, "download", "index.html"))
     if not dl_exists or a.replace_download:
         extras.append(("download/index.html", "download/index.html"))
