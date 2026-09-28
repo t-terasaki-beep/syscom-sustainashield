@@ -51,3 +51,10 @@ python ../terasaki-os-code/tools/line_richmenu_tera.py --check
 
 ## 検査（2026-09-28 cloud・テスト用ミラー）
 390px／1280px：横はみ出し0、JSエラー0、/download/?doc=sketch-triple-guard でスケッチ資料に自動チェック、再実行で二重に入らない（置き換え）。サムネ画像は cloud から YouTube に届かないため未表示（本番では表示される）。**本番ミラーでの実行・本番公開は未実施。**
+
+## コラム（/column/）2026-09-28 更新
+- 正本：`column/articles.json`（Notion 📝 note記事DB から取得）。`python3 column/build_column.py` で一覧と記事ページを再生成
+- 掲載18本：note公開済み6本（noteへリンク）＋サイト内記事12本（/column/<slug>/、寺嵜承認 2026-09-28「OK」「保存OK」）
+- サイト内記事の本文は Notion の「note本文開始〜終了」をそのまま転記（改稿なし）。各記事に 住宅/法人LINE・関連ページ・資料DLのCTA、Article構造化データ、関連記事3本
+- 公開後は Notion note記事DB の「自社ブログURL」に各URLを記入すること
+- 検査（cloud・テスト用ミラー）：13ページ×390/1280px 横はみ出し0・JSエラー0・/column/ 内リンク切れ0

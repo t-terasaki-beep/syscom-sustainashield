@@ -122,6 +122,18 @@ def add_assets(src):
     return src
 
 
+def column_files():
+    """column/ 配下の公開物（html・css・画像）。生成スクリプトと正本JSONは出さない"""
+    base = os.path.join(KIT, "column")
+    out = []
+    for dp, _, fs in os.walk(base):
+        for f in sorted(fs):
+            if f.endswith((".html", ".css", ".jpg", ".png", ".webp")):
+                rel = os.path.relpath(os.path.join(dp, f), KIT).replace(os.sep, "/")
+                out.append((rel, rel))
+    return sorted(out)
+
+
 def sha(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -174,7 +186,7 @@ def main():
     extras = [("assets/ss-media-set-v1.css", "assets/ss-media-set-v1.css"),
               ("assets/ss-media-set-v1.js", "assets/ss-media-set-v1.js"),
               ("videos/index.html", "videos/index.html"),
-              ("column/index.html", "column/index.html")] + [("column/img/"+f, "column/img/"+f) for f in sorted(os.listdir(os.path.join(KIT, "column", "img")))]
+              ] + column_files()
     dl_exists = os.path.exists(os.path.join(site, "download", "index.html"))
     if not dl_exists or a.replace_download:
         extras.append(("download/index.html", "download/index.html"))
