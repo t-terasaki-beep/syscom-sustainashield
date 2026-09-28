@@ -1,7 +1,7 @@
-# 戸建て冷暖塗装LP（residential/）
+# 戸建て冷暖塗装LP（residential-thermal/）
 
 千葉の戸建て向け 遮熱・保護塗装／冷暖・保全リフォームの専用LP。
-公開URL想定：`https://syscom-sustaina-shield.com/residential/`（CNAMEのGitHub Pages配信）
+公開URL想定：`https://syscom-sustaina-shield.com/residential-thermal/`（CNAMEのGitHub Pages配信）
 
 ## 収録物
 | パス | 内容 |
