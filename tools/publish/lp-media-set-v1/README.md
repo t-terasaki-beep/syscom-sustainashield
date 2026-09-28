@@ -58,3 +58,5 @@ python ../terasaki-os-code/tools/line_richmenu_tera.py --check
 - サイト内記事の本文は Notion の「note本文開始〜終了」をそのまま転記（改稿なし）。各記事に 住宅/法人LINE・関連ページ・資料DLのCTA、Article構造化データ、関連記事3本
 - 公開後は Notion note記事DB の「自社ブログURL」に各URLを記入すること
 - 検査（cloud・テスト用ミラー）：13ページ×390/1280px 横はみ出し0・JSエラー0・/column/ 内リンク切れ0
+
+- **/column.html（本番メニューの「コラム」）は新 /column/ への転送ページに置き換える**（2026-09-28 寺嵜指摘「コラム更新されてなくない？」）。旧「寺嵜が動画で答える」の動画は /videos/ と各LPの動画枠で見られる。本番ヘッダーの「コラム」リンク先を /column/ に直せる場合はそちらが望ましい

@@ -10,6 +10,7 @@ LP共通「資料・動画セット」v1 を、本番ミラー（お名前.com �
 ・ページ→動画・資料の割り当ては media-map.json（URL前方一致・長い方が優先）
 ・<!-- ss-media-set:v1 --> 〜 <!-- /ss-media-set:v1 --> で囲むので、再実行すると置き換わる（二重にならない）
 ・noindex のページ、除外パス（提案書・研究会・フォーム等）には入れない
+・/column.html（旧「寺嵜が動画で答える」）は新しい /column/ へ移す転送ページに置き換える（旧版はFTP公開前バックアップに残る）
 ・/download/ が本番ミラーに無ければ、復旧用ページを --out/download/index.html に出して警告する
   （本番にあっても --replace-download でキット版＝スケッチ資料の選択肢入りに置き換えられる）
 ・出力：--out/_report/changes.csv（ページ・テーマ・動画・資料・挿入位置）、SHA256SUMS.txt
@@ -186,7 +187,7 @@ def main():
     extras = [("assets/ss-media-set-v1.css", "assets/ss-media-set-v1.css"),
               ("assets/ss-media-set-v1.js", "assets/ss-media-set-v1.js"),
               ("videos/index.html", "videos/index.html"),
-              ] + column_files()
+              ("column-html-redirect.html", "column.html")] + column_files()
     dl_exists = os.path.exists(os.path.join(site, "download", "index.html"))
     if not dl_exists or a.replace_download:
         extras.append(("download/index.html", "download/index.html"))
