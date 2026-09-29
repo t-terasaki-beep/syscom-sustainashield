@@ -1,0 +1,98 @@
+# =============================================================================
+# お名前.com（nginx / 手動アップロードの本番）への FTP 自動デプロイ
+#
+# 【安全設計 / SAFETY MODEL】必ず読むこと
+# - このワークフローは「リポジトリで管理している “特定サブツリー” だけ」を本番へ反映します。
+#   サイト全体は同期しません。gitに無い本番ファイル（例：既存の /residential/ ほか）は一切触りません。
+# - リモートの削除は行いません（dangerous-clean-slate: false 固定）。
+#   ローカルに無いファイルがサーバーにあっても、消したり上書きしたりしません。
+# - 各サブツリーは server-dir をそのパスに厳密に限定して転送します（他ディレクトリへ波及しません）。
+# - 初回や不安な時は workflow_dispatch の dry_run=true で「差分の確認のみ」を実行できます（無転送）。
+#
+# 【必要な設定】リポジトリ Settings → Secrets and variables → Actions
+#   Secrets（必須）:
+#     FTP_SERVER     … 例) ftpXXX.onamae.ne.jp
+#     FTP_USERNAME   … FTPアカウント
+#     FTP_PASSWORD   … FTPパスワード
+#   Variables（任意）:
+#     FTP_REMOTE_ROOT … 本番ドキュメントルートのFTP上パス（末尾スラッシュ必須）。既定 "/"。
+#                        ファイルマネージャーで residential/ 等が直下に見えるなら "/" のまま。
+#                        公開領域が public_html 配下なら "/public_html/" 等に。
+#     FTP_PROTOCOL    … ftps（既定・推奨）/ ftp / ftps-legacy
+#     FTP_PORT        … 既定 21
+#
+# 【使い方】
+#   - まず Actions タブ → このワークフロー → Run workflow（dry_run=true のまま）で
+#     接続とパス（server-dir）を安全に検証する。ログに転送予定の差分が出る（無転送）。
+#   - 問題なければ dry_run=false で手動実行、または main へマージすると該当サブツリーを自動反映。
+#
+# 【対象サブツリーの増やし方】
+#   deploy ジョブに steps を1つ追加し、local-dir / server-dir を新パスに設定するだけ。
+#   ※ サイト全体を local-dir="./" にしない（本番を意図せず上書きし得るため禁止）。
+# =============================================================================
+name: Deploy to Onamae (managed subtrees only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "true=無転送で差分だけ確認（初回はこれ推奨）"
+        type: boolean
+        default: true
+  push:
+    branches: [ main ]
+    paths:
+      - 'residential/chiba-blackout/**'
+      - 'residential-thermal/**'
+
+concurrency:
+  group: onamae-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- 千葉停電LP -------------------------------------------------------
+      - name: Deploy residential/chiba-blackout
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ vars.FTP_PORT || '21' }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./residential/chiba-blackout/
+          server-dir: ${{ vars.FTP_REMOTE_ROOT || '/' }}residential/chiba-blackout/
+          dangerous-clean-slate: false
+          dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.DS_Store
+
+      # --- 戸建て冷暖塗装LP（本番の web ファイルのみ。内部ドキュメントは除外） ---
+      - name: Deploy residential-thermal
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ vars.FTP_PORT || '21' }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./residential-thermal/
+          server-dir: ${{ vars.FTP_REMOTE_ROOT || '/' }}residential-thermal/
+          dangerous-clean-slate: false
+          dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.DS_Store
+            README.md
+            content/**
+            templates/**
