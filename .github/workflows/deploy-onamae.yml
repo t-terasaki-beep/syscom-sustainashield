@@ -1,0 +1,90 @@
+# =============================================================================
+# お名前.com 本番公開（単一経路 / 安全設計）— 手動 & 承認必須
+#
+# 方針（COO指示に整合）:
+#  - 公開処理は deploy/publish.sh（PCでもActionsでも同一）に一本化
+#  - 変更ファイルだけを対象（deploy/changesets/<name>.txt に列挙した分のみ）
+#  - 公開先未設定なら停止（"/" フォールバック禁止）… preflight と publish.sh の両方で担保
+#  - 本番削除は禁止（publish.sh は逐次 PUT のみ・DELETE を一切発行しない）
+#  - 公開前=差分・バックアップ・承認 / 公開後=本番再取得検証（publish.sh 内で必須実行）
+#  - push 自動デプロイはしない（承認なし転送を避けるため workflow_dispatch のみ）
+#
+# 承認ゲート:
+#  Settings → Environments → "production" に Required reviewers を設定してください。
+#  これにより Run 実行時に人の承認が必須になります（confirm=PUBLISH と二重の歯止め）。
+#
+# 必要な Secrets（Settings → Secrets and variables → Actions）:
+#  FTP_HOST / FTP_USER / FTP_PASS / FTP_REMOTE_ROOT（末尾スラッシュ必須）
+#  任意 Variables: FTP_PROTOCOL(既定 ftps) / PUBLIC_BASE(既定 本番ドメイン)
+#
+# ※ 対象サブツリーのファイルが main に存在している必要があります
+#    （例: chiba-blackout は PR #11 マージ後に main へ載る）。
+# =============================================================================
+name: Publish to Onamae (safe, manual, approval-gated)
+
+on:
+  workflow_dispatch:
+    inputs:
+      changeset:
+        description: 公開する changeset（deploy/changesets/ 配下）
+        type: choice
+        options:
+          - chiba-blackout
+          - residential-thermal
+        default: chiba-blackout
+      confirm:
+        description: 本番公開を承認する場合のみ PUBLISH と入力（空ならプレビュー=差分表示のみ）
+        type: string
+        default: ""
+
+concurrency:
+  group: onamae-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: production   # ← 人の承認ゲート（Settings で required reviewers を設定）
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preflight（公開先未設定なら停止・"/"へフォールバックしない）
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_REMOTE_ROOT: ${{ secrets.FTP_REMOTE_ROOT }}
+        run: |
+          missing=0
+          for v in FTP_HOST FTP_USER FTP_PASS FTP_REMOTE_ROOT; do
+            eval "val=\${$v:-}"
+            if [ -z "$val" ]; then echo "::error::$v が未設定のため停止"; missing=1; fi
+          done
+          [ "$missing" = 0 ] || exit 2
+          case "$FTP_REMOTE_ROOT" in */) : ;; *) echo "::error::FTP_REMOTE_ROOT は末尾スラッシュ必須"; exit 2 ;; esac
+          cs="deploy/changesets/${{ inputs.changeset }}.txt"
+          [ -f "$cs" ] || { echo "::error::changeset が無い: $cs"; exit 2; }
+          echo "preflight OK: $cs"
+
+      - name: Publish（差分・バックアップ・承認・アップロード・本番再取得検証）
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          FTP_REMOTE_ROOT: ${{ secrets.FTP_REMOTE_ROOT }}
+          FTP_PROTOCOL: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          PUBLIC_BASE: ${{ vars.PUBLIC_BASE || 'https://syscom-sustaina-shield.com' }}
+          CONFIRM: ${{ inputs.confirm }}
+        run: bash deploy/publish.sh "deploy/changesets/${{ inputs.changeset }}.txt"
+
+      - name: 差分・バックアップ・ログを保存
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-run-${{ github.run_id }}
+          path: deploy/_runs/
+          if-no-files-found: ignore
+          retention-days: 30

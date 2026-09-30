@@ -1,0 +1,4 @@
+# 戸建て冷暖塗装LP：本番へ出す web ファイルのみ（内部ドキュメントは対象外）
+# ローカル相対パス  リモート相対パス（FTP_REMOTE_ROOT 基準）
+residential-thermal/index.html          residential-thermal/index.html
+residential-thermal/assets/styles.css   residential-thermal/assets/styles.css
