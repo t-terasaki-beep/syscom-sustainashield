@@ -1,0 +1,4 @@
+# 千葉停電LP：今回の変更2ファイルのみ（ローカル相対パス  リモート相対パス）
+# リモート相対は FTP_REMOTE_ROOT からの相対（=公開ドキュメントルート基準）
+residential/chiba-blackout/index.html            residential/chiba-blackout/index.html
+residential/chiba-blackout/assets/story-plus.css  residential/chiba-blackout/assets/story-plus.css
