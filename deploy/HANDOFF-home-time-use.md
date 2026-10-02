@@ -32,7 +32,22 @@
 - **GA4計測の有効化**：候補イベント `home_time_use_start / _received / _qualified / _estimate_requested` は `data-event` 属性のみ。**既存イベントとの重複確認後に配線**（クリックを相談完了として送信しない・PII非送信）。
 - **診断UI（シミュレーター）の設置**：本PRは比較「コンテンツ」とCTAまで。`home-time-use.js` はその土台。
 - **顧客への診断案内送信**：対象抽出（最大8件）・文面・価格は別途承認。対外使用の補助進捗は案内直前に再確認。
-- **本番公開（お名前.com アップロード）**：PC で `bash deploy/publish.sh deploy/changesets/home-time-use.txt`（プレビュー）→ `--yes`（公開）、または Actions。ecocute は上記スニペットを手動貼り付け。
+- **本番公開（お名前.com アップロード）**：下記「本番公開の正しい手順」を参照。
+
+## ★本番公開の正しい手順（2026-10-02 本番照合で判明した重要事項）
+本番を実際に取得して照合した結果、**リポジトリ版と本番は別物**だった：
+- 本番 `/sotsu-fit/` は **301 で `/residential/sotsu-fit/` へ転送**。本番ページは「サステナシールド」サービス案内型で、リポジトリの `sotsu-fit/index.html`（TERAちゃんねる型・緑）とは**全く別**。→ リポジトリ版を本番へ上げると本番の新しいページを壊す。
+- よって公開は **本番HTMLへブロックだけを追記した下記ファイル**で行う（「追記のみ」＝本番の既存要素は一切変更していないことを検証済み：ブロックを除去すると公開直前の本番とバイト一致）。
+
+| 公開ファイル（本リポジトリ） | 本番アップロード先 |
+|---|---|
+| `deploy/_publish/out/residential_sotsu-fit_index.html` | `/residential/sotsu-fit/index.html` |
+| `deploy/_publish/out/residential_ecocute_index.html` | `/residential/ecocute/index.html` |
+
+- 公開直前バックアップ（ロールバック用）：`deploy/_publish/backup_live/`。
+- 公開方法：PC で `bash deploy/publish.sh deploy/changesets/home-time-use-prod.txt`（プレビュー）→ `--yes`、または お名前.com ファイルマネージャーで上記2ファイルを該当パスへ上書き。
+- 本番ページは外部CSS（`/residential/assets/css/corporate.css`）を使うため、追記ブロックはサステナシールドのテーマ色（濃紺 `#123244`／ティール `#087a8d`／ゴールド `#bc9951`）に合わせた自己完結スタイルで作成。本番表示で 390px 横スクロール0・テーマ一致を確認済み。
+- 旧 `deploy/changesets/home-time-use.txt`（リポジトリ版 sotsu-fit を上げる想定）は**使わない**（本番とは別物のため）。
 
 ## 受入テスト観点（正本）対応状況
 ① DR誤一般化なし ✅／② 余剰二重計上なし ✅（テスト）／③ 補助47%の時刻・100%終了 ✅／④ 登録事業者等の条件 ✅（FAQ・根拠）／⑤ 通常型・現状維持の分岐 ✅／⑥ 未入力時に金額非表示 ✅（テスト）／⑦ 375/1280px・キーボード：要実機確認／⑧ 添付成功・失敗・容量超過・連打：診断UI実装時／⑨ GA4二重計測・PII非送信：計測配線時／⑩ 既存CTA・canonical・Search Console・LINE維持 ✅（既存要素は不変更）。

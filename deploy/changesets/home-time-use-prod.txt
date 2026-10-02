@@ -1,0 +1,9 @@
+# 卒FIT「家で使う時間」診断：本番(お名前.com)への安全公開用 changeset
+# ★重要：本番 /sotsu-fit/ は /residential/sotsu-fit/ へ301転送され、
+#   本番ページはリポジトリの sotsu-fit/index.html とは別物（サステナシールド型）。
+#   そのためリポジトリ版ではなく、本番HTMLへブロックだけを追記した下記ファイルを公開する。
+# これらは本番取得版に #home-time-use ブロックのみを追加した「追記のみ」ファイル
+#   （バックアップ: deploy/_publish/backup_live/ に公開直前の現行版あり）。
+# ローカル相対パス                                         リモート相対パス（FTP_REMOTE_ROOT 基準）
+deploy/_publish/out/residential_sotsu-fit_index.html     residential/sotsu-fit/index.html
+deploy/_publish/out/residential_ecocute_index.html       residential/ecocute/index.html
