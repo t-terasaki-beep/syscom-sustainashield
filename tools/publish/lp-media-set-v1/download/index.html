@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>資料ダウンロード｜シスコムサステナシールド</title>
+<meta name="description" content="遮熱・断熱コーティング（スケッチ商材）、エコキュート、太陽光・蓄電池、補助金の資料をお送りします。">
+<link rel="canonical" href="https://syscom-sustaina-shield.com/download/">
+<link rel="stylesheet" href="/assets/ss-media-set-v1.css?v=1">
+<style>
+body{margin:0;background:#E8F7FD}.vl-top{background:#fff;border-bottom:1px solid #D9E8EF}.vl-top a{display:inline-block;padding:18px 20px;font-weight:700;color:#102F40;text-decoration:none}
+.dl-form{background:#fff;border-radius:20px;padding:24px;max-width:640px}
+.dl-form label{display:block;font-weight:700;font-size:15px;margin:16px 0 6px}
+.dl-form input,.dl-form select,.dl-form textarea{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:2px solid #D9E8EF;border-radius:12px;background:#fff;color:#102F40}
+.dl-form fieldset{border:0;padding:0;margin:0}.dl-form .ck{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin:10px 0}.dl-form .ck input{width:20px;height:20px;margin-top:3px;flex:0 0 20px}
+.dl-form .ssm-btn{width:100%;border:0;margin-top:24px;cursor:pointer}
+.req{color:#C0392B;font-size:12px;margin-left:6px}
+</style>
+</head><body>
+<header class="vl-top"><a href="/">シスコムサステナシールド</a></header>
+<main class="ssm" style="padding-top:32px"><div class="ssm-wrap">
+<span class="ssm-en">Download</span>
+<h1 class="ssm-h2">資料ダウンロード</h1>
+<p class="ssm-lead">欲しい資料にチェックを入れて送信してください。ご入力のメールアドレスへ、寺嵜から資料をお送りします。営業電話はしません。</p>
+<form class="dl-form" action="https://formsubmit.co/t.terasaki.4456@gmail.com" method="POST" data-event="generate_lead_form">
+  <input type="hidden" name="_subject" value="【資料請求】サステナシールド 資料ダウンロード">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_captcha" value="true">
+  <input type="hidden" name="_next" value="https://syscom-sustaina-shield.com/download/?sent=1">
+  <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+  <input type="hidden" name="見ていたページ" id="dl-from" value="">
+  <fieldset>
+    <label>欲しい資料<span class="req">必須</span></label>
+    <div class="ck"><input type="checkbox" name="資料" value="遮熱・断熱トリプルガードコート 説明資料（株式会社スケッチ）" id="doc-sketch-triple-guard"><span>遮熱・断熱トリプルガードコート 説明資料<br><small>スケッチ商材（ラストシールド／冷暖断熱シールド／スーパーグラスバリア）</small></span></div>
+    <div class="ck"><input type="checkbox" name="資料" value="省エネ トリプルガードコート 詳細説明（株式会社スケッチ）" id="doc-sketch-triple-guard-detail"><span>省エネ トリプルガードコート 詳細説明<br><small>スケッチ商材・詳しい版</small></span></div>
+    <div class="ck"><input type="checkbox" name="資料" value="会社・サービス案内" id="doc-company-guide"><span>会社・サービス案内<br><small>エコキュート・太陽光・蓄電池・卒FIT・補助金</small></span></div>
+  </fieldset>
+  <label for="dl-name">お名前<span class="req">必須</span></label><input id="dl-name" name="お名前" required autocomplete="name">
+  <label for="dl-company">会社名（法人の方）</label><input id="dl-company" name="会社名" autocomplete="organization">
+  <label for="dl-mail">メールアドレス<span class="req">必須</span></label><input id="dl-mail" type="email" name="email" required autocomplete="email">
+  <label for="dl-note">気になっていること（任意）</label><textarea id="dl-note" name="気になっていること" rows="3"></textarea>
+  <button class="ssm-btn" type="submit">資料を請求する</button>
+  <p class="ssm-note">メーカー資料の価格・性能の記載は資料作成時点のものです。現在の価格は現地確認のうえ個別にお見積りします。いただいた情報は資料送付とご相談への回答にのみ使います（<a href="/privacy.html">プライバシーポリシー</a>）。</p>
+</form>
+<p id="dl-sent" class="ssm-lead" hidden style="background:#fff;border-radius:20px;padding:20px;max-width:640px">送信しました。ご入力のメールアドレスへ資料をお送りします。お急ぎの方は <a href="https://line.me/R/ti/p/%40631cqlgf">LINE</a> でもどうぞ。</p>
+<a class="ssm-more" href="/videos/">先に動画で見る</a>
+</div></main>
+<script>
+(function(){var q=new URLSearchParams(location.search);
+ document.getElementById('dl-from').value=q.get('from')||document.referrer||'';
+ var d=q.get('doc'); if(d){var c=document.getElementById('doc-'+d); if(c)c.checked=true;}
+ if(q.get('sent')){document.querySelector('.dl-form').hidden=true;document.getElementById('dl-sent').hidden=false;}
+ document.querySelector('.dl-form').addEventListener('submit',function(e){
+   if(!this.querySelector('input[name="資料"]:checked')){e.preventDefault();alert('欲しい資料を1つ以上選んでください');}
+ });})();
+</script>
+<script src="/assets/ss-media-set-v1.js?v=1" defer></script>
+</body></html>
