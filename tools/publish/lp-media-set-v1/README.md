@@ -35,12 +35,12 @@ Drive の「防さび、防水、断熱シールド.pdf」（スケッチ製、2
 # 1. 本番を取り直した最新ミラーで DryRun（何ページに何が入るか _report/changes.csv で確認）
 python tools/publish/lp-media-set-v1/inject.py --site <本番ミラー> --out Desktop/_run/DEPLOY_MEDIASET_v1
 # 2. 公開物を作る（本番ミラーは書き換えない。変わるファイルだけが --out に出る）
-python tools/publish/lp-media-set-v1/inject.py --site <本番ミラー> --out Desktop/_run/DEPLOY_MEDIASET_v1 --apply --replace-download
+python tools/publish/lp-media-set-v1/inject.py --site <本番ミラー> --out Desktop/_run/DEPLOY_MEDIASET_v1 --apply
 # 3. 390px／1280px で横はみ出し0・JSエラー0・リンク切れ0 を確認 → 既存の publish.ps1 と同じ方式で公開・再取得して SHA256 照合
 # 4. YouTube に届く環境で動画の公開状態を確認（非公開・削除が混ざっていないか）
 python ../terasaki-os-code/tools/line_richmenu_tera.py --check
 ```
-`--replace-download` は、本番 /download/ にスケッチ資料の選択肢が無い場合に付ける（本番版にすでにある場合は付けない）。
+`--replace-download` は本番 /download/ が無いときの復旧専用。本番に /download/（資料ライブラリ）がある場合は inject.py がエラーで止める（キット版はスタブなので上書き禁止）。
 
 ## 戻し方
 - 最速：`/assets/ss-media-set-v1.css` に `.ssm{display:none}` の1行だけを書いて上書き（全ページから即座に消える）

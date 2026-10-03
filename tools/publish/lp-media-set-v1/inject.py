@@ -189,7 +189,10 @@ def main():
               ("videos/index.html", "videos/index.html"),
               ("column-html-redirect.html", "column.html")] + column_files()
     dl_exists = os.path.exists(os.path.join(site, "download", "index.html"))
-    if not dl_exists or a.replace_download:
+    if dl_exists and a.replace_download:
+        # 本番 /download/ は資料ライブラリ本体（キット版はスタブ）。上書きすると壊すので止める（2026-10-04 Cowork 実測）
+        sys.exit("ERROR: 本番ミラーに /download/ があります。--replace-download は使わないでください")
+    if not dl_exists:
         extras.append(("download/index.html", "download/index.html"))
         print("WARN: 本番ミラーに /download/ がありません → 復旧用ページを出力します")
     if a.apply:
