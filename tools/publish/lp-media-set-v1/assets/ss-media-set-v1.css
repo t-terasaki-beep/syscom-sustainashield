@@ -1,0 +1,33 @@
+/* ss-media-set v1 — LP共通「資料・動画セット」（資料ダウンロード＋スケッチ商材資料＋YouTube）
+   既存ページのCSSに依存しないよう ssm- 接頭辞で閉じる。配色は住宅HUB・kadai.css v2 と同じ値 */
+.ssm{--ssm-sky:#0093CF;--ssm-sky-deep:#0079AD;--ssm-ink:#102F40;--ssm-sub:#4F6472;--ssm-band:#E8F7FD;--ssm-line:#D9E8EF;
+  background:var(--ssm-band);color:var(--ssm-ink);padding:48px 0;font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;line-height:1.8;letter-spacing:.03em;clear:both}
+.ssm *,.ssm *::before,.ssm *::after{box-sizing:border-box}
+.ssm-wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.ssm-en{display:block;font:600 12px/1 "Montserrat","Noto Sans JP",sans-serif;letter-spacing:.14em;color:var(--ssm-sky);text-transform:uppercase;margin-bottom:10px}
+.ssm-h2{font-size:24px;font-weight:700;line-height:1.5;margin:0 0 8px}
+.ssm-h2::after{content:"";display:block;width:30px;height:3px;background:var(--ssm-sky);margin-top:12px}
+.ssm-lead{color:var(--ssm-sub);font-size:15px;margin:0 0 24px}
+.ssm-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:861px){.ssm{padding:72px 0}.ssm-h2{font-size:30px}.ssm-grid{grid-template-columns:repeat(3,1fr);gap:20px}}
+.ssm-card{background:#fff;border-radius:20px;padding:20px;display:flex;flex-direction:column;min-width:0}
+.ssm-card h3{font-size:17px;font-weight:700;line-height:1.5;margin:12px 0 4px}
+.ssm-card p{font-size:14px;color:var(--ssm-sub);margin:0 0 14px}
+.ssm-tag{align-self:flex-start;font:600 11px/1 "Montserrat","Noto Sans JP",sans-serif;letter-spacing:.08em;color:#fff;background:var(--ssm-sky);border-radius:999px;padding:6px 10px}
+.ssm-tag.is-sketch{background:var(--ssm-ink)}
+.ssm-yt{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#0b1a22;border:0;padding:0;cursor:pointer}
+.ssm-yt img{width:100%;height:100%;object-fit:cover;display:block;opacity:.9}
+.ssm-yt::after{content:"";position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:var(--ssm-sky) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 7l8 5-8 5z' fill='%23fff'/%3E%3C/svg%3E") center/32px no-repeat}
+.ssm-yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ssm-yt.is-on::after{display:none}
+.ssm-doc{color:var(--ssm-ink)!important;text-decoration:none!important;margin-bottom:16px;background:#fff;border:2px solid var(--ssm-line);border-radius:14px;padding:18px;display:flex;gap:14px;align-items:center}
+.ssm-doc svg{flex:0 0 40px;height:48px}
+.ssm-doc>span{min-width:0;flex:1}
+.ssm-doc:hover{border-color:var(--ssm-sky)}
+.ssm-doc b{color:var(--ssm-sky-deep);text-decoration:underline;text-underline-offset:3px;display:block;overflow-wrap:anywhere;font-size:15px;line-height:1.5}
+.ssm-doc small{display:block;font-size:12px;color:var(--ssm-sub);margin-top:2px}
+.ssm-btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:999px;background:var(--ssm-sky);color:#fff!important;font-weight:700;font-size:15px;text-decoration:none!important;padding:0 24px;margin-top:auto}
+.ssm-btn:hover{background:var(--ssm-sky-deep)}
+.ssm-btn.is-ghost{background:#fff;color:var(--ssm-sky-deep)!important;border:2px solid var(--ssm-sky)}
+.ssm-note{font-size:12px;color:var(--ssm-sub);margin:16px 0 0}
+.ssm-more{display:block;overflow-wrap:anywhere;margin-top:18px;font-weight:700;color:var(--ssm-sky-deep);text-decoration:underline;text-underline-offset:4px}
