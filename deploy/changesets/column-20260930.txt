@@ -1,0 +1,27 @@
+# コラム公開（25ファイル）。ローカル相対＝リポジトリ直下（PR #10 マージ済み main）、リモート相対＝FTP_REMOTE_ROOT 基準
+# 順序：assets → column/（css・画像・記事）→ videos/ → column.html（転送ページは最後）
+tools/publish/lp-media-set-v1/assets/ss-media-set-v1.css  assets/ss-media-set-v1.css
+tools/publish/lp-media-set-v1/assets/ss-media-set-v1.js  assets/ss-media-set-v1.js
+tools/publish/lp-media-set-v1/column/column.css  column/column.css
+tools/publish/lp-media-set-v1/column/img/cubicle-check.jpg  column/img/cubicle-check.jpg
+tools/publish/lp-media-set-v1/column/img/ecocute-consult.jpg  column/img/ecocute-consult.jpg
+tools/publish/lp-media-set-v1/column/img/home-battery.jpg  column/img/home-battery.jpg
+tools/publish/lp-media-set-v1/column/img/home-family.jpg  column/img/home-family.jpg
+tools/publish/lp-media-set-v1/column/img/home-solar.jpg  column/img/home-solar.jpg
+tools/publish/lp-media-set-v1/column/img/office-demand.jpg  column/img/office-demand.jpg
+tools/publish/lp-media-set-v1/column/img/warehouse-roof.jpg  column/img/warehouse-roof.jpg
+tools/publish/lp-media-set-v1/column/battery-roles/index.html  column/battery-roles/index.html
+tools/publish/lp-media-set-v1/column/coating-expectations/index.html  column/coating-expectations/index.html
+tools/publish/lp-media-set-v1/column/ecoone-blackout/index.html  column/ecoone-blackout/index.html
+tools/publish/lp-media-set-v1/column/heat-and-solar/index.html  column/heat-and-solar/index.html
+tools/publish/lp-media-set-v1/column/index.html  column/index.html
+tools/publish/lp-media-set-v1/column/ohisama-compare/index.html  column/ohisama-compare/index.html
+tools/publish/lp-media-set-v1/column/ohisama-daytime/index.html  column/ohisama-daytime/index.html
+tools/publish/lp-media-set-v1/column/power-visualization/index.html  column/power-visualization/index.html
+tools/publish/lp-media-set-v1/column/solar-and-roof-order/index.html  column/solar-and-roof-order/index.html
+tools/publish/lp-media-set-v1/column/sotsufit-first-day/index.html  column/sotsufit-first-day/index.html
+tools/publish/lp-media-set-v1/column/sotsufit-weekday-memo/index.html  column/sotsufit-weekday-memo/index.html
+tools/publish/lp-media-set-v1/column/subsidy-meeting/index.html  column/subsidy-meeting/index.html
+tools/publish/lp-media-set-v1/column/thermo-reading/index.html  column/thermo-reading/index.html
+tools/publish/lp-media-set-v1/videos/index.html  videos/index.html
+tools/publish/lp-media-set-v1/column-html-redirect.html  column.html
