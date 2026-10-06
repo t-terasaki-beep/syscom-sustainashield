@@ -31,6 +31,7 @@ on:
         options:
           - chiba-blackout
           - residential-thermal
+          - column-20260930
         default: chiba-blackout
       confirm:
         description: 本番公開を承認する場合のみ PUBLISH と入力（空ならプレビュー=差分表示のみ）

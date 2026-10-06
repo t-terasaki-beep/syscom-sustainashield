@@ -52,3 +52,9 @@ bash deploy/publish.sh deploy/changesets/chiba-blackout.txt --yes
   - Actions実行なら Secrets に登録。
 - FTP が無効な契約の場合は、コントロールパネルで FTP を有効化（または SFTP 情報を用意）。
 値は私（Claude）に共有不要です。設定後は上記の1コマンド（またはRun workflow）で公開できます。
+
+## コラム公開（column-20260930）
+- 対象：`deploy/changesets/column-20260930.txt`（25ファイル。assets → column/ → videos/ → column.html の順）
+- ローカル側は PR #10 でマージ済みの `tools/publish/lp-media-set-v1/` を参照する（別途ビルド不要）
+- `/column.html` は旧ページを「/column/ への転送ページ」で上書きする。戻すときは `deploy/_runs/<日時>/backup/column.html` を再アップロード
+- 公開後：`https://syscom-sustaina-shield.com/column/` `/column.html` `/videos/` の表示と、記事内リンク先（/business/ /residential/ /download/ /hojokin/）の到達を確認
