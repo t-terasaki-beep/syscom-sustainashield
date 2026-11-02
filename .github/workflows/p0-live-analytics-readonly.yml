@@ -32,6 +32,11 @@ jobs:
           expected_etag = "6262-65f3790c0687e"
           expected_size = 25186
           expected_sha = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
+          # Baseline: GET-only run 41514953232 (2026-11-03 04:59 JST).
+          # Validate the sibling bytes, not just HTTP 200 + one analytics tag.
+          expected_sibling_etag = "5d57-65f3744b854f4"
+          expected_sibling_size = 23895
+          expected_sibling_sha = "2a7af2f43473f03c58ffca47b284b4fdc9b9ca97779e4b2486f237746672bbd6"
           script_ref = b"ss-analytics.js"
           exact_script_tag = b'<script src="/assets/ss-analytics.js" defer></script>'
 
@@ -86,6 +91,14 @@ jobs:
                                ensure_ascii=False))
               sys.exit(2)
 
+          sibling_unchanged = (s["http"] == 200 and s["exact_url"] and
+                               s["etag"] is not None and
+                               not s["etag"].startswith("W/") and
+                               s["etag"].strip('"') == expected_sibling_etag and
+                               s["bytes"] == expected_sibling_size and
+                               s["sha256"] == expected_sibling_sha and
+                               s["analytics_references"] == 1 and s["html_closed"])
+
           safe = (t["http"] == 200 and t["exact_url"] and
                   t["etag"] is not None and
                   t["etag"].strip('"') == expected_etag and
@@ -93,19 +106,17 @@ jobs:
                   t["bytes"] == expected_size and
                   t["sha256"] == expected_sha and
                   t["analytics_references"] == 0 and not t["alternate_ga4"] and
-                  t["has_h1"] and t["footer_shape"] and
-                  s["http"] == 200 and s["exact_url"] and
-                  s["analytics_references"] == 1 and s["html_closed"])
+                  t["has_h1"] and t["footer_shape"] and sibling_unchanged)
           if safe:
               verdict = "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW"
           elif (t["http"] == 200 and t["exact_url"] and t["has_h1"] and
                 t["verified_expected_patch"] and not t["alternate_ga4"] and
-                s["http"] == 200 and s["exact_url"] and
-                s["analytics_references"] == 1 and s["html_closed"]):
+                sibling_unchanged):
               verdict = "ALREADY_TAGGED_CHECK_EVENT_DELIVERY"
           else:
               verdict = "STOP_REBASELINE_OR_MANUAL_REVIEW"
-          print(json.dumps({"verdict": verdict, "target": t, "sibling": s},
+          print(json.dumps({"verdict": verdict, "target": t, "sibling": s,
+                            "sibling_byte_identical_to_baseline": sibling_unchanged},
                            ensure_ascii=False, indent=2))
           if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
               sys.exit(1)
