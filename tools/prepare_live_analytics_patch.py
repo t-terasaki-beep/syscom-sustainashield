@@ -43,8 +43,8 @@ def build_one_line_patch(raw: bytes) -> bytes:
     other_trackers = (
         b"googletagmanager.com/gtag/js",
         b"googletagmanager.com/gtm.js",
-        b"gtag(\'config\'",
-        b\'gtag("config"\',
+        b"gtag('config'",
+        b'gtag("config"',
         b"G-ELZG7B45NH",
     )
     if any(marker in raw for marker in other_trackers):
