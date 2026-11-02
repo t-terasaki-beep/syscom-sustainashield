@@ -1,0 +1,96 @@
+name: P0 live analytics status (read-only)
+
+# One-off verification on this draft branch; no cron, no deploy, no secrets.
+on:
+  push:
+    branches:
+      - fix/read-only-live-analytics-preflight-20261103
+    paths:
+      - .github/workflows/p0-live-analytics-readonly.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read current production and sibling (GET only)
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import sys
+          import urllib.request
+
+          site = "https://syscom-sustaina-shield.com"
+          target = site + "/column/chiba-suigai-hinanjo-dengen/"
+          sibling = site + "/column/shoene2024-data-leak-alert/"
+          expected_etag = "6262-65f3790c0687e"
+          expected_size = 25186
+          script_ref = b"ss-analytics.js"
+
+          def inspect(url):
+              req = urllib.request.Request(url, headers={
+                  "Cache-Control": "no-cache",
+                  "Pragma": "no-cache",
+                  "User-Agent": "SustainaShield-ReadOnly-Check/1.0",
+              })
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  status, actual_url = response.status, response.geturl()
+                  etag = response.headers.get("ETag")
+                  body = response.read(1024 * 1024 + 1)
+              if len(body) > 1024 * 1024:
+                  raise ValueError("Unexpectedly large HTML")
+              return {
+                  "url": url,
+                  "http": status,
+                  "exact_url": actual_url == url,
+                  "etag": etag,
+                  "bytes": len(body),
+                  "sha256": hashlib.sha256(body).hexdigest(),
+                  "analytics_references": body.count(script_ref),
+                  "has_h1": b"<h1" in body.lower() and b"</h1>" in body.lower(),
+                  "html_closed": body.rstrip().endswith(b"</html>"),
+                  "footer_shape": body.endswith(b"</script></body></html>"),
+                  "alternate_ga4": any(t in body for t in (
+                      b"googletagmanager.com/gtag/js",
+                      b"googletagmanager.com/gtm.js",
+                      b"gtag('config'",
+                      b'gtag("config"',
+                      b"G-ELZG7B45NH",
+                  )),
+              }
+
+          try:
+              t = inspect(target)
+              s = inspect(sibling)
+          except Exception as e:
+              print(json.dumps({"verdict": "UNKNOWN_FETCH_FAILED", "error_type": type(e).__name__},
+                               ensure_ascii=False))
+              sys.exit(2)
+
+          safe = (t["http"] == 200 and t["exact_url"] and
+                  t["etag"] is not None and
+                  t["etag"].strip('"') == expected_etag and
+                  not t["etag"].startswith("W/") and
+                  t["bytes"] == expected_size and
+                  t["analytics_references"] == 0 and not t["alternate_ga4"] and
+                  t["has_h1"] and t["footer_shape"] and
+                  s["http"] == 200 and s["exact_url"] and
+                  s["analytics_references"] == 1 and s["html_closed"])
+          if safe:
+              verdict = "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW"
+          elif (t["http"] == 200 and t["exact_url"] and t["has_h1"] and
+                t["analytics_references"] == 1 and t["html_closed"]):
+              verdict = "ALREADY_TAGGED_CHECK_EVENT_DELIVERY"
+          else:
+              verdict = "STOP_REBASELINE_OR_MANUAL_REVIEW"
+          print(json.dumps({"verdict": verdict, "target": t, "sibling": s},
+                           ensure_ascii=False, indent=2))
+          if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
+              sys.exit(1)
+          PY
