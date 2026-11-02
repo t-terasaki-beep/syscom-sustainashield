@@ -38,6 +38,17 @@ def build_one_line_patch(raw: bytes) -> bytes:
         raise PreflightError(f"Unexpected original size: {len(raw)} != {EXPECTED_ORIGINAL_SIZE}")
     if b"ss-analytics.js" in raw:
         raise PreflightError("Analytics reference already exists; no patch prepared")
+    # A different GA4 loader/config may already track this page. Fail closed
+    # instead of adding a second page_view source to the existing production HTML.
+    other_trackers = (
+        b"googletagmanager.com/gtag/js",
+        b"googletagmanager.com/gtm.js",
+        b"gtag(\'config\'",
+        b\'gtag("config"\',
+        b"G-ELZG7B45NH",
+    )
+    if any(marker in raw for marker in other_trackers):
+        raise PreflightError("Other GA4/GTM tracking detected; manual review required. STOP")
     if b"<h1" not in raw.lower() or b"</h1>" not in raw.lower():
         raise PreflightError("Article H1 missing; wrong or damaged live page. STOP")
     if raw.count(b"</body>") != 1 or not raw.endswith(SUFFIX):
