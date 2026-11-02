@@ -38,6 +38,8 @@ def build_one_line_patch(raw: bytes) -> bytes:
         raise PreflightError(f"Unexpected original size: {len(raw)} != {EXPECTED_ORIGINAL_SIZE}")
     if b"ss-analytics.js" in raw:
         raise PreflightError("Analytics reference already exists; no patch prepared")
+    if b"<h1" not in raw.lower() or b"</h1>" not in raw.lower():
+        raise PreflightError("Article H1 missing; wrong or damaged live page. STOP")
     if raw.count(b"</body>") != 1 or not raw.endswith(SUFFIX):
         raise PreflightError("Unexpected body/footer structure; no patch prepared")
     changed = raw[:-len(b"</body></html>")] + TAG + b"</body></html>"
