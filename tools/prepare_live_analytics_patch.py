@@ -33,8 +33,12 @@ def normalize_etag(value: str | None) -> str:
     return value.strip('"')
 
 
-def build_one_line_patch(raw: bytes) -> bytes:
-    """Fail closed unless the live bytes have the exact expected structure."""
+def build_one_line_patch(raw: bytes, *, expected_sha256: str = EXPECTED_ORIGINAL_SHA256) -> bytes:
+    """Fail closed unless the complete source bytes match an approved baseline.
+
+    The override is for offline fixtures. Production callers must keep the pinned
+    baseline default, including if this helper is invoked without fetch_live().
+    """
     if len(raw) != EXPECTED_ORIGINAL_SIZE:
         raise PreflightError(f"Unexpected original size: {len(raw)} != {EXPECTED_ORIGINAL_SIZE}")
     if b"ss-analytics.js" in raw:
@@ -54,6 +58,10 @@ def build_one_line_patch(raw: bytes) -> bytes:
         raise PreflightError("Article H1 missing; wrong or damaged live page. STOP")
     if raw.count(b"</body>") != 1 or not raw.endswith(SUFFIX):
         raise PreflightError("Unexpected body/footer structure; no patch prepared")
+    # Guard the builder itself, not only fetch_live(): a stale/unapproved file
+    # with identical length, H1 and footer must never yield a publish candidate.
+    if sha256(raw) != expected_sha256:
+        raise PreflightError("Original SHA-256 differs from approved live baseline. STOP")
     # Production has a newline after </script> and after </html>; keep both bytes.
     position = len(raw) - len(b"</body></html>\n")
     changed = raw[:position] + TAG + raw[position:]
