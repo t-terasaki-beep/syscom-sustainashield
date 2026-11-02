@@ -33,6 +33,7 @@ jobs:
           expected_size = 25186
           expected_sha = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
           script_ref = b"ss-analytics.js"
+          exact_script_tag = b'<script src="/assets/ss-analytics.js" defer></script>'
 
           def inspect(url):
               req = urllib.request.Request(url, headers={
@@ -54,6 +55,16 @@ jobs:
                   "bytes": len(body),
                   "sha256": hashlib.sha256(body).hexdigest(),
                   "analytics_references": body.count(script_ref),
+                  # A single reference is not proof of a correct one-line patch.
+                  # Remove the *exact* authorized tag and verify that every
+                  # remaining byte matches the observed pre-publication HTML.
+                  "verified_expected_patch": (
+                      len(body) == expected_size + len(exact_script_tag) and
+                      body.count(script_ref) == 1 and
+                      body.count(exact_script_tag) == 1 and
+                      body.endswith(exact_script_tag + b"</body></html>\n") and
+                      hashlib.sha256(body.replace(exact_script_tag, b"", 1)).hexdigest() == expected_sha
+                  ),
                   "has_h1": b"<h1" in body.lower() and b"</h1>" in body.lower(),
                   "html_closed": body.rstrip().endswith(b"</html>"),
                   "footer_shape": body.endswith(b"</script>\n</body></html>\n"),
@@ -88,7 +99,9 @@ jobs:
           if safe:
               verdict = "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW"
           elif (t["http"] == 200 and t["exact_url"] and t["has_h1"] and
-                t["analytics_references"] == 1 and t["html_closed"]):
+                t["verified_expected_patch"] and not t["alternate_ga4"] and
+                s["http"] == 200 and s["exact_url"] and
+                s["analytics_references"] == 1 and s["html_closed"]):
               verdict = "ALREADY_TAGGED_CHECK_EVENT_DELIVERY"
           else:
               verdict = "STOP_REBASELINE_OR_MANUAL_REVIEW"
