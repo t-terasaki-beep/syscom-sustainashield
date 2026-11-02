@@ -10,7 +10,7 @@ spec.loader.exec_module(preflight)
 
 
 def sample() -> bytes:
-    tail = b"</script></body></html>"
+    tail = b"</script>\n</body></html>\n"
     head = b"<html><body><main><h1>Example</h1>"
     return head + b"x" * (preflight.EXPECTED_ORIGINAL_SIZE - len(head) - len(tail)) + tail
 
@@ -22,6 +22,8 @@ class PatchTests(unittest.TestCase):
         self.assertEqual(len(edited), 25239)
         self.assertEqual(edited.replace(preflight.TAG, b""), raw)
         self.assertEqual(edited.count(preflight.TAG), 1)
+        self.assertTrue(edited.endswith(preflight.TAG + b"</body></html>\n"))
+        self.assertEqual(edited[:-len(b"</body></html>\n")].count(b"</script>\n"), 1)
 
     def test_duplicate_refuses_to_modify(self):
         ref = b"ss-analytics.js"
@@ -57,7 +59,7 @@ class PatchTests(unittest.TestCase):
             preflight.build_one_line_patch(sample() + b"x")
 
     def test_unexpected_footer_fails_closed(self):
-        raw = sample().replace(b"</script></body></html>", b"</script></boDY></html>")
+        raw = sample().replace(b"</script>\n</body></html>\n", b"</script>\n</boDY></html>\n")
         with self.assertRaises(preflight.PreflightError):
             preflight.build_one_line_patch(raw)
 
