@@ -31,6 +31,7 @@ jobs:
           sibling = site + "/column/shoene2024-data-leak-alert/"
           expected_etag = "6262-65f3790c0687e"
           expected_size = 25186
+          expected_sha = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
           script_ref = b"ss-analytics.js"
 
           def inspect(url):
@@ -55,7 +56,7 @@ jobs:
                   "analytics_references": body.count(script_ref),
                   "has_h1": b"<h1" in body.lower() and b"</h1>" in body.lower(),
                   "html_closed": body.rstrip().endswith(b"</html>"),
-                  "footer_shape": body.endswith(b"</script></body></html>"),
+                  "footer_shape": body.endswith(b"</script>\n</body></html>\n"),
                   "footer_tail_repr": repr(body[-120:]),
                   "alternate_ga4": any(t in body for t in (
                       b"googletagmanager.com/gtag/js",
@@ -79,6 +80,7 @@ jobs:
                   t["etag"].strip('"') == expected_etag and
                   not t["etag"].startswith("W/") and
                   t["bytes"] == expected_size and
+                  t["sha256"] == expected_sha and
                   t["analytics_references"] == 0 and not t["alternate_ga4"] and
                   t["has_h1"] and t["footer_shape"] and
                   s["http"] == 200 and s["exact_url"] and
