@@ -18,12 +18,21 @@ def sample() -> bytes:
 class PatchTests(unittest.TestCase):
     def test_insertion_is_exactly_one_tag(self):
         raw = sample()
-        edited = preflight.build_one_line_patch(raw)
+        edited = preflight.build_one_line_patch(raw, expected_sha256=preflight.sha256(raw))
         self.assertEqual(len(edited), 25239)
         self.assertEqual(edited.replace(preflight.TAG, b""), raw)
         self.assertEqual(edited.count(preflight.TAG), 1)
         self.assertTrue(edited.endswith(preflight.TAG + b"</body></html>\n"))
         self.assertEqual(edited[:-len(b"</body></html>\n")].count(b"</script>\n"), 1)
+
+    def test_same_size_and_shape_but_wrong_sha_fails_closed(self):
+        # An old or altered production page could be exactly the same length.
+        # The standalone builder must refuse it even without fetch_live().
+        raw = sample()
+        self.assertEqual(len(raw), preflight.EXPECTED_ORIGINAL_SIZE)
+        self.assertIn(b"<h1>", raw)
+        with self.assertRaisesRegex(preflight.PreflightError, "Original SHA-256"):
+            preflight.build_one_line_patch(raw)
 
     def test_duplicate_refuses_to_modify(self):
         ref = b"ss-analytics.js"
