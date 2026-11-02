@@ -18,7 +18,8 @@ EXPECTED_ETAG = "6262-65f3790c0687e"
 EXPECTED_ORIGINAL_SIZE = 25186
 EXPECTED_PATCHED_SIZE = 25239
 TAG = b'<script src="/assets/ss-analytics.js" defer></script>'
-SUFFIX = b"</script></body></html>"
+SUFFIX = b"</script>\n</body></html>\n"
+EXPECTED_ORIGINAL_SHA256 = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
 
 
 class PreflightError(ValueError):
@@ -53,13 +54,14 @@ def build_one_line_patch(raw: bytes) -> bytes:
         raise PreflightError("Article H1 missing; wrong or damaged live page. STOP")
     if raw.count(b"</body>") != 1 or not raw.endswith(SUFFIX):
         raise PreflightError("Unexpected body/footer structure; no patch prepared")
-    changed = raw[:-len(b"</body></html>")] + TAG + b"</body></html>"
+    # Production has a newline after </script> and after </html>; keep both bytes.
+    position = len(raw) - len(b"</body></html>\n")
+    changed = raw[:position] + TAG + raw[position:]
     if len(changed) != EXPECTED_PATCHED_SIZE:
         raise PreflightError("Patched size mismatch")
     if changed.count(TAG) != 1:
         raise PreflightError("Expected exactly one analytics tag")
     # Byte-for-byte proof that the patch is only a single insertion.
-    position = len(raw) - len(b"</body></html>")
     if changed[:position] != raw[:position] or changed[position + len(TAG):] != raw[position:]:
         raise PreflightError("Unexpected differences beyond one insertion")
     return changed
@@ -80,6 +82,8 @@ def fetch_live() -> tuple[bytes, str]:
         payload = response.read(EXPECTED_ORIGINAL_SIZE + 1)
     if len(payload) != EXPECTED_ORIGINAL_SIZE:
         raise PreflightError("Production byte size changed. STOP and re-baseline")
+    if sha256(payload) != EXPECTED_ORIGINAL_SHA256:
+        raise PreflightError("Production SHA-256 changed. STOP and re-baseline")
     return payload, etag
 
 
