@@ -133,13 +133,13 @@ jobs:
           summary = os.environ.get("GITHUB_STEP_SUMMARY")
           if summary:
               with open(summary, "a", encoding="utf-8") as output:
-                  output.write("## P0 production analytics — read-only verification\\n\\n")
-                  output.write(f"**{human_status}**\\n\\n")
-                  output.write(f"- Target HTTP: {t['http']}; ETag: `{t['etag']}`\\n")
-                  output.write(f"- Target script references: {t['analytics_references']}\\n")
-                  output.write(f"- Sibling unchanged (ETag/size/SHA): {sibling_unchanged}\\n")
-                  output.write("- No publish performed. A passing Actions check does **not** establish recovery.\\n")
-                  output.write("- Final gate: publish lock + backup + immediate SHA/ETag recheck + authorized one-file upload + GA4 event receipt.\\n")
+                  output.write("## P0 production analytics — read-only verification\n\n")
+                  output.write(f"**{human_status}**\n\n")
+                  output.write(f"- Target HTTP: {t['http']}; ETag: `{t['etag']}`\n")
+                  output.write(f"- Target script references: {t['analytics_references']}\n")
+                  output.write(f"- Sibling unchanged (ETag/size/SHA): {sibling_unchanged}\n")
+                  output.write("- No publish performed. A passing Actions check does **not** establish recovery.\n")
+                  output.write("- Final gate: publish lock + backup + immediate SHA/ETag recheck + authorized one-file upload + GA4 event receipt.\n")
           if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
               sys.exit(1)
           PY
