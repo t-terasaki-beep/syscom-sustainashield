@@ -30,6 +30,12 @@ class PatchTests(unittest.TestCase):
         with self.assertRaises(preflight.PreflightError):
             preflight.build_one_line_patch(raw)
 
+    def test_missing_h1_fails_closed(self):
+        raw = sample().replace(b"<h1>Example</h1>", b"<p>Example</p>" + b"x" * 2)
+        self.assertEqual(len(raw), preflight.EXPECTED_ORIGINAL_SIZE)
+        with self.assertRaises(preflight.PreflightError):
+            preflight.build_one_line_patch(raw)
+
     def test_size_drift_fails_closed(self):
         with self.assertRaises(preflight.PreflightError):
             preflight.build_one_line_patch(sample() + b"x")
