@@ -23,6 +23,7 @@ jobs:
           python - <<'PY'
           import hashlib
           import json
+          import os
           import sys
           import urllib.request
 
@@ -118,6 +119,27 @@ jobs:
           print(json.dumps({"verdict": verdict, "target": t, "sibling": s,
                             "sibling_byte_identical_to_baseline": sibling_unchanged},
                            ensure_ascii=False, indent=2))
+          # Green read-only CI is not a published fix. Surface the outstanding
+          # work in Actions annotations and the job summary, not only raw JSON.
+          if verdict == "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW":
+              print("::warning title=P0 analytics still missing::Live page has zero tags. Separate authorized publish and GA4 event verification are still required.")
+              human_status = "UNRESOLVED — live tag missing (0)"
+          elif verdict == "ALREADY_TAGGED_CHECK_EVENT_DELIVERY":
+              print("::notice title=P0 tag present::One-line HTML patch matches baseline; GA4 event delivery remains unverified.")
+              human_status = "TAG_PRESENT — GA4 event not yet verified"
+          else:
+              print("::error title=P0 preflight stopped::Production changed or sibling drifted. Do not publish the prepared patch.")
+              human_status = "STOP — manual re-baseline required"
+          summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary:
+              with open(summary, "a", encoding="utf-8") as output:
+                  output.write("## P0 production analytics — read-only verification\\n\\n")
+                  output.write(f"**{human_status}**\\n\\n")
+                  output.write(f"- Target HTTP: {t['http']}; ETag: `{t['etag']}`\\n")
+                  output.write(f"- Target script references: {t['analytics_references']}\\n")
+                  output.write(f"- Sibling unchanged (ETag/size/SHA): {sibling_unchanged}\\n")
+                  output.write("- No publish performed. A passing Actions check does **not** establish recovery.\\n")
+                  output.write("- Final gate: publish lock + backup + immediate SHA/ETag recheck + authorized one-file upload + GA4 event receipt.\\n")
           if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
               sys.exit(1)
           PY
