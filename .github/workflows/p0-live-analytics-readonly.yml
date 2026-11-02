@@ -2,9 +2,9 @@ name: P0 live analytics status (read-only)
 
 # One-off verification on this draft branch; no cron, no deploy, no secrets.
 on:
-  push:
+  pull_request:
     branches:
-      - fix/read-only-live-analytics-preflight-20261103
+      - main
     paths:
       - .github/workflows/p0-live-analytics-readonly.yml
   workflow_dispatch:
