@@ -82,6 +82,20 @@ jobs:
                       b'gtag("config"',
                       b"G-ELZG7B45NH",
                   )),
+                  # Digest only: derived in memory from exact live bytes.
+                  # No patched HTML is saved, uploaded, or published.
+                  "_candidate_patch_sha256": (
+                      hashlib.sha256(
+                          body[:-len(b"</body></html>\n")] +
+                          exact_script_tag +
+                          body[-len(b"</body></html>\n"):]
+                      ).hexdigest()
+                      if (url == target and len(body) == expected_size and
+                          hashlib.sha256(body).hexdigest() == expected_sha and
+                          body.endswith(b"</script>\n</body></html>\n") and
+                          body.count(script_ref) == 0)
+                      else None
+                  ),
               }
 
           try:
@@ -110,12 +124,20 @@ jobs:
                   t["has_h1"] and t["footer_shape"] and sibling_unchanged)
           if safe:
               verdict = "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW"
+              # Compare this digest with the published bytes AFTER authorized upload.
+              # It is not evidence of publication or GA4 event receipt.
+              t["expected_one_line_patch_sha256"] = t.pop("_candidate_patch_sha256")
+              if not t["expected_one_line_patch_sha256"]:
+                  raise ValueError("Cannot derive patch digest from approved baseline")
           elif (t["http"] == 200 and t["exact_url"] and t["has_h1"] and
                 t["verified_expected_patch"] and not t["alternate_ga4"] and
                 sibling_unchanged):
               verdict = "ALREADY_TAGGED_CHECK_EVENT_DELIVERY"
           else:
               verdict = "STOP_REBASELINE_OR_MANUAL_REVIEW"
+          # A stopped preflight must not suggest a publishable patch digest.
+          t.pop("_candidate_patch_sha256", None)
+          s.pop("_candidate_patch_sha256", None)
           print(json.dumps({"verdict": verdict, "target": t, "sibling": s,
                             "sibling_byte_identical_to_baseline": sibling_unchanged},
                            ensure_ascii=False, indent=2))
@@ -137,6 +159,8 @@ jobs:
                   output.write(f"**{human_status}**\n\n")
                   output.write(f"- Target HTTP: {t['http']}; ETag: `{t['etag']}`\n")
                   output.write(f"- Target script references: {t['analytics_references']}\n")
+                  if verdict == "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW":
+                      output.write(f"- Expected SHA-256 after separately authorized one-line patch (NOT published): `{t['expected_one_line_patch_sha256']}`\n")
                   output.write(f"- Sibling unchanged (ETag/size/SHA): {sibling_unchanged}\n")
                   output.write("- No publish performed. A passing Actions check does **not** establish recovery.\n")
                   output.write("- Final gate: publish lock + backup + immediate SHA/ETag recheck + authorized one-file upload + GA4 event receipt.\n")
