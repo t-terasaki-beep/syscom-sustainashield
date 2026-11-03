@@ -95,7 +95,7 @@ jobs:
           lines = [
               "## P1: sampled LIVE internal diagnosis anchor links (GET only)",
               "",
-              "This is five fixed pages only, not a complete site crawl or evidence of external backlinks.",
+              f"This is {len(result['pages'])} fixed pages only, not a complete site crawl or evidence of external backlinks.",
               "",
               f"Observed UTC: {result['observed_at_utc']}",
               "",
