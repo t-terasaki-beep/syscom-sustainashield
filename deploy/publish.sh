@@ -48,6 +48,15 @@ while IFS= read -r line || [ -n "$line" ]; do
   case "$line" in ''|\#*) continue ;; esac
   lp="$(printf '%s\n' "$line" | awk '{print $1}')"
   rp="$(printf '%s\n' "$line" | awk '{if ($2!="") print $2; else print $1}')"
+  # Production-only or live-divergent files are NOT deployable from GitHub.
+  # P0 column repair must use the separately authorized, locked live-file
+  # patch workflow, never a repository-generated replacement.
+  case "$rp" in
+    /*|./*|../*|*/../*|*/./*|*//*)
+      echo "停止: 非正規のリモート相対パス: $rp"; exit 3 ;;
+    column/chiba-suigai-hinanjo-dengen/index.html|photo-diagnosis/index.html|shindan.html)
+      echo "停止: 本番専用・差異ありの保護URLはGitHubから上書き禁止: $rp"; exit 3 ;;
+  esac
   [ -f "$LOCAL_ROOT/$lp" ] || { echo "停止: ローカルに無い: $LOCAL_ROOT/$lp"; exit 2; }
   LOCS="$LOCS$lp"$'\n'; REMS="$REMS$rp"$'\n'
 done < "$CHANGESET"
