@@ -154,8 +154,20 @@ jobs:
               ]
           else:
               lines.append("INCOMPLETE: " + str(report.get("error", "one or more sitemap pages did not return HTTP200")))
-              lines.append("No sitewide conclusion is supported.")
+              if "pages" in report:
+                  failures = [(r["page"], r.get("http_status", r.get("error", "UNKNOWN")))
+                              for r in report["pages"] if r.get("http_status") != 200 or "error" in r]
+                  lines += [
+                      f"Sitemap URLs scanned: {report['sitemap_page_count']}",
+                      f"HTTP200: {report['http_200_count']}",
+                      f"Observed old-path anchors in HTTP200 responses: {report['anchor_totals']['/shindan.html']}",
+                      f"Observed current-path anchors in HTTP200 responses: {report['anchor_totals']['/photo-diagnosis/']}",
+                      f"Non-200 or unreadable pages: {len(failures)}",
+                      "Failing paths (up to 30): " + ", ".join(f"{path}={status}" for path, status in failures[:30]),
+                  ]
+              lines.append("No sitewide zero-link conclusion is supported.")
           lines += ["", "No deployment, 301, or canonical changes. GSC and external backlink evidence still required."]
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
               f.write("\n".join(lines) + "\n")
+          print("\n".join(lines))
           PY
