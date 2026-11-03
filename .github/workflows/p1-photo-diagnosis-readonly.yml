@@ -50,8 +50,8 @@ jobs:
               "",
               f"Observed at UTC: `{data['observed_at_utc']}`",
               "",
-              "| URL | HTTP | Location | HTML bytes | SHA-256 | canonical |",
-              "|---|---:|---|---:|---|---|",
+              "| URL | HTTP | Location | HTML bytes | SHA-256 | HTML canonical | HTTP Link headers |",
+              "|---|---:|---|---:|---|---|---|",
           ]
           for entry in urls:
               report.append(
@@ -60,7 +60,8 @@ jobs:
                   str(entry.get("location") or "-") + "` | " +
                   str(entry.get("body_bytes", "-")) + " | `" +
                   str(entry.get("sha256", "-")) + "` | `" +
-                  ", ".join(entry.get("canonical_links", [])) + "` |"
+                  ", ".join(entry.get("canonical_links", [])) + "` | `" +
+                  ", ".join(entry.get("http_link_headers", [])).replace("|", r"\|") + "` |"
               )
           report += [
               "",
