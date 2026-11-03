@@ -41,6 +41,20 @@ class ProtectedRouteTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.check_rejected(path, "上書き禁止")
 
+    def test_protected_subtrees_reject_other_filename_and_directory_targets(self):
+        # Reject more than index.html: an incidental asset upload into these
+        # production-maintained routes must never bypass the repository guard.
+        for path in (
+            "column/chiba-suigai-hinanjo-dengen",
+            "column/chiba-suigai-hinanjo-dengen/new.html",
+            "column/chiba-suigai-hinanjo-dengen/assets/app.js",
+            "photo-diagnosis",
+            "photo-diagnosis/alternate.html",
+            "photo-diagnosis/assets/style.css",
+        ):
+            with self.subTest(path=path):
+                self.check_rejected(path, "上書き禁止")
+
     def test_noncanonical_remote_paths_rejected(self):
         for path in (
             "./shindan.html",
