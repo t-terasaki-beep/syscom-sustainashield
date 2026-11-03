@@ -71,6 +71,9 @@ def inspect(opener, url, timeout=10.0, max_bytes=1000000):
             "etag": h.get("ETag"),
             "content_length_header": h.get("Content-Length"),
             "x_robots_tag": h.get("X-Robots-Tag"),
+            # HTML canonical is not the only source: HTTP Link headers may
+            # carry rel=canonical, including on a redirect response.
+            "http_link_headers": h.get_all("Link", []),
             "redirect_followed": False,
         }
         # Don't digest a redirect's error document: it is not the target HTML.
