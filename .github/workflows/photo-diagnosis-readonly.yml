@@ -112,14 +112,14 @@ jobs:
           if summary:
               with open(summary, "a", encoding="utf-8") as fp:
                   fp.write("## P1 photo diagnosis — direct HTTP evidence (GET only)\n\n")
-                  fp.write(f"- Both HTTP 200 and byte-identical: \`{report['byte_identical']}\` (None means unknown)\n")
+                  fp.write(f"- Both HTTP 200 and byte-identical: `{report['byte_identical']}` (None means unknown)\n")
                   for path in paths:
                       item = report["pages"].get(path)
-                      fp.write(f"- \`{path}\`: HTTP {item['http'] if item else 'FETCH_FAILED'}; "
-                               f"Location \`{item['location'] if item else 'unknown'}\`; "
-                               f"canonical \`{item['canonical'] if item else 'unknown'}\`\n")
-                  fp.write(f"- Selected entry-point link counts: \`{report['selected_internal_links']}\`\n")
-                  fp.write(f"- Fetch failures: \`{report['errors']}\`\n")
+                      fp.write(f"- `{path}`: HTTP {item['http'] if item else 'FETCH_FAILED'}; "
+                               f"Location `{item['location'] if item else 'unknown'}`; "
+                               f"canonical `{item['canonical'] if item else 'unknown'}`\n")
+                  fp.write(f"- Selected entry-point link counts: `{report['selected_internal_links']}`\n")
+                  fp.write(f"- Fetch failures: `{report['errors']}`\n")
                   fp.write("- **No canonical/301/delete decision**. Confirm GSC and external links first.\n")
                   fp.write("- No FTP, public writes, analytics changes, paid ads, or customer contact.\n")
           if any(p not in report["pages"] for p in paths):
