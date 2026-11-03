@@ -77,7 +77,7 @@ jobs:
           else:
               print("::notice title=P1 two direct HTTP200 results::Body hashes recorded. Canonical direction still requires traffic/link evidence.")
           PY
-- name: Sample live internal diagnosis anchors (GET only; no crawl)
+      - name: Sample live internal diagnosis anchors (GET only; no crawl)
         shell: bash
         run: |
           set -euo pipefail
