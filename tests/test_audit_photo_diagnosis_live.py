@@ -50,24 +50,29 @@ class AuditTests(unittest.TestCase):
         data = (b'<html><head><link rel="canonical" href="/photo-diagnosis/">'
                 b'<title>Photo</title><meta name="robots" content="index,follow">'
                 b'</head><body><script src="/assets/ss-analytics.js" defer></script></body></html>')
-        opener = StaticOpener([FakeResponse(data), FakeResponse(data)])
+        canonical_header = '<https://syscom-sustaina-shield.com/photo-diagnosis/>; rel="canonical"'
+        opener = StaticOpener([FakeResponse(data, {"Link": canonical_header}), FakeResponse(data)])
         report = collect(opener)
         self.assertEqual(report["status"], "observed_both_200")
         self.assertTrue(report["same_body_sha256_if_both_200"])
         self.assertEqual(report["urls"][0]["body_bytes"], len(data))
         self.assertEqual(report["urls"][0]["canonical_links"], ["/photo-diagnosis/"])
+        self.assertEqual(report["urls"][0]["http_link_headers"], [canonical_header])
+        self.assertEqual(report["urls"][1]["http_link_headers"], [])
         self.assertEqual(report["urls"][0]["ss_analytics_script_count"], 1)
         self.assertEqual(opener.calls, [(URLS[0], "GET"), (URLS[1], "GET")])
 
     def test_redirect_is_recorded_without_following(self):
         headers = Message()
         headers["Location"] = "/photo-diagnosis/"
+        headers["Link"] = '<https://syscom-sustaina-shield.com/photo-diagnosis/>; rel="canonical"'
         redirect = HTTPError(URLS[1], 301, "Moved Permanently", headers, io.BytesIO(b"redirect"))
         opener = StaticOpener([FakeResponse(b"<html>ok</html>"), redirect])
         report = collect(opener)
         self.assertIsNone(report["same_body_sha256_if_both_200"])
         self.assertEqual(report["urls"][1]["http_status"], 301)
         self.assertEqual(report["urls"][1]["location"], "/photo-diagnosis/")
+        self.assertEqual(len(report["urls"][1]["http_link_headers"]), 1)
         self.assertNotIn("sha256", report["urls"][1])
         self.assertEqual(len(opener.calls), 2)
 
