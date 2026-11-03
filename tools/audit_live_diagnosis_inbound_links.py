@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Read-only sample of LIVE internal links to the two photo-diagnosis URLs.
 
-Five fixed, high-level production pages; no crawl, redirect follow, auth, writes,
+Ten fixed, high-level production pages; no crawl, redirect follow, auth, writes,
 SEO changes, or external submissions. HTML anchors only (not JS-generated links).
 """
 from datetime import datetime, timezone
@@ -12,7 +12,12 @@ from urllib import request, error
 from urllib.parse import urljoin, urlsplit
 
 SITE = "https://syscom-sustaina-shield.com"
-PATHS = ("/", "/residential/", "/faq.html", "/company.html", "/contact.html")
+PATHS = (
+    "/", "/residential/", "/faq.html", "/company.html", "/contact.html",
+    # Five additional verified-in-project routes; this remains a sample, not a crawl.
+    "/bcp/", "/solar/", "/aliphatic-polyurea-chiba/",
+    "/residential/chiba-blackout/", "/column/shoene2024-data-leak-alert/",
+)
 TRACKED = ("/shindan.html", "/photo-diagnosis/")
 MAX_BYTES = 750_000
 
@@ -84,7 +89,7 @@ def collect(opener):
               for p in TRACKED}
     return {
         "observed_at_utc": datetime.now(timezone.utc).isoformat(),
-        "scope": "Five sampled LIVE HTML pages, only <a href>; no sitewide claim",
+        "scope": f"{len(PATHS)} sampled LIVE HTML pages, only <a href>; no sitewide claim",
         "redirect_followed": False,
         "pages": pages,
         "anchor_totals": totals,
