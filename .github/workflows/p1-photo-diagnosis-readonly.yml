@@ -8,8 +8,10 @@ on:
     paths:
       - tools/audit_photo_diagnosis_live.py
       - tools/audit_live_diagnosis_inbound_links.py
+      - tools/audit_sitemap_diagnosis_inbound_links.py
       - tests/test_audit_photo_diagnosis_live.py
       - tests/test_audit_live_diagnosis_inbound_links.py
+      - tests/test_audit_sitemap_diagnosis_inbound_links.py
       - .github/workflows/p1-photo-diagnosis-readonly.yml
   workflow_dispatch:
 
@@ -19,7 +21,7 @@ permissions:
 jobs:
   inspect-production:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - name: Checkout audit-only PR
         uses: actions/checkout@v4
@@ -121,4 +123,39 @@ jobs:
               f.write("\n".join(lines) + "\n")
           if not result["complete"]:
               print("::warning title=P1 sampled internal links incomplete::Review page statuses before using this evidence.")
+          PY
+      - name: Sitemap-wide live diagnosis anchors (read-only, bounded)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p 'test_audit_sitemap_diagnosis_inbound_links.py' -v
+          if python tools/audit_sitemap_diagnosis_inbound_links.py > "$RUNNER_TEMP/p1-sitemap-inbound.json"; then
+            echo "::notice title=P1 sitemap link audit::Sitemap-wide read-only GETs completed; compare with GSC and external backlinks."
+          else
+            echo "::warning title=P1 sitemap link audit incomplete::Do not assert sitewide zero old links or change canonical."
+          fi
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          report = json.loads((Path(os.environ["RUNNER_TEMP"]) / "p1-sitemap-inbound.json").read_text(encoding="utf-8"))
+          lines = ["## P1 sitemap-wide LIVE inbound link audit (read-only)", "",
+                   "Only sitemap-listed HTML anchors; excludes JS links and external backlinks.",
+                   ""]
+          if report.get("complete"):
+              count = report["sitemap_page_count"]
+              lines += [
+                  f"Observed UTC: {report['observed_at_utc']}",
+                  f"Pages: {report['http_200_count']}/{count} HTTP200",
+                  f"Old /shindan.html anchors: {report['anchor_totals']['/shindan.html']}",
+                  f"Current /photo-diagnosis/ anchors: {report['anchor_totals']['/photo-diagnosis/']}",
+                  f"Pages containing old links: {', '.join(report['pages_with_old_url']) or '(none)'}",
+                  f"Pages containing current links: {', '.join(report['pages_with_new_url']) or '(none)'}",
+              ]
+          else:
+              lines.append("INCOMPLETE: " + str(report.get("error", "one or more sitemap pages did not return HTTP200")))
+              lines.append("No sitewide conclusion is supported.")
+          lines += ["", "No deployment, 301, or canonical changes. GSC and external backlink evidence still required."]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write("\n".join(lines) + "\n")
           PY
