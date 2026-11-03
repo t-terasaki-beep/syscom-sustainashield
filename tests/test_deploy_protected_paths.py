@@ -55,6 +55,23 @@ class ProtectedRouteTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.check_rejected(path, "上書き禁止")
 
+    def test_url_encoded_and_url_suffix_aliases_rejected(self):
+        # A remote server or intermediary can decode URL syntax differently.
+        # Reject these ambiguous forms rather than risk bypassing protected paths.
+        for path in (
+            "shindan%2ehtml",
+            "photo-diagnosis%2findex.html",
+            "column/chiba-suigai-hinanjo-dengen%2Findex.html",
+            "column%2Fchiba-suigai-hinanjo-dengen/index.html",
+            "column\\\\chiba-suigai-hinanjo-dengen\\\\index.html",
+            "shindan.html?rev=2",
+            "shindan.html#v1",
+            "column/..",
+            "column/.",
+        ):
+            with self.subTest(path=path):
+                self.check_rejected(path, "非正規")
+
     def test_noncanonical_remote_paths_rejected(self):
         for path in (
             "./shindan.html",
