@@ -1,0 +1,77 @@
+name: P1 photo diagnosis live HTTP audit (read-only)
+
+# Evidence collection only: two GET requests, no redirect following,
+# canonical/301 edits, FTP, deployment, secrets, or production writes.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tools/audit_photo_diagnosis_live.py
+      - tests/test_audit_photo_diagnosis_live.py
+      - .github/workflows/p1-photo-diagnosis-readonly.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout audit-only PR
+        uses: actions/checkout@v4
+
+      - name: Offline audit safety tests
+        run: python -m unittest discover -s tests -p 'test_audit_photo_diagnosis_live.py' -v
+
+      - name: Capture real HTTP response of both URLs (GET only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/audit_photo_diagnosis_live.py > "$RUNNER_TEMP/p1-photo-diagnosis-observation.json"
+          cat "$RUNNER_TEMP/p1-photo-diagnosis-observation.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["RUNNER_TEMP"]) / "p1-photo-diagnosis-observation.json"
+          data = json.loads(path.read_text(encoding="utf-8"))
+          urls = data["urls"]
+          if len(urls) != 2:
+              raise SystemExit("Unexpected URL count; no SEO decision")
+          report = [
+              "## P1 photo diagnosis URL audit — observation only",
+              "",
+              f"Observed at UTC: `{data['observed_at_utc']}`",
+              "",
+              "| URL | HTTP | Location | HTML bytes | SHA-256 | canonical |",
+              "|---|---:|---|---:|---|---|",
+          ]
+          for entry in urls:
+              report.append(
+                  "| `" + entry["url"] + "` | " +
+                  str(entry.get("http_status", "UNREACHABLE")) + " | `" +
+                  str(entry.get("location") or "-") + "` | " +
+                  str(entry.get("body_bytes", "-")) + " | `" +
+                  str(entry.get("sha256", "-")) + "` | `" +
+                  ", ".join(entry.get("canonical_links", [])) + "` |"
+              )
+          report += [
+              "",
+              f"Same HTML SHA-256 **if both HTTP 200**: `{data['same_body_sha256_if_both_200']}`",
+              "",
+              "**No redirect or canonical changes made.** "
+              "Do not decide a canonical URL without the production internal-link, "
+              "external backlink, and Search Console evidence.",
+          ]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write("\n".join(report) + "\n")
+          if any("error" in entry for entry in urls):
+              print("::warning title=P1 response incomplete::At least one URL was unreachable. Do not infer HTTP status, redirects, or canonical.")
+          elif any(entry.get("http_status") != 200 for entry in urls):
+              print("::notice title=P1 redirect or non-200 observed::Record status and Location. No automatic redirect follow or canonical change.")
+          else:
+              print("::notice title=P1 two direct HTTP200 results::Body hashes recorded. Canonical direction still requires traffic/link evidence.")
+          PY
