@@ -52,8 +52,11 @@ while IFS= read -r line || [ -n "$line" ]; do
   # are NOT deployable from GitHub (including newly added assets).
   # P0 column repair must use the separately authorized, locked live-file
   # patch workflow, never a repository-generated replacement.
+  # Reject URL-encoded separators/aliases, Windows separators, URL suffixes,
+  # and terminal dot segments BEFORE any network activity.
+  # This is intentionally conservative: release paths must be plain relative paths.
   case "$rp" in
-    /*|./*|../*|*/../*|*/./*|*//*)
+    /*|./*|../*|*/../*|*/./*|*//*|*/..|*/.|.|..|*'%'*|*'\'*|*'?'*|*'#'*)
       echo "停止: 非正規のリモート相対パス: $rp"; exit 3 ;;
     column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|shindan.html)
       echo "停止: 本番専用・差異ありの保護URLはGitHubから上書き禁止: $rp"; exit 3 ;;
