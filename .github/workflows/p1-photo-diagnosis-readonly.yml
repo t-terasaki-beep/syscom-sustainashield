@@ -7,7 +7,9 @@ on:
     branches: [main]
     paths:
       - tools/audit_photo_diagnosis_live.py
+      - tools/audit_live_diagnosis_inbound_links.py
       - tests/test_audit_photo_diagnosis_live.py
+      - tests/test_audit_live_diagnosis_inbound_links.py
       - .github/workflows/p1-photo-diagnosis-readonly.yml
   workflow_dispatch:
 
@@ -74,4 +76,49 @@ jobs:
               print("::notice title=P1 redirect or non-200 observed::Record status and Location. No automatic redirect follow or canonical change.")
           else:
               print("::notice title=P1 two direct HTTP200 results::Body hashes recorded. Canonical direction still requires traffic/link evidence.")
+          PY
+- name: Sample live internal diagnosis anchors (GET only; no crawl)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p 'test_audit_live_diagnosis_inbound_links.py' -v
+          if ! python tools/audit_live_diagnosis_inbound_links.py > "$RUNNER_TEMP/p1-inbound-link-sample.json"; then
+            echo "::warning title=P1 sample incomplete::Read-only sample incomplete; do not extrapolate or change SEO configuration."
+          fi
+          cat "$RUNNER_TEMP/p1-inbound-link-sample.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          path = Path(os.environ["RUNNER_TEMP"]) / "p1-inbound-link-sample.json"
+          result = json.loads(path.read_text(encoding="utf-8"))
+          lines = [
+              "## P1: sampled LIVE internal diagnosis anchor links (GET only)",
+              "",
+              "This is five fixed pages only, not a complete site crawl or evidence of external backlinks.",
+              "",
+              f"Observed UTC: {result['observed_at_utc']}",
+              "",
+              "| Sampled page | HTTP | /shindan.html | /photo-diagnosis/ |",
+              "|---|---:|---:|---:|",
+          ]
+          for page in result["pages"]:
+              links = page.get("tracked_anchor_counts", {})
+              lines.append(
+                  f"| {page['page']} | {page.get('http_status', 'ERROR')} | "
+                  f"{links.get('/shindan.html', 'N/A')} | "
+                  f"{links.get('/photo-diagnosis/', 'N/A')} |"
+              )
+          lines += [
+              "",
+              f"Complete sample: {result['complete']}; "
+              f"old URL links: {result['anchor_totals']['/shindan.html']}; "
+              f"new URL links: {result['anchor_totals']['/photo-diagnosis/']}.",
+              "",
+              "No 301/canonical changes. Compare with Search Console and external backlink data before deciding.",
+          ]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write("\n".join(lines) + "\n")
+          if not result["complete"]:
+              print("::warning title=P1 sampled internal links incomplete::Review page statuses before using this evidence.")
           PY
