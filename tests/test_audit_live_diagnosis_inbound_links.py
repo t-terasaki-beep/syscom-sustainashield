@@ -57,9 +57,12 @@ class TestSampler(unittest.TestCase):
         opener = FakeOpener(responses)
         result = m.collect(opener)
         self.assertTrue(result['complete'])
-        self.assertEqual(result['anchor_totals']['/shindan.html'], 5)
+        self.assertEqual(result['anchor_totals']['/shindan.html'], len(m.PATHS))
         self.assertEqual(result['anchor_totals']['/photo-diagnosis/'], 0)
-        self.assertEqual(len(opener.requests), 5)
+        self.assertEqual(len(opener.requests), len(m.PATHS))
+        self.assertEqual(len(m.PATHS), 10)
+        self.assertEqual(len(set(m.PATHS)), len(m.PATHS))
+        self.assertIn('10 sampled LIVE HTML pages', result['scope'])
 
     def test_missing_page_marks_sample_incomplete(self):
         responses = {m.SITE+p: FakeResponse(b'<p>empty</p>') for p in m.PATHS}
