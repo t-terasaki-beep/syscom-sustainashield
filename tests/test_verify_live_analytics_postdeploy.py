@@ -80,24 +80,41 @@ class VerifyTests(unittest.TestCase):
 
     def test_live_analytics_asset_id_present(self):
         asset = b"window.ssAnalytics={measurementId:'G-ELZG7B45NH'};"
-        result = m.check_analytics_asset(asset)
+        result = m.check_analytics_asset(asset, "text/javascript; charset=utf-8")
         self.assertEqual(result["status"], "PASS")
         self.assertEqual(result["sha256"], m.sha256(asset))
         self.assertTrue(result["ga4_measurement_id_present"])
+        self.assertEqual(result["javascript_content_type"], "text/javascript")
         self.assertFalse(result["ga4_event_receipt_verified"])
 
     def test_analytics_asset_html_fallback_fails(self):
         with self.assertRaisesRegex(m.VerificationError, "HTML"):
-            m.check_analytics_asset(b"  <!DOCTYPE html><title>Fallback</title>G-ELZG7B45NH")
+            m.check_analytics_asset(b"  <!DOCTYPE html><title>Fallback</title>G-ELZG7B45NH", "text/javascript")
 
     def test_analytics_asset_wrong_measurement_id_fails(self):
         with self.assertRaisesRegex(m.VerificationError, "expected GA4 ID"):
-            m.check_analytics_asset(b"gtag('config', 'G-OTHER')")
+            m.check_analytics_asset(b"gtag('config', 'G-OTHER')", "application/javascript")
 
     def test_analytics_asset_empty_and_oversize_fail(self):
         for asset in (b"", b"z" * (m.ANALYTICS_ASSET_MAX_BYTES + 1)):
             with self.subTest(size=len(asset)), self.assertRaises(m.VerificationError):
-                m.check_analytics_asset(asset)
+                m.check_analytics_asset(asset, "text/javascript")
+
+    def test_analytics_asset_wrong_or_missing_mime_fails(self):
+        js = b"// G-ELZG7B45NH"
+        for mime in (None, "", "text/html; charset=utf-8", "text/plain",
+                     "application/octet-stream", "image/svg+xml"):
+            with self.subTest(mime=mime), self.assertRaisesRegex(m.VerificationError, "Content-Type"):
+                m.check_analytics_asset(js, mime)
+
+    def test_analytics_asset_javascript_mime_variants_pass(self):
+        js = b"// G-ELZG7B45NH"
+        for mime in ("text/javascript", "TEXT/JAVASCRIPT; charset=UTF-8",
+                     "application/javascript; charset=utf-8", "application/ecmascript"):
+            with self.subTest(mime=mime):
+                result = m.check_analytics_asset(js, mime)
+                self.assertEqual(result["status"], "PASS")
+                self.assertEqual(result["javascript_content_type"], mime.split(";", 1)[0].lower())
 
     def test_bad_sibling_hash_fails(self):
         with self.assertRaises(m.VerificationError):
