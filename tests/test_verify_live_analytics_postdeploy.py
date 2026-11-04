@@ -58,20 +58,32 @@ class VerifyTests(unittest.TestCase):
         finally:
             m.ORIGINAL_SHA256 = old
 
+    def test_modified_sibling_cannot_be_approved_by_its_own_postchange_hash(self):
+        # An operator accidentally capturing the baseline AFTER publication
+        # must not make a modified sibling pass the non-destruction gate.
+        modified = b"<h1>Changed sibling</h1>" + m.TAG
+        supplied_after_change = m.sha256(modified)
+        self.assertNotEqual(supplied_after_change, m.SIBLING_APPROVED_SHA256)
+        with self.assertRaisesRegex(m.VerificationError, "independently approved"):
+            m.check_sibling(modified, "sibling-etag", supplied_after_change)
+
     def test_sibling_unchanged_and_tag_once(self):
         sib = b"<h1>Sibling</h1>" + m.TAG
-        res = m.check_sibling(sib, "sibling-etag", m.sha256(sib))
+        with patch.object(m, "SIBLING_APPROVED_SHA256", m.sha256(sib)):
+            res = m.check_sibling(sib, "sibling-etag", m.sha256(sib))
         self.assertEqual(res["status"], "PASS")
 
     def test_sibling_changed_fails(self):
         sib = b"<h1>Sibling</h1>" + m.TAG
-        with self.assertRaisesRegex(m.VerificationError, "changed"):
-            m.check_sibling(sib + b"x", "sibling-etag", m.sha256(sib))
+        with patch.object(m, "SIBLING_APPROVED_SHA256", m.sha256(sib)):
+            with self.assertRaisesRegex(m.VerificationError, "changed"):
+                m.check_sibling(sib + b"x", "sibling-etag", m.sha256(sib))
 
     def test_sibling_missing_tag_fails(self):
         sib = b"<h1>Sibling</h1>"
-        with self.assertRaisesRegex(m.VerificationError, "tag"):
-            m.check_sibling(sib, "sibling-etag", m.sha256(sib))
+        with patch.object(m, "SIBLING_APPROVED_SHA256", m.sha256(sib)):
+            with self.assertRaisesRegex(m.VerificationError, "tag"):
+                m.check_sibling(sib, "sibling-etag", m.sha256(sib))
 
     def test_etag_validator(self):
         self.assertEqual(m.strong_etag('"6262-65f3790c0687e"'), m.ORIGINAL_ETAG)
