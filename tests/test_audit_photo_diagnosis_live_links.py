@@ -3,7 +3,7 @@ import sys
 import unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from audit_photo_diagnosis_live_links import LinkReader, normalize_target, sitemap_items, inspect_page
+from audit_photo_diagnosis_live_links import LinkReader, normalize_target, sitemap_items, inspect_page, summarize_sitemap_seo
 from unittest.mock import patch
 
 
@@ -59,6 +59,33 @@ class TestP1LiveLinkAudit(unittest.TestCase):
     def test_reject_external_sitemap_url(self):
         with self.assertRaises(ValueError):
             sitemap_items(b'<urlset><url><loc>https://external.example/</loc></url></urlset>')
+
+    def test_existing_301_sitemap_signal_is_explicit_and_read_only(self):
+        root = "https://syscom-sustaina-shield.com"
+        legacy, dest = root + "/shindan.html", root + "/photo-diagnosis/"
+        report = summarize_sitemap_seo(
+            [legacy, dest],
+            [{"url": legacy, "http": 301, "redirect_to": dest},
+             {"url": dest, "http": 200}])
+        self.assertEqual(report["status"], "EXISTING_301_URL_INCLUDED_IN_SITEMAP")
+        self.assertTrue(report["legacy_listed"])
+        self.assertTrue(report["destination_listed"])
+        self.assertTrue(report["observed_existing_301"])
+        self.assertIn("HOLD_NO_SITEMAP", report["decision"])
+
+    def test_unverified_sitemap_route_is_not_called_a_known_redirect(self):
+        root = "https://syscom-sustaina-shield.com"
+        legacy = root + "/shindan.html"
+        report = summarize_sitemap_seo(
+            [legacy], [{"url": legacy, "issue": "TimeoutError"}])
+        self.assertEqual(report["status"], "LEGACY_SITEMAP_URL_ROUTE_UNVERIFIED")
+        self.assertFalse(report["observed_existing_301"])
+
+    def test_missing_legacy_sitemap_does_not_imply_external_links_absent(self):
+        root = "https://syscom-sustaina-shield.com"
+        report = summarize_sitemap_seo([root + "/photo-diagnosis/"], [])
+        self.assertEqual(report["status"], "LEGACY_URL_NOT_LISTED_IN_SITEMAP")
+        self.assertIn("GSC_AND_BACKLINKS", report["decision"])
 
     def test_reject_empty_sitemap(self):
         with self.assertRaises(ValueError):
