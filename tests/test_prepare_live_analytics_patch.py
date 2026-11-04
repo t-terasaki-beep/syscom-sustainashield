@@ -18,7 +18,7 @@ def sample() -> bytes:
 
 def sibling_fixture() -> bytes:
     head = b"<html><body><h1>Sibling</h1>"
-    tail = preflight.TAG + b"</body></html>\\n"
+    tail = preflight.TAG + b"</body></html>\n"
     return head + b"x" * (preflight.EXPECTED_SIBLING_SIZE - len(head) - len(tail)) + tail
 
 
