@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - '.github/workflows/photo-diagnosis-readonly.yml'
+      - 'tools/audit_photo_diagnosis_repo_links.py'
+      - 'tests/test_audit_photo_diagnosis_repo_links.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -156,4 +158,38 @@ jobs:
           if not (destination_unchanged and legacy_redirect_unchanged):
               print("::error title=P1 production route drift::The previously observed 200/301 routing or destination indexability changed; review before any canonical/301 decision.")
               sys.exit(1)
+          PY
+
+  inspect-repository-inlinks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run read-only link classifier tests
+        run: python -m unittest discover -s tests -p 'test_audit_photo_diagnosis_repo_links.py' -v
+      - name: Audit all checkout HTML links (not production)
+        shell: bash
+        run: |
+          python tools/audit_photo_diagnosis_repo_links.py . > /tmp/p1-repo-inlinks.json
+          python - <<'PY'
+          import json, os
+          with open('/tmp/p1-repo-inlinks.json', encoding='utf-8') as f:
+              report = json.load(f)
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          summary = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary:
+              with open(summary, 'a', encoding='utf-8') as f:
+                  f.write('## P1 repository inbound links — offline snapshot\n\n')
+                  f.write('Checkout HTML only; not live pages or external backlinks.\n\n')
+                  f.write(f"- HTML files scanned: {report['html_files_scanned']}\n")
+                  f.write(f"- Direct href counts: {report['counts']}\n")
+                  f.write(f"- Files with matching links: {len(report['sources'])}\n")
+                  f.write(f"- Decode errors: {report['decode_errors']}\n")
+                  for item in report['sources'][:15]:
+                      f.write(f"- {item['file']}: {len(item['matches'])} matching links\n")
+                  f.write('\nNo route, canonical, redirect, or production file changed. '
+                          'Hold canonical until verified live and GSC/external-link evidence.\n')
           PY
