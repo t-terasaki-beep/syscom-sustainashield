@@ -2,6 +2,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 MOD_PATH = Path(__file__).resolve().parents[1] / "tools" / "prepare_live_analytics_patch.py"
 spec = importlib.util.spec_from_file_location("preflight", MOD_PATH)
@@ -13,6 +14,53 @@ def sample() -> bytes:
     tail = b"</script>\n</body></html>\n"
     head = b"<html><body><main><h1>Example</h1>"
     return head + b"x" * (preflight.EXPECTED_ORIGINAL_SIZE - len(head) - len(tail)) + tail
+
+
+def sibling_fixture() -> bytes:
+    head = b"<html><body><h1>Sibling</h1>"
+    tail = preflight.TAG + b"</body></html>\\n"
+    return head + b"x" * (preflight.EXPECTED_SIBLING_SIZE - len(head) - len(tail)) + tail
+
+
+class SiblingSnapshotTests(unittest.TestCase):
+    def test_baseline_sibling_produces_preflight_only_sha_evidence(self):
+        raw = sibling_fixture()
+        with patch.object(preflight, "EXPECTED_SIBLING_SHA256", preflight.sha256(raw)):
+            record = preflight.validate_sibling_snapshot(raw, preflight.EXPECTED_SIBLING_ETAG)
+        self.assertEqual(record["sha256"], preflight.sha256(raw))
+        self.assertEqual(record["analytics_tag_count"], 1)
+        self.assertEqual(record["capture_stage"], "PREFLIGHT_ONLY_NOT_UNDER_LOCK")
+
+    def test_sibling_etag_or_size_drift_stops(self):
+        raw = sibling_fixture()
+        with self.assertRaisesRegex(preflight.PreflightError, "ETag changed"):
+            preflight.validate_sibling_snapshot(raw, "changed")
+        with self.assertRaisesRegex(preflight.PreflightError, "size changed"):
+            preflight.validate_sibling_snapshot(raw + b"x", preflight.EXPECTED_SIBLING_ETAG)
+
+    def test_sibling_same_size_content_drift_stops(self):
+        raw = sibling_fixture()
+        altered = raw.replace(b"<h1>Sibling", b"<h1>SiBling", 1)
+        self.assertEqual(len(raw), len(altered))
+        with patch.object(preflight, "EXPECTED_SIBLING_SHA256", preflight.sha256(raw)):
+            with self.assertRaisesRegex(preflight.PreflightError, "SHA-256 changed"):
+                preflight.validate_sibling_snapshot(altered, preflight.EXPECTED_SIBLING_ETAG)
+
+    def test_sibling_duplicate_tracking_ref_stops_even_with_matching_digest(self):
+        raw = sibling_fixture()
+        modified = raw.replace(b"x" * len(preflight.TAG), preflight.TAG, 1)
+        self.assertEqual(len(raw), len(modified))
+        with patch.object(preflight, "EXPECTED_SIBLING_SHA256", preflight.sha256(modified)):
+            with self.assertRaisesRegex(preflight.PreflightError, "tag count"):
+                preflight.validate_sibling_snapshot(modified, preflight.EXPECTED_SIBLING_ETAG)
+
+    def test_sibling_footer_incomplete_stops_even_with_matching_digest(self):
+        raw = sibling_fixture()
+        modified = raw[:-7] + b"x" * 7
+        self.assertEqual(len(raw), len(modified))
+        with patch.object(preflight, "EXPECTED_SIBLING_SHA256", preflight.sha256(modified)):
+            with self.assertRaisesRegex(preflight.PreflightError, "footer incomplete"):
+                preflight.validate_sibling_snapshot(modified, preflight.EXPECTED_SIBLING_ETAG)
 
 
 class PatchTests(unittest.TestCase):
