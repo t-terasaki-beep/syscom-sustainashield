@@ -2,6 +2,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 SCRIPT = Path(__file__).resolve().parents[1] / "tools" / "verify_live_analytics_postdeploy.py"
 spec = importlib.util.spec_from_file_location("verify_p0", SCRIPT)
@@ -80,7 +81,9 @@ class VerifyTests(unittest.TestCase):
 
     def test_live_analytics_asset_id_present(self):
         asset = b"window.ssAnalytics={measurementId:'G-ELZG7B45NH'};"
-        result = m.check_analytics_asset(asset, "text/javascript; charset=utf-8")
+        with patch.object(m, "ANALYTICS_ASSET_EXPECTED_SIZE", len(asset)), \
+             patch.object(m, "ANALYTICS_ASSET_EXPECTED_SHA256", m.sha256(asset)):
+            result = m.check_analytics_asset(asset, "text/javascript; charset=utf-8")
         self.assertEqual(result["status"], "PASS")
         self.assertEqual(result["sha256"], m.sha256(asset))
         self.assertTrue(result["ga4_measurement_id_present"])
@@ -112,9 +115,28 @@ class VerifyTests(unittest.TestCase):
         for mime in ("text/javascript", "TEXT/JAVASCRIPT; charset=UTF-8",
                      "application/javascript; charset=utf-8", "application/ecmascript"):
             with self.subTest(mime=mime):
-                result = m.check_analytics_asset(js, mime)
+                with patch.object(m, "ANALYTICS_ASSET_EXPECTED_SIZE", len(js)), \
+                     patch.object(m, "ANALYTICS_ASSET_EXPECTED_SHA256", m.sha256(js)):
+                    result = m.check_analytics_asset(js, mime)
                 self.assertEqual(result["status"], "PASS")
                 self.assertEqual(result["javascript_content_type"], mime.split(";", 1)[0].lower())
+
+    def test_analytics_asset_wrong_sha_fails(self):
+        # Same size, same measurement ID, but changed bytes must not pass.
+        original = b"// G-ELZG7B45NH; OK"
+        changed = b"// G-ELZG7B45NH; NO"
+        self.assertEqual(len(original), len(changed))
+        with patch.object(m, "ANALYTICS_ASSET_EXPECTED_SIZE", len(original)), \
+             patch.object(m, "ANALYTICS_ASSET_EXPECTED_SHA256", m.sha256(original)):
+            with self.assertRaisesRegex(m.VerificationError, "SHA-256"):
+                m.check_analytics_asset(changed, "text/javascript")
+
+    def test_analytics_asset_wrong_size_fails(self):
+        original = b"// G-ELZG7B45NH"
+        with patch.object(m, "ANALYTICS_ASSET_EXPECTED_SIZE", len(original) + 1), \
+             patch.object(m, "ANALYTICS_ASSET_EXPECTED_SHA256", m.sha256(original)):
+            with self.assertRaisesRegex(m.VerificationError, "size differs"):
+                m.check_analytics_asset(original, "text/javascript")
 
     def test_bad_sibling_hash_fails(self):
         with self.assertRaises(m.VerificationError):
