@@ -78,6 +78,27 @@ class VerifyTests(unittest.TestCase):
             with self.subTest(v=v), self.assertRaises(m.VerificationError):
                 m.strong_etag(v)
 
+    def test_live_analytics_asset_id_present(self):
+        asset = b"window.ssAnalytics={measurementId:'G-ELZG7B45NH'};"
+        result = m.check_analytics_asset(asset)
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(result["sha256"], m.sha256(asset))
+        self.assertTrue(result["ga4_measurement_id_present"])
+        self.assertFalse(result["ga4_event_receipt_verified"])
+
+    def test_analytics_asset_html_fallback_fails(self):
+        with self.assertRaisesRegex(m.VerificationError, "HTML"):
+            m.check_analytics_asset(b"  <!DOCTYPE html><title>Fallback</title>G-ELZG7B45NH")
+
+    def test_analytics_asset_wrong_measurement_id_fails(self):
+        with self.assertRaisesRegex(m.VerificationError, "expected GA4 ID"):
+            m.check_analytics_asset(b"gtag('config', 'G-OTHER')")
+
+    def test_analytics_asset_empty_and_oversize_fail(self):
+        for asset in (b"", b"z" * (m.ANALYTICS_ASSET_MAX_BYTES + 1)):
+            with self.subTest(size=len(asset)), self.assertRaises(m.VerificationError):
+                m.check_analytics_asset(asset)
+
     def test_bad_sibling_hash_fails(self):
         with self.assertRaises(m.VerificationError):
             m.check_sibling(b"x", "etag", "bad")
