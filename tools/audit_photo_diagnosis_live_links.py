@@ -148,6 +148,38 @@ def inspect_page(url: str) -> dict:
         return {"url": url, "issue": type(exc).__name__}
 
 
+
+def summarize_sitemap_seo(urls: list[str], results: list[dict]) -> dict:
+    """Surface a 301 URL in XML sitemap as a hygiene issue, not an edit request.
+
+    The 301 was already live. Google Search Console and external backlinks must
+    be reviewed separately before changing sitemap, redirect, or canonical.
+    """
+    legacy = ORIGIN + "/shindan.html"
+    destination = ORIGIN + "/photo-diagnosis/"
+    listed_legacy = legacy in urls
+    listed_destination = destination in urls
+    old_response = next((row for row in results if row.get("url") == legacy), None)
+    already_redirecting = bool(
+        old_response and old_response.get("http") == 301
+        and old_response.get("redirect_to") == destination
+    )
+    if listed_legacy and already_redirecting:
+        status = "EXISTING_301_URL_INCLUDED_IN_SITEMAP"
+    elif listed_legacy:
+        status = "LEGACY_SITEMAP_URL_ROUTE_UNVERIFIED"
+    else:
+        status = "LEGACY_URL_NOT_LISTED_IN_SITEMAP"
+    return {
+        "status": status,
+        "legacy_listed": listed_legacy,
+        "destination_listed": listed_destination,
+        "observed_existing_301": already_redirecting,
+        "decision": "HOLD_NO_SITEMAP_REDIRECT_CANONICAL_CHANGE_UNTIL_GSC_AND_BACKLINKS",
+        "scope": "Only sitemap-listed URL status, not Search Console indexing or external backlinks",
+    }
+
+
 def audit() -> dict:
     urls = get_sitemap_urls()
     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
@@ -170,6 +202,7 @@ def audit() -> dict:
         "sitemap_urls": len(urls),
         "http200_html_pages": len(results) - len(failures) - len(legacy_redirects),
         "verified_existing_legacy_301": len(legacy_redirects),
+        "sitemap_seo_hygiene": summarize_sitemap_seo(urls, results),
         "errors": failures,
         "href_counts": counts,
         "unique_source_page_counts": {target: len(items) for target, items in sources.items()},
@@ -187,6 +220,8 @@ def main() -> int:
                           "message": str(error), "production_changes": 0}, ensure_ascii=False))
         return 2
     print(json.dumps(result, ensure_ascii=False, indent=2))
+    if result["sitemap_seo_hygiene"]["status"] == "EXISTING_301_URL_INCLUDED_IN_SITEMAP":
+        print("::warning title=P1 sitemap hygiene::An already-301 URL is in sitemap; review GSC/external links before any change.", file=sys.stderr)
     if not result["complete"]:
         print("::warning title=P1 incomplete::Do not claim a site-wide count.", file=sys.stderr)
         return 2
