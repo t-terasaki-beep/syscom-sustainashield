@@ -24,6 +24,10 @@ TARGET_FOOTER = b"</script>\n" + TAG + b"</body></html>\n"
 ANALYTICS_ASSET = "https://syscom-sustaina-shield.com/assets/ss-analytics.js"
 ANALYTICS_ASSET_MAX_BYTES = 65536
 GA4_MEASUREMENT_ID = b"G-ELZG7B45NH"
+# Actual production delivery verified via GET-only Actions 41884024682,
+# 2026-11-05 03:08 JST. Any byte drift requires manual re-baselining.
+ANALYTICS_ASSET_EXPECTED_SIZE = 8607
+ANALYTICS_ASSET_EXPECTED_SHA256 = "d31313584ab615a35581de2d8ccd9e4380cb95f14133b174269bca4d761f9ed3"
 # A 200 response with the right GA4 ID is insufficient if the browser refuses to execute it.
 # A JavaScript media type is required; HTML/text fallback must not be marked verified.
 JAVASCRIPT_MEDIA_TYPES = frozenset({
@@ -102,8 +106,13 @@ def check_analytics_asset(raw: bytes, content_type: str | None) -> dict:
         raise VerificationError("Analytics asset returned an HTML page; STOP")
     if GA4_MEASUREMENT_ID not in raw:
         raise VerificationError("Analytics asset missing the expected GA4 ID; STOP")
+    if len(raw) != ANALYTICS_ASSET_EXPECTED_SIZE:
+        raise VerificationError("Analytics asset size differs from verified production baseline; STOP")
+    if sha256(raw) != ANALYTICS_ASSET_EXPECTED_SHA256:
+        raise VerificationError("Analytics asset SHA-256 differs from verified production baseline; STOP")
     return {"status": "PASS", "http": 200, "bytes": len(raw),
-            "sha256": sha256(raw), "javascript_content_type": mime,
+            "sha256": sha256(raw), "sha256_matches_production_baseline": True,
+            "javascript_content_type": mime,
             "ga4_measurement_id_present": True,
             "ga4_event_receipt_verified": False}
 
