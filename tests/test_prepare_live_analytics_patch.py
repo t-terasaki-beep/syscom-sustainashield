@@ -72,11 +72,20 @@ class PatchTests(unittest.TestCase):
         with self.assertRaises(preflight.PreflightError):
             preflight.build_one_line_patch(raw)
 
-    def test_etag_weak_or_missing_is_rejected(self):
-        for value in (None, 'W/"6262-65f3790c0687e"'):
-            with self.assertRaises(preflight.PreflightError):
+    def test_etag_weak_missing_or_malformed_is_rejected(self):
+        for value in (
+            None, "", 'W/"6262-65f3790c0687e"',
+            "6262-65f3790c0687e",  # Bare token used to slip past the ETag gate.
+            '"6262-65f3790c0687e"trailing',
+            ' "6262-65f3790c0687e"noise ',
+            '""',
+        ):
+            with self.subTest(value=value), self.assertRaises(preflight.PreflightError):
                 preflight.normalize_etag(value)
         self.assertEqual(preflight.normalize_etag('"6262-65f3790c0687e"'),
+                         preflight.EXPECTED_ETAG)
+        # Whitespace around an otherwise valid quoted validator is harmless.
+        self.assertEqual(preflight.normalize_etag('  "6262-65f3790c0687e"  '),
                          preflight.EXPECTED_ETAG)
 
 
