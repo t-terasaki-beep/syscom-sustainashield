@@ -226,7 +226,7 @@ jobs:
                       output.write(f"- Expected SHA-256 after separately authorized one-line patch (NOT published): `{t['expected_one_line_patch_sha256']}`\n")
                   output.write(f"- Sibling unchanged (ETag/size/SHA): {sibling_unchanged}\n")
                   output.write(f"- Analytics JS: HTTP {asset['http']}, MIME {asset['mime']}, GA4 ID present {asset['ga4_id_present']}, script response valid {asset_ok}\n")
-                  output.write(f"- Analytics JS baseline SHA-256 match: {asset['sha256_matches_observed_baseline']}; expected bytes: {expected_asset_size}\\n")
+                  output.write(f"- Analytics JS baseline SHA-256 match: {asset['sha256_matches_observed_baseline']}; expected bytes: {expected_asset_size}\n")
                   output.write("- No publish performed. A passing Actions check does **not** establish recovery.\n")
                   output.write("- Final gate: publish lock + backup + immediate SHA/ETag recheck + authorized one-file upload + GA4 event receipt.\n")
           if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
