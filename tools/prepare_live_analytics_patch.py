@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 from urllib.request import Request, urlopen
 
@@ -27,10 +28,11 @@ class PreflightError(ValueError):
 
 
 def normalize_etag(value: str | None) -> str:
-    # Weak validators do not prove byte identity. Fail closed.
-    if not value or value.startswith("W/"):
-        raise PreflightError("Missing/weak HTTP ETag; cannot safely prepare patch")
-    return value.strip('"')
+    # A strong HTTP entity-tag must be fully enclosed in quotes. An unquoted
+    # token is not a valid strong validator even if its bytes match our pin.
+    if not value or not re.fullmatch(r'"[^"]+"', value.strip()):
+        raise PreflightError("Missing, weak, or malformed HTTP ETag; STOP")
+    return value.strip()[1:-1]
 
 
 def build_one_line_patch(raw: bytes, *, expected_sha256: str = EXPECTED_ORIGINAL_SHA256) -> bytes:
@@ -79,6 +81,7 @@ def fetch_live() -> tuple[bytes, str]:
     request = Request(URL, headers={
         "Cache-Control": "no-cache",
         "Pragma": "no-cache",
+        "Accept-Encoding": "identity",
         "User-Agent": "SustainaShield-Preflight/1.0",
     })
     with urlopen(request, timeout=20) as response:
