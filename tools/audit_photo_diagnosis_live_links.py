@@ -46,7 +46,11 @@ class LinkReader(HTMLParser):
 
 
 def normalize_target(source_url: str, href: str) -> str | None:
-    resolved = urlsplit(urljoin(source_url, href.strip()))
+    raw_href = href.strip()
+    # Fragment-only and empty hrefs are same-page controls, not inbound navigation.
+    if not raw_href or raw_href.startswith("#"):
+        return None
+    resolved = urlsplit(urljoin(source_url, raw_href))
     if resolved.scheme != "https" or resolved.netloc.lower() != "syscom-sustaina-shield.com":
         return None
     path = unquote(resolved.path)
@@ -78,7 +82,7 @@ def sitemap_items(xml: bytes) -> tuple[str, list[str]]:
     return kind, values
 
 
-def fetch(url: str, *, max_bytes: int = MAX_BODY) -> tuple[int, str, bytes]:
+def fetch(url: str, *, max_bytes: int = MAX_BODY) -> tuple[int, str, bytes, str | None]:
     parsed = urlsplit(url)
     if parsed.scheme != "https" or parsed.netloc.lower() != "syscom-sustaina-shield.com":
         raise ValueError("Out-of-scope host")
@@ -91,10 +95,11 @@ def fetch(url: str, *, max_bytes: int = MAX_BODY) -> tuple[int, str, bytes]:
     with response:
         code = response.status
         content_type = response.headers.get("Content-Type", "")
+        location = response.headers.get("Location")
         blob = response.read(max_bytes + 1)
     if len(blob) > max_bytes:
         raise ValueError("Response exceeded size cap")
-    return code, content_type, blob
+    return code, content_type, blob, location
 
 
 def get_sitemap_urls(start: str = SITEMAP) -> list[str]:
@@ -106,7 +111,7 @@ def get_sitemap_urls(start: str = SITEMAP) -> list[str]:
         if url in checked or depth > 2:
             raise ValueError("Sitemap duplicate or recursion depth exceeded")
         checked.add(url)
-        status, content_type, blob = fetch(url, max_bytes=2 * MAX_BODY)
+        status, content_type, blob, _location = fetch(url, max_bytes=2 * MAX_BODY)
         if status != 200 or "xml" not in content_type.lower():
             raise ValueError("Sitemap not HTTP200/XML")
         kind, urls = sitemap_items(blob)
@@ -123,7 +128,12 @@ def get_sitemap_urls(start: str = SITEMAP) -> list[str]:
 
 def inspect_page(url: str) -> dict:
     try:
-        status, content_type, blob = fetch(url)
+        status, content_type, blob, location = fetch(url)
+        # The sitemap includes the existing legacy 301: preserve it as a
+        # verified redirect, not an HTML fetch failure or a newly added rule.
+        if (url == ORIGIN + "/shindan.html" and status == 301 and
+                location == ORIGIN + "/photo-diagnosis/"):
+            return {"url": url, "http": 301, "redirect_to": location}
         if status != 200 or "html" not in content_type.lower():
             return {"url": url, "http": status, "issue": "Not HTTP200 HTML"}
         parser = LinkReader()
@@ -144,6 +154,7 @@ def audit() -> dict:
         results = list(pool.map(inspect_page, urls))
     failures = [{k: v for k, v in item.items() if k != "matches"}
                 for item in results if "issue" in item]
+    legacy_redirects = [item for item in results if item.get("http") == 301]
     counts = {target: 0 for target in TARGETS}
     sources = {target: [] for target in TARGETS}
     for page in results:
@@ -157,7 +168,8 @@ def audit() -> dict:
         "scope": "Sitemap-listed live HTML a[href] only; no JS links, external backlinks or GSC",
         "sitemap_url": SITEMAP,
         "sitemap_urls": len(urls),
-        "http200_html_pages": len(results) - len(failures),
+        "http200_html_pages": len(results) - len(failures) - len(legacy_redirects),
+        "verified_existing_legacy_301": len(legacy_redirects),
         "errors": failures,
         "href_counts": counts,
         "unique_source_page_counts": {target: len(items) for target, items in sources.items()},
