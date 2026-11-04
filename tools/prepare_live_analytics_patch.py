@@ -25,6 +25,16 @@ EXPECTED_PATCHED_SIZE = 25239
 TAG = b'<script src="/assets/ss-analytics.js" defer></script>'
 SUFFIX = b"</script>\n</body></html>\n"
 EXPECTED_ORIGINAL_SHA256 = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
+# P0 production JS baseline observed in read-only GitHub Actions on 2026-11-05.
+# A valid script response is necessary before preparing any local patch.
+ASSET_URL = "https://syscom-sustaina-shield.com/assets/ss-analytics.js"
+EXPECTED_ASSET_SIZE = 8607
+EXPECTED_ASSET_SHA256 = "d31313584ab615a35581de2d8ccd9e4380cb95f14133b174269bca4d761f9ed3"
+GA4_MEASUREMENT_ID = b"G-ELZG7B45NH"
+VALID_SCRIPT_MIMES = frozenset((
+    "text/javascript", "application/javascript", "text/ecmascript",
+    "application/ecmascript", "application/x-javascript",
+))
 
 
 class PreflightError(ValueError):
@@ -143,6 +153,53 @@ def fetch_sibling_live() -> dict:
     return validate_sibling_snapshot(payload, etag)
 
 
+def validate_analytics_asset(raw: bytes, *, content_type: str | None,
+                             status: int = 200, actual_url: str = ASSET_URL) -> dict:
+    """Do not prepare a patch when the browser cannot load the pinned GA4 script.
+
+    An asset check verifies HTTP delivery only. It does NOT verify receipt of a
+    GA4 event or authorize a production write.
+    """
+    mime = (content_type or "").split(";", 1)[0].strip().lower()
+    if status != 200 or actual_url != ASSET_URL:
+        raise PreflightError("Analytics JS HTTP status or final URL changed. STOP")
+    if mime not in VALID_SCRIPT_MIMES:
+        raise PreflightError("Analytics JS Content-Type is not JavaScript. STOP")
+    if len(raw) != EXPECTED_ASSET_SIZE:
+        raise PreflightError("Analytics JS byte size changed. STOP")
+    digest = sha256(raw)
+    if digest != EXPECTED_ASSET_SHA256:
+        raise PreflightError("Analytics JS SHA-256 changed. STOP")
+    if raw.lstrip().lower().startswith((b"<!doctype html", b"<html")):
+        raise PreflightError("Analytics JS resolved to HTML. STOP")
+    if GA4_MEASUREMENT_ID not in raw:
+        raise PreflightError("Analytics JS GA4 measurement ID missing. STOP")
+    return {
+        "url": ASSET_URL, "status": status, "mime": mime,
+        "bytes": len(raw), "sha256": digest,
+        "ga4_measurement_id_present": True,
+        "capture_stage": "PREFLIGHT_ONLY_NOT_UNDER_LOCK",
+        "ga4_event_receipt_verified": False,
+    }
+
+
+def fetch_analytics_asset() -> dict:
+    """GET-only asset verification before writing any local candidate."""
+    request = Request(ASSET_URL, headers={
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+        "Accept-Encoding": "identity",
+        "User-Agent": "SustainaShield-Preflight/1.0",
+    })
+    with urlopen(request, timeout=20) as response:
+        status, final_url = response.status, response.geturl()
+        content_type = response.headers.get("Content-Type")
+        payload = response.read(EXPECTED_ASSET_SIZE + 1)
+    return validate_analytics_asset(
+        payload, content_type=content_type, status=status, actual_url=final_url
+    )
+
+
 def sha256(blob: bytes) -> str:
     return hashlib.sha256(blob).hexdigest()
 
@@ -156,6 +213,7 @@ def main() -> int:
     raw, etag = fetch_live()
     changed = build_one_line_patch(raw)
     sibling = fetch_sibling_live()  # Fail closed before writing any candidate files.
+    asset = fetch_analytics_asset()  # A missing/altered JS must not yield preflight PASS.
     dest = Path(args.output_dir).resolve()
     dest.mkdir(parents=True, exist_ok=True)
     html_path = dest / "index.html"
@@ -171,6 +229,7 @@ def main() -> int:
         "original_sha256": sha256(raw),
         "prepared_sha256": sha256(changed),
         "sibling_read_only_preflight": sibling,
+        "analytics_asset_read_only_preflight": asset,
         "change": "insert exactly one ss-analytics.js script before </body>",
         "mandatory_next_steps": [
             "Claim production publish lock with existing authorized workflow",
