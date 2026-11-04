@@ -118,6 +118,15 @@ jobs:
                   and value.strip()[1:-1] == expected
               )
 
+          def strong_etag_changed(value, original):
+              # A patched page must have a *new*, valid strong ETag. A stale
+              # validator (or a weak/malformed one) cannot prove publication.
+              return (
+                  isinstance(value, str)
+                  and re.fullmatch(r'"[^"]+"', value.strip()) is not None
+                  and value.strip()[1:-1] != original
+              )
+
           sibling_unchanged = (s["http"] == 200 and s["exact_url"] and
                                strong_etag_matches(s["etag"], expected_sibling_etag) and
                                s["bytes"] == expected_sibling_size and
@@ -138,6 +147,7 @@ jobs:
               if not t["expected_one_line_patch_sha256"]:
                   raise ValueError("Cannot derive patch digest from approved baseline")
           elif (t["http"] == 200 and t["exact_url"] and t["has_h1"] and
+                strong_etag_changed(t["etag"], expected_etag) and
                 t["verified_expected_patch"] and not t["alternate_ga4"] and
                 sibling_unchanged):
               verdict = "ALREADY_TAGGED_CHECK_EVENT_DELIVERY"
