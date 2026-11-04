@@ -18,6 +18,10 @@ TARGET = "https://syscom-sustaina-shield.com/column/chiba-suigai-hinanjo-dengen/
 SIBLING = "https://syscom-sustaina-shield.com/column/shoene2024-data-leak-alert/"
 ORIGINAL_ETAG = "6262-65f3790c0687e"
 ORIGINAL_SHA256 = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
+# Independently observed unchanged sibling: 2026-11-03 production GET baseline.
+# The operator-supplied under-lock hash alone must NOT be allowed to authorize
+# an already-modified sibling as its own clean reference.
+SIBLING_APPROVED_SHA256 = "2a7af2f43473f03c58ffca47b284b4fdc9b9ca97779e4b2486f237746672bbd6"
 PATCHED_SIZE = 25239
 TAG = b'<script src="/assets/ss-analytics.js" defer></script>'
 TARGET_FOOTER = b"</script>\n" + TAG + b"</body></html>\n"
@@ -73,6 +77,8 @@ def check_target(raw: bytes, etag: str) -> dict:
 def check_sibling(raw: bytes, etag: str, baseline_sha: str) -> dict:
     if not re.fullmatch(r"[a-f0-9]{64}", baseline_sha):
         raise VerificationError("Sibling baseline SHA-256 must be exactly 64 lowercase hex chars")
+    if baseline_sha != SIBLING_APPROVED_SHA256:
+        raise VerificationError("Sibling before-upload baseline differs from independently approved production SHA-256; STOP")
     current_sha = sha256(raw)
     if current_sha != baseline_sha:
         raise VerificationError("Sibling article changed since pre-publication snapshot")
