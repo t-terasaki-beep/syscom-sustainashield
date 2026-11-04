@@ -219,7 +219,8 @@ jobs:
           if summary:
               with open(summary, 'a', encoding='utf-8') as fp:
                   fp.write('## P1 site-wide live internal links (GET-only)\n\n')
-                  fp.write(f"- Sitemap URLs: {d['sitemap_urls']}, HTTP200 HTML: {d['http200_html_pages']}\n")
+                  fp.write(f"- Sitemap URLs: {d['sitemap_urls']}, HTTP200 HTML: {d['http200_html_pages']}, "
+                           f"existing legacy 301: {d['verified_existing_legacy_301']}\n")
                   fp.write(f"- Link counts: {d['href_counts']}\n")
                   fp.write(f"- Unique linking source pages: {d['unique_source_page_counts']}\n")
                   fp.write(f"- Fetch failures: {len(d['errors'])}, complete: {d['complete']}\n")
