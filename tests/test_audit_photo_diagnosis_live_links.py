@@ -3,7 +3,8 @@ import sys
 import unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
-from audit_photo_diagnosis_live_links import LinkReader, normalize_target, sitemap_items
+from audit_photo_diagnosis_live_links import LinkReader, normalize_target, sitemap_items, inspect_page
+from unittest.mock import patch
 
 
 class TestP1LiveLinkAudit(unittest.TestCase):
@@ -28,6 +29,21 @@ class TestP1LiveLinkAudit(unittest.TestCase):
         parser.feed('<a href="/shindan.html">old</a><A HREF="/photo-diagnosis/">new</A>'
                     '<script>"/shindan.html"</script><link href="/shindan.html">')
         self.assertEqual(parser.hrefs, ["/shindan.html", "/photo-diagnosis/"])
+
+    def test_fragment_only_not_counted_as_inbound_link(self):
+        self.assertIsNone(normalize_target("https://syscom-sustaina-shield.com/photo-diagnosis/", "#main"))
+        self.assertIsNone(normalize_target("https://syscom-sustaina-shield.com/photo-diagnosis/", ""))
+
+    def test_known_redirect_301_counts_as_verified_route(self):
+        with patch("audit_photo_diagnosis_live_links.fetch", return_value=(301, "text/html", b"", "https://syscom-sustaina-shield.com/photo-diagnosis/")):
+            d = inspect_page("https://syscom-sustaina-shield.com/shindan.html")
+        self.assertEqual(d["http"], 301)
+        self.assertNotIn("issue", d)
+
+    def test_unknown_redirect_does_not_count_as_healthy(self):
+        with patch("audit_photo_diagnosis_live_links.fetch", return_value=(301, "text/html", b"", "https://evil.example/")):
+            d = inspect_page("https://syscom-sustaina-shield.com/shindan.html")
+        self.assertIn("issue", d)
 
     def test_sitemap_urlset(self):
         xml = (b'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
