@@ -6,6 +6,8 @@ on:
       - '.github/workflows/photo-diagnosis-readonly.yml'
       - 'tools/audit_photo_diagnosis_repo_links.py'
       - 'tests/test_audit_photo_diagnosis_repo_links.py'
+      - 'tools/audit_photo_diagnosis_live_links.py'
+      - 'tests/test_audit_photo_diagnosis_live_links.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -193,3 +195,41 @@ jobs:
                   f.write('\nNo route, canonical, redirect, or production file changed. '
                           'Hold canonical until verified live and GSC/external-link evidence.\n')
           PY
+
+  inspect-live-sitemap-inlinks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify offline sitemap and href parser tests
+        run: python -m unittest discover -s tests -p 'test_audit_photo_diagnosis_live_links.py' -v
+      - name: Survey sitemap-listed production HTML links (GET only; no follow redirects)
+        shell: bash
+        run: |
+          python tools/audit_photo_diagnosis_live_links.py > /tmp/p1-live-inlinks.json
+          python - <<'PY'
+          import json, os
+          with open('/tmp/p1-live-inlinks.json', encoding='utf-8') as fp:
+              d = json.load(fp)
+          print(json.dumps(d, ensure_ascii=False, indent=2))
+          summary = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary:
+              with open(summary, 'a', encoding='utf-8') as fp:
+                  fp.write('## P1 site-wide live internal links (GET-only)\n\n')
+                  fp.write(f"- Sitemap URLs: {d['sitemap_urls']}, HTTP200 HTML: {d['http200_html_pages']}\n")
+                  fp.write(f"- Link counts: {d['href_counts']}\n")
+                  fp.write(f"- Unique linking source pages: {d['unique_source_page_counts']}\n")
+                  fp.write(f"- Fetch failures: {len(d['errors'])}, complete: {d['complete']}\n")
+                  fp.write('No redirect, canonical, page, advertising or GSC changes. External backlinks and GSC remain unverified.\n')
+          PY
+      - name: Preserve read-only audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-live-inlinks-evidence
+          path: /tmp/p1-live-inlinks.json
+          if-no-files-found: ignore
+          retention-days: 14
