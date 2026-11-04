@@ -39,6 +39,10 @@ jobs:
           expected_sibling_etag = "5d57-65f3744b854f4"
           expected_sibling_size = 23895
           expected_sibling_sha = "2a7af2f43473f03c58ffca47b284b4fdc9b9ca97779e4b2486f237746672bbd6"
+          # GET-only production baseline: Actions run 41884024682, 2026-11-05 03:08 JST.
+          # A changed asset must be manually re-baselined; GA4 ID alone is insufficient.
+          expected_asset_size = 8607
+          expected_asset_sha256 = "d31313584ab615a35581de2d8ccd9e4380cb95f14133b174269bca4d761f9ed3"
           script_ref = b"ss-analytics.js"
           exact_script_tag = b'<script src="/assets/ss-analytics.js" defer></script>'
 
@@ -122,7 +126,8 @@ jobs:
               }
               valid = (
                   status == 200 and actual_url == url
-                  and 0 < len(body) <= 65536
+                  and len(body) == expected_asset_size
+                  and hashlib.sha256(body).hexdigest() == expected_asset_sha256
                   and mime in script_types
                   and not body.lstrip().lower().startswith((b"<!doctype html", b"<html"))
                   and b"G-ELZG7B45NH" in body
@@ -131,6 +136,8 @@ jobs:
                   "http": status, "exact_url": actual_url == url,
                   "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest(),
                   "mime": mime, "ga4_id_present": b"G-ELZG7B45NH" in body,
+                  "size_matches_observed_baseline": len(body) == expected_asset_size,
+                  "sha256_matches_observed_baseline": hashlib.sha256(body).hexdigest() == expected_asset_sha256,
                   "valid_browser_script_response": valid,
                   "ga4_event_receipt_verified": False,
               }
@@ -219,7 +226,7 @@ jobs:
                       output.write(f"- Expected SHA-256 after separately authorized one-line patch (NOT published): `{t['expected_one_line_patch_sha256']}`\n")
                   output.write(f"- Sibling unchanged (ETag/size/SHA): {sibling_unchanged}\n")
                   output.write(f"- Analytics JS: HTTP {asset['http']}, MIME {asset['mime']}, GA4 ID present {asset['ga4_id_present']}, script response valid {asset_ok}\n")
-                  output.write(f"- Analytics JS SHA-256 (observed; NOT pinned v1.3): `{asset['sha256']}`\n")
+                  output.write(f"- Analytics JS baseline SHA-256 match: {asset['sha256_matches_observed_baseline']}; expected bytes: {expected_asset_size}\\n")
                   output.write("- No publish performed. A passing Actions check does **not** establish recovery.\n")
                   output.write("- Final gate: publish lock + backup + immediate SHA/ETag recheck + authorized one-file upload + GA4 event receipt.\n")
           if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
