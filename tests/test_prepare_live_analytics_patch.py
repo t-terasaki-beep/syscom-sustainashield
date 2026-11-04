@@ -63,6 +63,73 @@ class SiblingSnapshotTests(unittest.TestCase):
                 preflight.validate_sibling_snapshot(modified, preflight.EXPECTED_SIBLING_ETAG)
 
 
+def analytics_asset_fixture() -> bytes:
+    # Offline test bytes only: no real production script is stored in tests.
+    start = b"// " + preflight.GA4_MEASUREMENT_ID + b"\\n"
+    return start + b"x" * (preflight.EXPECTED_ASSET_SIZE - len(start))
+
+
+class AnalyticsAssetPreflightTests(unittest.TestCase):
+    def test_pinned_js_passes_with_normal_javascript_mime(self):
+        raw = analytics_asset_fixture()
+        with patch.object(preflight, "EXPECTED_ASSET_SHA256", preflight.sha256(raw)):
+            proof = preflight.validate_analytics_asset(
+                raw, content_type="text/javascript; charset=utf-8"
+            )
+        self.assertEqual(proof["bytes"], 8607)
+        self.assertTrue(proof["ga4_measurement_id_present"])
+        self.assertFalse(proof["ga4_event_receipt_verified"])
+        self.assertEqual(proof["capture_stage"], "PREFLIGHT_ONLY_NOT_UNDER_LOCK")
+
+    def test_changed_asset_sha_stops_even_with_same_size_and_ga4_id(self):
+        raw = analytics_asset_fixture()
+        tampered = raw[:-1] + b"q"
+        self.assertEqual(len(raw), len(tampered))
+        with patch.object(preflight, "EXPECTED_ASSET_SHA256", preflight.sha256(raw)):
+            with self.assertRaisesRegex(preflight.PreflightError, "SHA-256"):
+                preflight.validate_analytics_asset(
+                    tampered, content_type="application/javascript"
+                )
+
+    def test_non_javascript_or_missing_mime_stops(self):
+        raw = analytics_asset_fixture()
+        with patch.object(preflight, "EXPECTED_ASSET_SHA256", preflight.sha256(raw)):
+            for mime in ("text/html", "text/plain", None):
+                with self.subTest(mime=mime), self.assertRaisesRegex(
+                    preflight.PreflightError, "Content-Type"
+                ):
+                    preflight.validate_analytics_asset(raw, content_type=mime)
+
+    def test_redirect_or_non_200_status_stops(self):
+        raw = analytics_asset_fixture()
+        with patch.object(preflight, "EXPECTED_ASSET_SHA256", preflight.sha256(raw)):
+            for status, url in ((301, preflight.ASSET_URL),
+                                (200, "https://example.org/fallback.js")):
+                with self.subTest(status=status, url=url), self.assertRaisesRegex(
+                    preflight.PreflightError, "HTTP status or final URL"
+                ):
+                    preflight.validate_analytics_asset(
+                        raw, content_type="text/javascript",
+                        status=status, actual_url=url
+                    )
+
+    def test_length_and_ga4_id_missing_stop(self):
+        raw = analytics_asset_fixture()
+        with patch.object(preflight, "EXPECTED_ASSET_SHA256", preflight.sha256(raw)):
+            with self.assertRaisesRegex(preflight.PreflightError, "byte size"):
+                preflight.validate_analytics_asset(
+                    raw[:-1], content_type="text/javascript"
+                )
+        missing = raw.replace(preflight.GA4_MEASUREMENT_ID,
+                              b"x" * len(preflight.GA4_MEASUREMENT_ID), 1)
+        with patch.object(preflight, "EXPECTED_ASSET_SHA256", preflight.sha256(missing)):
+            with self.assertRaisesRegex(preflight.PreflightError, "measurement ID missing"):
+                preflight.validate_analytics_asset(
+                    missing, content_type="text/javascript"
+                )
+
+
+
 class PatchTests(unittest.TestCase):
     def test_insertion_is_exactly_one_tag(self):
         raw = sample()
