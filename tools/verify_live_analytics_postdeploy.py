@@ -24,6 +24,12 @@ TARGET_FOOTER = b"</script>\n" + TAG + b"</body></html>\n"
 ANALYTICS_ASSET = "https://syscom-sustaina-shield.com/assets/ss-analytics.js"
 ANALYTICS_ASSET_MAX_BYTES = 65536
 GA4_MEASUREMENT_ID = b"G-ELZG7B45NH"
+# A 200 response with the right GA4 ID is insufficient if the browser refuses to execute it.
+# A JavaScript media type is required; HTML/text fallback must not be marked verified.
+JAVASCRIPT_MEDIA_TYPES = frozenset({
+    "text/javascript", "application/javascript", "text/ecmascript",
+    "application/ecmascript", "application/x-javascript",
+})
 
 
 class VerificationError(ValueError):
@@ -85,8 +91,11 @@ def fetch_exact(url: str, max_bytes: int) -> tuple[bytes, str]:
     return blob, etag
 
 
-def check_analytics_asset(raw: bytes) -> dict:
-    """Verify the referenced analytics script is served, not that GA4 received events."""
+def check_analytics_asset(raw: bytes, content_type: str | None) -> dict:
+    """Verify browser-loadable JavaScript delivery, not GA4 event receipt."""
+    mime = (content_type or "").split(";", 1)[0].strip().lower()
+    if mime not in JAVASCRIPT_MEDIA_TYPES:
+        raise VerificationError("Analytics asset has missing/non-JavaScript Content-Type; STOP")
     if not raw or len(raw) > ANALYTICS_ASSET_MAX_BYTES:
         raise VerificationError("Analytics asset empty or unexpectedly large; STOP")
     if raw.lstrip().lower().startswith((b"<!doctype html", b"<html")):
@@ -94,7 +103,8 @@ def check_analytics_asset(raw: bytes) -> dict:
     if GA4_MEASUREMENT_ID not in raw:
         raise VerificationError("Analytics asset missing the expected GA4 ID; STOP")
     return {"status": "PASS", "http": 200, "bytes": len(raw),
-            "sha256": sha256(raw), "ga4_measurement_id_present": True,
+            "sha256": sha256(raw), "javascript_content_type": mime,
+            "ga4_measurement_id_present": True,
             "ga4_event_receipt_verified": False}
 
 
@@ -106,8 +116,9 @@ def fetch_analytics_asset() -> dict:
     with urlopen(req, timeout=20) as res:
         if res.status != 200 or res.geturl() != ANALYTICS_ASSET:
             raise VerificationError("Analytics asset not HTTP 200 at the expected URL")
+        content_type = res.headers.get("Content-Type")
         raw = res.read(ANALYTICS_ASSET_MAX_BYTES + 1)
-    return check_analytics_asset(raw)
+    return check_analytics_asset(raw, content_type)
 
 
 def main() -> int:
