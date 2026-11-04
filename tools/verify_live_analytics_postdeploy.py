@@ -21,6 +21,9 @@ ORIGINAL_SHA256 = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1ab
 PATCHED_SIZE = 25239
 TAG = b'<script src="/assets/ss-analytics.js" defer></script>'
 TARGET_FOOTER = b"</script>\n" + TAG + b"</body></html>\n"
+ANALYTICS_ASSET = "https://syscom-sustaina-shield.com/assets/ss-analytics.js"
+ANALYTICS_ASSET_MAX_BYTES = 65536
+GA4_MEASUREMENT_ID = b"G-ELZG7B45NH"
 
 
 class VerificationError(ValueError):
@@ -82,6 +85,31 @@ def fetch_exact(url: str, max_bytes: int) -> tuple[bytes, str]:
     return blob, etag
 
 
+def check_analytics_asset(raw: bytes) -> dict:
+    """Verify the referenced analytics script is served, not that GA4 received events."""
+    if not raw or len(raw) > ANALYTICS_ASSET_MAX_BYTES:
+        raise VerificationError("Analytics asset empty or unexpectedly large; STOP")
+    if raw.lstrip().lower().startswith((b"<!doctype html", b"<html")):
+        raise VerificationError("Analytics asset returned an HTML page; STOP")
+    if GA4_MEASUREMENT_ID not in raw:
+        raise VerificationError("Analytics asset missing the expected GA4 ID; STOP")
+    return {"status": "PASS", "http": 200, "bytes": len(raw),
+            "sha256": sha256(raw), "ga4_measurement_id_present": True,
+            "ga4_event_receipt_verified": False}
+
+
+def fetch_analytics_asset() -> dict:
+    """GET only; reject redirects and avoid exposing the script body in logs."""
+    req = Request(ANALYTICS_ASSET, headers={
+        "Cache-Control": "no-cache", "Pragma": "no-cache",
+        "Accept-Encoding": "identity", "User-Agent": "SustainaShield-P0-Verify/1.0"})
+    with urlopen(req, timeout=20) as res:
+        if res.status != 200 or res.geturl() != ANALYTICS_ASSET:
+            raise VerificationError("Analytics asset not HTTP 200 at the expected URL")
+        raw = res.read(ANALYTICS_ASSET_MAX_BYTES + 1)
+    return check_analytics_asset(raw)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sibling-before-sha256", required=True,
@@ -91,9 +119,11 @@ def main() -> int:
         raise VerificationError("Invalid sibling baseline SHA-256")
     target, target_etag = fetch_exact(TARGET, 25300)
     sibling, sibling_etag = fetch_exact(SIBLING, 300000)
+    asset = fetch_analytics_asset()
     result = {"publication_verification": "PASS_FOR_HTTP_CONTENT_ONLY",
               "target": check_target(target, target_etag),
               "sibling_unchanged": check_sibling(sibling, sibling_etag, args.sibling_before_sha256),
+              "analytics_asset_http_check": asset,
               "ga4_page_view_delivery_verified": False,
               "ga4_check_required": "Confirm GA4 real-time page_view receipt in authorized session",
               "publish_and_ftp_operations": 0}
