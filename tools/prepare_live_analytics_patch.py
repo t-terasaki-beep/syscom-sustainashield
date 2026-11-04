@@ -15,6 +15,10 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 URL = "https://syscom-sustaina-shield.com/column/chiba-suigai-hinanjo-dengen/"
+SIBLING_URL = "https://syscom-sustaina-shield.com/column/shoene2024-data-leak-alert/"
+EXPECTED_SIBLING_ETAG = "5d57-65f3744b854f4"
+EXPECTED_SIBLING_SIZE = 23895
+EXPECTED_SIBLING_SHA256 = "2a7af2f43473f03c58ffca47b284b4fdc9b9ca97779e4b2486f237746672bbd6"
 EXPECTED_ETAG = "6262-65f3790c0687e"
 EXPECTED_ORIGINAL_SIZE = 25186
 EXPECTED_PATCHED_SIZE = 25239
@@ -98,6 +102,47 @@ def fetch_live() -> tuple[bytes, str]:
     return payload, etag
 
 
+def validate_sibling_snapshot(raw: bytes, etag: str) -> dict:
+    """Fail closed on sibling drift BEFORE preparing any local candidate.
+
+    The fixed reference is the independently observed production sibling from
+    2026-11-03. A preflight snapshot is NOT a substitute for the under-lock
+    SHA-256 snapshot taken immediately before the authorized publication.
+    """
+    if etag != EXPECTED_SIBLING_ETAG:
+        raise PreflightError("Sibling ETag changed; manual review required. STOP")
+    if len(raw) != EXPECTED_SIBLING_SIZE:
+        raise PreflightError("Sibling size changed; manual review required. STOP")
+    digest = sha256(raw)
+    if digest != EXPECTED_SIBLING_SHA256:
+        raise PreflightError("Sibling SHA-256 changed; manual review required. STOP")
+    if raw.count(TAG) != 1 or raw.count(b"ss-analytics.js") != 1:
+        raise PreflightError("Sibling analytics tag count differs from baseline. STOP")
+    if not raw.rstrip().endswith(b"</html>"):
+        raise PreflightError("Sibling HTML footer incomplete. STOP")
+    return {
+        "url": SIBLING_URL, "etag": etag, "bytes": len(raw),
+        "sha256": digest, "analytics_tag_count": 1,
+        "capture_stage": "PREFLIGHT_ONLY_NOT_UNDER_LOCK",
+    }
+
+
+def fetch_sibling_live() -> dict:
+    """GET-only sibling check; never copy or modify the live sibling page."""
+    request = Request(SIBLING_URL, headers={
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache",
+        "Accept-Encoding": "identity",
+        "User-Agent": "SustainaShield-Preflight/1.0",
+    })
+    with urlopen(request, timeout=20) as response:
+        if response.status != 200 or response.geturl() != SIBLING_URL:
+            raise PreflightError("Sibling not HTTP 200 from exact URL; STOP")
+        etag = normalize_etag(response.headers.get("ETag"))
+        payload = response.read(EXPECTED_SIBLING_SIZE + 1)
+    return validate_sibling_snapshot(payload, etag)
+
+
 def sha256(blob: bytes) -> str:
     return hashlib.sha256(blob).hexdigest()
 
@@ -110,6 +155,7 @@ def main() -> int:
 
     raw, etag = fetch_live()
     changed = build_one_line_patch(raw)
+    sibling = fetch_sibling_live()  # Fail closed before writing any candidate files.
     dest = Path(args.output_dir).resolve()
     dest.mkdir(parents=True, exist_ok=True)
     html_path = dest / "index.html"
@@ -124,10 +170,12 @@ def main() -> int:
         "prepared_bytes": len(changed),
         "original_sha256": sha256(raw),
         "prepared_sha256": sha256(changed),
+        "sibling_read_only_preflight": sibling,
         "change": "insert exactly one ss-analytics.js script before </body>",
         "mandatory_next_steps": [
             "Claim production publish lock with existing authorized workflow",
             "Backup production via deployment channel and compare live SHA/ETag again",
+            "Re-capture sibling SHA under publish lock immediately before upload; do not reuse this earlier preflight snapshot",
             "Upload this one file only after explicit approval; never publish repo-generated page",
             "Verify HTTP 200, exactly one tag, pageview event, and unchanged sibling page",
             "Release publish lock and retain rollback backup",
