@@ -2,6 +2,9 @@
 import tempfile
 from pathlib import Path
 import unittest
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from audit_photo_diagnosis_repo_links import audit, target_for_href, source_url_path
 
 
