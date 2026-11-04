@@ -222,8 +222,8 @@ jobs:
                   fp.write(f"- Sitemap URLs: {d['sitemap_urls']}, HTTP200 HTML: {d['http200_html_pages']}, "
                            f"existing legacy 301: {d['verified_existing_legacy_301']}\n")
                   fp.write(f"- Link counts: {d['href_counts']}\n")
-                  fp.write(f"- Sitemap 301 hygiene: {d['sitemap_seo_hygiene']['status']} (observation only)\\n")
-                  fp.write("- Do not edit sitemap, canonical, or existing 301 without GSC and external-link review.\\n")
+                  fp.write(f"- Sitemap 301 hygiene: {d['sitemap_seo_hygiene']['status']} (observation only)\n")
+                  fp.write("- Do not edit sitemap, canonical, or existing 301 without GSC and external-link review.\n")
                   fp.write(f"- Unique linking source pages: {d['unique_source_page_counts']}\n")
                   fp.write(f"- Fetch failures: {len(d['errors'])}, complete: {d['complete']}\n")
                   fp.write('No redirect, canonical, page, advertising or GSC changes. External backlinks and GSC remain unverified.\n')
