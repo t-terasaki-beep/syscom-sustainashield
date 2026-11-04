@@ -100,9 +100,45 @@ jobs:
                   ),
               }
 
+          # Check the live JS response, not just the script tag in HTML.
+          # This is a GET-only delivery check, NOT a GA4 event receipt check.
+          def inspect_analytics_asset():
+              url = site + "/assets/ss-analytics.js"
+              req = urllib.request.Request(url, headers={
+                  "Cache-Control": "no-cache",
+                  "Pragma": "no-cache",
+                  "Accept-Encoding": "identity",
+                  "User-Agent": "SustainaShield-ReadOnly-Check/1.0",
+              })
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  status, actual_url = response.status, response.geturl()
+                  content_type = response.headers.get("Content-Type")
+                  body = response.read(65537)
+              mime = (content_type or "").split(";", 1)[0].strip().lower()
+              script_types = {
+                  "text/javascript", "application/javascript",
+                  "text/ecmascript", "application/ecmascript",
+                  "application/x-javascript",
+              }
+              valid = (
+                  status == 200 and actual_url == url
+                  and 0 < len(body) <= 65536
+                  and mime in script_types
+                  and not body.lstrip().lower().startswith((b"<!doctype html", b"<html"))
+                  and b"G-ELZG7B45NH" in body
+              )
+              return {
+                  "http": status, "exact_url": actual_url == url,
+                  "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest(),
+                  "mime": mime, "ga4_id_present": b"G-ELZG7B45NH" in body,
+                  "valid_browser_script_response": valid,
+                  "ga4_event_receipt_verified": False,
+              }
+
           try:
               t = inspect(target)
               s = inspect(sibling)
+              asset = inspect_analytics_asset()
           except Exception as e:
               print(json.dumps({"verdict": "UNKNOWN_FETCH_FAILED", "error_type": type(e).__name__},
                                ensure_ascii=False))
@@ -133,7 +169,8 @@ jobs:
                                s["sha256"] == expected_sibling_sha and
                                s["analytics_references"] == 1 and s["html_closed"])
 
-          safe = (t["http"] == 200 and t["exact_url"] and
+          asset_ok = asset["valid_browser_script_response"]
+          safe = (asset_ok and t["http"] == 200 and t["exact_url"] and
                   strong_etag_matches(t["etag"], expected_etag) and
                   t["bytes"] == expected_size and
                   t["sha256"] == expected_sha and
@@ -146,7 +183,7 @@ jobs:
               t["expected_one_line_patch_sha256"] = t.pop("_candidate_patch_sha256")
               if not t["expected_one_line_patch_sha256"]:
                   raise ValueError("Cannot derive patch digest from approved baseline")
-          elif (t["http"] == 200 and t["exact_url"] and t["has_h1"] and
+          elif (asset_ok and t["http"] == 200 and t["exact_url"] and t["has_h1"] and
                 strong_etag_changed(t["etag"], expected_etag) and
                 t["verified_expected_patch"] and not t["alternate_ga4"] and
                 sibling_unchanged):
@@ -157,6 +194,7 @@ jobs:
           t.pop("_candidate_patch_sha256", None)
           s.pop("_candidate_patch_sha256", None)
           print(json.dumps({"verdict": verdict, "target": t, "sibling": s,
+                            "analytics_asset": asset,
                             "sibling_byte_identical_to_baseline": sibling_unchanged},
                            ensure_ascii=False, indent=2))
           # Green read-only CI is not a published fix. Surface the outstanding
@@ -168,7 +206,7 @@ jobs:
               print("::notice title=P0 tag present::One-line HTML patch matches baseline; GA4 event delivery remains unverified.")
               human_status = "TAG_PRESENT — GA4 event not yet verified"
           else:
-              print("::error title=P0 preflight stopped::Production changed or sibling drifted. Do not publish the prepared patch.")
+              print("::error title=P0 preflight stopped::Production HTML, sibling, or analytics asset differed. Do not publish the prepared patch.")
               human_status = "STOP — manual re-baseline required"
           summary = os.environ.get("GITHUB_STEP_SUMMARY")
           if summary:
@@ -180,6 +218,8 @@ jobs:
                   if verdict == "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW":
                       output.write(f"- Expected SHA-256 after separately authorized one-line patch (NOT published): `{t['expected_one_line_patch_sha256']}`\n")
                   output.write(f"- Sibling unchanged (ETag/size/SHA): {sibling_unchanged}\n")
+                  output.write(f"- Analytics JS: HTTP {asset['http']}, MIME {asset['mime']}, GA4 ID present {asset['ga4_id_present']}, script response valid {asset_ok}\n")
+                  output.write(f"- Analytics JS SHA-256 (observed; NOT pinned v1.3): `{asset['sha256']}`\n")
                   output.write("- No publish performed. A passing Actions check does **not** establish recovery.\n")
                   output.write("- Final gate: publish lock + backup + immediate SHA/ETag recheck + authorized one-file upload + GA4 event receipt.\n")
           if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
