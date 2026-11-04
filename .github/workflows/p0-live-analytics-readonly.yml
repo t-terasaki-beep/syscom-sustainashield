@@ -23,6 +23,7 @@ jobs:
           python - <<'PY'
           import hashlib
           import json
+          from datetime import datetime, timezone
           import os
           import re
           import sys
@@ -147,8 +148,13 @@ jobs:
               s = inspect(sibling)
               asset = inspect_analytics_asset()
           except Exception as e:
-              print(json.dumps({"verdict": "UNKNOWN_FETCH_FAILED", "error_type": type(e).__name__},
-                               ensure_ascii=False))
+              failure = {"observed_utc": datetime.now(timezone.utc).isoformat(),
+                         "verdict": "UNKNOWN_FETCH_FAILED", "error_type": type(e).__name__}
+              print(json.dumps(failure, ensure_ascii=False))
+              if os.environ.get("RUNNER_TEMP"):
+                  with open(os.path.join(os.environ["RUNNER_TEMP"], "p0-live-analytics-evidence.json"),
+                            "w", encoding="utf-8") as fp:
+                      json.dump(failure, fp, ensure_ascii=False, indent=2)
               sys.exit(2)
 
           # Do not accept bare/weak/trailing-junk ETags. The helper used by
@@ -200,10 +206,19 @@ jobs:
           # A stopped preflight must not suggest a publishable patch digest.
           t.pop("_candidate_patch_sha256", None)
           s.pop("_candidate_patch_sha256", None)
-          print(json.dumps({"verdict": verdict, "target": t, "sibling": s,
-                            "analytics_asset": asset,
-                            "sibling_byte_identical_to_baseline": sibling_unchanged},
-                           ensure_ascii=False, indent=2))
+          report = {"observed_utc": datetime.now(timezone.utc).isoformat(),
+                    "verdict": verdict, "target": t, "sibling": s,
+                    "analytics_asset": asset,
+                    "sibling_byte_identical_to_baseline": sibling_unchanged,
+                    "published_by_this_workflow": False,
+                    "ga4_event_receipt_verified": False}
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          # Preserve exact read-only evidence for the authorized publisher.
+          # Store only headers/digests/status; never copy production HTML or credentials.
+          if os.environ.get("RUNNER_TEMP"):
+              with open(os.path.join(os.environ["RUNNER_TEMP"], "p0-live-analytics-evidence.json"),
+                        "w", encoding="utf-8") as fp:
+                  json.dump(report, fp, ensure_ascii=False, indent=2)
           # Green read-only CI is not a published fix. Surface the outstanding
           # work in Actions annotations and the job summary, not only raw JSON.
           if verdict == "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW":
@@ -232,3 +247,12 @@ jobs:
           if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
               sys.exit(1)
           PY
+
+      - name: Retain P0 GET-only evidence (no page body)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-live-analytics-evidence
+          path: ${{ runner.temp }}/p0-live-analytics-evidence.json
+          if-no-files-found: ignore
+          retention-days: 14
