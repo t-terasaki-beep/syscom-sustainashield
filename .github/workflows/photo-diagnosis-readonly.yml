@@ -105,7 +105,34 @@ jobs:
                                           first["sha256"] == second["sha256"])
           else:
               report["byte_identical"] = None
-          report["decision"] = "HOLD_CANONICAL_AND_301_PENDING_GSC_AND_EXTERNAL_LINKS"
+          # Observed on 2026-11-03 13:03 JST, using redirects disabled:
+          # /photo-diagnosis/ was 200; /shindan.html was already 301 to it.
+          # This is monitoring of an EXISTING production redirect, NOT an
+          # instruction to create/change a redirect or choose a canonical.
+          destination = report["pages"].get(paths[0])
+          legacy = report["pages"].get(paths[1])
+          destination_unchanged = (
+              destination is not None and destination["http"] == 200
+              and not destination["location"] and destination["canonical"] == []
+              and not any("noindex" in (r.get("content") or "").lower()
+                          for r in destination["robots"])
+          )
+          legacy_redirect_unchanged = (
+              legacy is not None and legacy["http"] == 301
+              and legacy["location"] == origin + paths[0]
+          )
+          report["known_route_baseline"] = {
+              "observed_jst": "2026-11-03 13:03",
+              "destination": "/photo-diagnosis/ HTTP 200, no canonical/noindex",
+              "legacy": "/shindan.html HTTP 301 to /photo-diagnosis/",
+          }
+          report["destination_unchanged"] = destination_unchanged
+          report["legacy_redirect_unchanged"] = legacy_redirect_unchanged
+          report["decision"] = (
+              "HOLD_CANONICAL_AND_301_PENDING_GSC_AND_EXTERNAL_LINKS"
+              if destination_unchanged and legacy_redirect_unchanged else
+              "STOP_REVIEW_P1_PRODUCTION_ROUTE_DRIFT"
+          )
           print(json.dumps(report, ensure_ascii=False, indent=2))
           
           summary = os.environ.get("GITHUB_STEP_SUMMARY")
@@ -120,9 +147,13 @@ jobs:
                                f"canonical `{item['canonical'] if item else 'unknown'}`\n")
                   fp.write(f"- Selected entry-point link counts: `{report['selected_internal_links']}`\n")
                   fp.write(f"- Fetch failures: `{report['errors']}`\n")
+                  fp.write(f"- Existing 2026-11-03 routing unchanged (200 + already-present 301): `{report['destination_unchanged'] and report['legacy_redirect_unchanged']}`\n")
                   fp.write("- **No canonical/301/delete decision**. Confirm GSC and external links first.\n")
                   fp.write("- No FTP, public writes, analytics changes, paid ads, or customer contact.\n")
           if any(p not in report["pages"] for p in paths):
               print("::warning title=Live P1 audit incomplete::One or more target URLs could not be fetched; no conclusion.")
               sys.exit(2)
+          if not (destination_unchanged and legacy_redirect_unchanged):
+              print("::error title=P1 production route drift::The previously observed 200/301 routing or destination indexability changed; review before any canonical/301 decision.")
+              sys.exit(1)
           PY
