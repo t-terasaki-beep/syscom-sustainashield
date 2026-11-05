@@ -66,10 +66,26 @@ def audit(root: Path) -> dict:
         template_issues = [type(exc).__name__]
     if template_issues:
         errors.append({"path": generator_path, "issues": template_issues})
+    # The /download/ lead form is a distinct template (not one of the 16 P2 pages).
+    # Its post-submit LINE handoff must point to the approved residential account.
+    download_path = "tools/publish/lp-media-set-v1/download/index.html"
+    try:
+        download = (root / download_path).read_text(encoding="utf-8")
+        download_issues = check_text(download)
+        if "%40631cqlgf" in download or "@631cqlgf" in download:
+            download_issues.append("資料請求完了後のLINEに住宅旧IDが残存")
+        if download.count("https://line.me/R/ti/p/%40829oslez") != 1:
+            download_issues.append("資料請求完了後のLINEリンクは正本@829oslezを1箇所だけ使用すること")
+    except (OSError, UnicodeError) as exc:
+        download_issues = [type(exc).__name__]
+    if download_issues:
+        errors.append({"path": download_path, "issues": download_issues})
     return {
         "scope": "PR #19 P2 review-only HTML files; NOT production or site-wide coverage",
         "checked_pages": len(PAGES),
         "checked_generators": 1,
+        "checked_download_templates": 1,
+        "failed_download_templates": sum(1 for row in errors if row["path"] == download_path),
         "failed_pages": sum(1 for row in errors if row["path"] in PAGES),
         "failed_generators": sum(1 for row in errors if row["path"] == generator_path),
         "errors": errors,
