@@ -33,6 +33,7 @@ ASSET_URL = "https://syscom-sustaina-shield.com/assets/ss-analytics.js"
 EXPECTED_ASSET_SIZE = 8607
 EXPECTED_ASSET_SHA256 = "d31313584ab615a35581de2d8ccd9e4380cb95f14133b174269bca4d761f9ed3"
 GA4_MEASUREMENT_ID = b"G-ELZG7B45NH"
+HTML_MEDIA_TYPES = frozenset(("text/html", "application/xhtml+xml"))
 VALID_SCRIPT_MIMES = frozenset((
     "text/javascript", "application/javascript", "text/ecmascript",
     "application/ecmascript", "application/x-javascript",
@@ -49,6 +50,13 @@ def normalize_etag(value: str | None) -> str:
     if not value or not re.fullmatch(r'"[^"]+"', value.strip()):
         raise PreflightError("Missing, weak, or malformed HTTP ETag; STOP")
     return value.strip()[1:-1]
+
+
+def require_html_media_type(content_type: str | None) -> None:
+    """Reject a text/plain or application/octet-stream page even if bytes match."""
+    mime = (content_type or "").split(";", 1)[0].strip().lower()
+    if mime not in HTML_MEDIA_TYPES:
+        raise PreflightError("Article Content-Type is not HTML; STOP")
 
 
 def build_one_line_patch(raw: bytes, *, expected_sha256: str = EXPECTED_ORIGINAL_SHA256) -> bytes:
@@ -108,6 +116,7 @@ def fetch_live() -> tuple[bytes, str]:
     with urlopen(request, timeout=20) as response:
         if response.status != 200 or response.geturl() != URL:
             raise PreflightError("Not HTTP 200 from exact expected URL")
+        require_html_media_type(response.headers.get("Content-Type"))
         etag = normalize_etag(response.headers.get("ETag"))
         if etag != EXPECTED_ETAG:
             raise PreflightError(f"Production ETag changed: {etag!r}. STOP and re-baseline")
@@ -155,6 +164,7 @@ def fetch_sibling_live() -> dict:
     with urlopen(request, timeout=20) as response:
         if response.status != 200 or response.geturl() != SIBLING_URL:
             raise PreflightError("Sibling not HTTP 200 from exact URL; STOP")
+        require_html_media_type(response.headers.get("Content-Type"))
         etag = normalize_etag(response.headers.get("ETag"))
         payload = response.read(EXPECTED_SIBLING_SIZE + 1)
     return validate_sibling_snapshot(payload, etag)
