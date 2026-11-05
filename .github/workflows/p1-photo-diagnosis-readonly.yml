@@ -1,0 +1,176 @@
+name: P1 photo diagnosis live HTTP audit (read-only)
+
+# Evidence collection only: two GET requests, no redirect following,
+# canonical/301 edits, FTP, deployment, secrets, or production writes.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tools/audit_photo_diagnosis_live.py
+      - tools/audit_live_diagnosis_inbound_links.py
+      - tools/audit_sitemap_diagnosis_inbound_links.py
+      - tests/test_audit_photo_diagnosis_live.py
+      - tests/test_audit_live_diagnosis_inbound_links.py
+      - tests/test_audit_sitemap_diagnosis_inbound_links.py
+      - .github/workflows/p1-photo-diagnosis-readonly.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout audit-only PR
+        uses: actions/checkout@v4
+
+      - name: Offline audit safety tests
+        run: python -m unittest discover -s tests -p 'test_audit_photo_diagnosis_live.py' -v
+
+      - name: Capture real HTTP response of both URLs (GET only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/audit_photo_diagnosis_live.py > "$RUNNER_TEMP/p1-photo-diagnosis-observation.json"
+          cat "$RUNNER_TEMP/p1-photo-diagnosis-observation.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["RUNNER_TEMP"]) / "p1-photo-diagnosis-observation.json"
+          data = json.loads(path.read_text(encoding="utf-8"))
+          urls = data["urls"]
+          if len(urls) != 2:
+              raise SystemExit("Unexpected URL count; no SEO decision")
+          report = [
+              "## P1 photo diagnosis URL audit — observation only",
+              "",
+              f"Observed at UTC: `{data['observed_at_utc']}`",
+              "",
+              "| URL | HTTP | Location | HTML bytes | SHA-256 | HTML canonical | HTTP Link headers |",
+              "|---|---:|---|---:|---|---|---|",
+          ]
+          for entry in urls:
+              report.append(
+                  "| `" + entry["url"] + "` | " +
+                  str(entry.get("http_status", "UNREACHABLE")) + " | `" +
+                  str(entry.get("location") or "-") + "` | " +
+                  str(entry.get("body_bytes", "-")) + " | `" +
+                  str(entry.get("sha256", "-")) + "` | `" +
+                  ", ".join(entry.get("canonical_links", [])) + "` | `" +
+                  ", ".join(entry.get("http_link_headers", [])).replace("|", r"\|") + "` |"
+              )
+          report += [
+              "",
+              f"Same HTML SHA-256 **if both HTTP 200**: `{data['same_body_sha256_if_both_200']}`",
+              "",
+              "**No redirect or canonical changes made.** "
+              "Do not decide a canonical URL without the production internal-link, "
+              "external backlink, and Search Console evidence.",
+          ]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write("\n".join(report) + "\n")
+          if any("error" in entry for entry in urls):
+              print("::warning title=P1 response incomplete::At least one URL was unreachable. Do not infer HTTP status, redirects, or canonical.")
+          elif any(entry.get("http_status") != 200 for entry in urls):
+              print("::notice title=P1 redirect or non-200 observed::Record status and Location. No automatic redirect follow or canonical change.")
+          else:
+              print("::notice title=P1 two direct HTTP200 results::Body hashes recorded. Canonical direction still requires traffic/link evidence.")
+          PY
+      - name: Sample live internal diagnosis anchors (GET only; no crawl)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p 'test_audit_live_diagnosis_inbound_links.py' -v
+          if ! python tools/audit_live_diagnosis_inbound_links.py > "$RUNNER_TEMP/p1-inbound-link-sample.json"; then
+            echo "::warning title=P1 sample incomplete::Read-only sample incomplete; do not extrapolate or change SEO configuration."
+          fi
+          cat "$RUNNER_TEMP/p1-inbound-link-sample.json"
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          path = Path(os.environ["RUNNER_TEMP"]) / "p1-inbound-link-sample.json"
+          result = json.loads(path.read_text(encoding="utf-8"))
+          lines = [
+              "## P1: sampled LIVE internal diagnosis anchor links (GET only)",
+              "",
+              f"This is {len(result['pages'])} fixed pages only, not a complete site crawl or evidence of external backlinks.",
+              "",
+              f"Observed UTC: {result['observed_at_utc']}",
+              "",
+              "| Sampled page | HTTP | /shindan.html | /photo-diagnosis/ |",
+              "|---|---:|---:|---:|",
+          ]
+          for page in result["pages"]:
+              links = page.get("tracked_anchor_counts", {})
+              lines.append(
+                  f"| {page['page']} | {page.get('http_status', 'ERROR')} | "
+                  f"{links.get('/shindan.html', 'N/A')} | "
+                  f"{links.get('/photo-diagnosis/', 'N/A')} |"
+              )
+          lines += [
+              "",
+              f"Complete sample: {result['complete']}; "
+              f"old URL links: {result['anchor_totals']['/shindan.html']}; "
+              f"new URL links: {result['anchor_totals']['/photo-diagnosis/']}.",
+              "",
+              "No 301/canonical changes. Compare with Search Console and external backlink data before deciding.",
+          ]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write("\n".join(lines) + "\n")
+          if not result["complete"]:
+              print("::warning title=P1 sampled internal links incomplete::Review page statuses before using this evidence.")
+          PY
+      - name: Sitemap-wide live diagnosis anchors (read-only, bounded)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p 'test_audit_sitemap_diagnosis_inbound_links.py' -v
+          if python tools/audit_sitemap_diagnosis_inbound_links.py > "$RUNNER_TEMP/p1-sitemap-inbound.json"; then
+            echo "::notice title=P1 sitemap link audit::Sitemap-wide read-only GETs completed; compare with GSC and external backlinks."
+          else
+            echo "::warning title=P1 sitemap link audit incomplete::Do not assert sitewide zero old links or change canonical."
+          fi
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          report = json.loads((Path(os.environ["RUNNER_TEMP"]) / "p1-sitemap-inbound.json").read_text(encoding="utf-8"))
+          lines = ["## P1 sitemap-wide LIVE inbound link audit (read-only)", "",
+                   "Only sitemap-listed HTML anchors; excludes JS links and external backlinks.",
+                   ""]
+          if report.get("complete"):
+              count = report["sitemap_page_count"]
+              lines += [
+                  f"Observed UTC: {report['observed_at_utc']}",
+                  f"Pages: {count} sitemap-listed; {report['http_200_count']} HTTP200; "
+                  f"verified old-URL 301: {report['verified_legacy_301_count']}",
+                  f"Legacy redirect still listed in sitemap: {report['sitemap_contains_legacy_redirect_url']}",
+                  f"Old /shindan.html anchors: {report['anchor_totals']['/shindan.html']}",
+                  f"Current /photo-diagnosis/ anchors: {report['anchor_totals']['/photo-diagnosis/']}",
+                  f"Pages containing old links: {', '.join(report['pages_with_old_url']) or '(none)'}",
+                  f"Pages containing current links: {', '.join(report['pages_with_new_url']) or '(none)'}",
+              ]
+          else:
+              lines.append("INCOMPLETE: " + str(report.get("error", "one or more sitemap pages did not return HTTP200")))
+              if "pages" in report:
+                  failures = [(r["page"], r.get("http_status", r.get("error", "UNKNOWN")))
+                              for r in report["pages"] if r.get("http_status") != 200 or "error" in r]
+                  lines += [
+                      f"Sitemap URLs scanned: {report['sitemap_page_count']}",
+                      f"HTTP200: {report['http_200_count']}",
+                      f"Observed old-path anchors in HTTP200 responses: {report['anchor_totals']['/shindan.html']}",
+                      f"Observed current-path anchors in HTTP200 responses: {report['anchor_totals']['/photo-diagnosis/']}",
+                      f"Non-200 or unreadable pages: {len(failures)}",
+                      "Failing paths (up to 30): " + ", ".join(f"{path}={status}" for path, status in failures[:30]),
+                  ]
+              lines.append("No sitewide zero-link conclusion is supported.")
+          lines += ["", "No deployment, 301, or canonical changes. GSC and external backlink evidence still required."]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write("\n".join(lines) + "\n")
+          print("\n".join(lines))
+          PY
