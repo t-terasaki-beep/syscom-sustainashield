@@ -22,6 +22,32 @@ def fixture():
 
 class VerifyTests(unittest.TestCase):
     def test_expected_size_and_one_line(self):
+    def test_article_mime_accepts_html_and_rejects_non_html(self):
+        for mime in ("text/html", "TEXT/HTML; charset=UTF-8", "application/xhtml+xml"):
+            m.require_html_media_type(mime)
+        for mime in (None, "", "text/plain", "text/javascript", "application/octet-stream"):
+            with self.subTest(mime=mime), self.assertRaisesRegex(
+                m.VerificationError, "Content-Type is not HTML"
+            ):
+                m.require_html_media_type(mime)
+
+    def test_postdeploy_fetch_rejects_plain_text_before_hash_comparison(self):
+        class FakeResponse:
+            status = 200
+            headers = {"ETag": '"new-etag"', "Content-Type": "text/plain"}
+            def __enter__(self):
+                return self
+            def __exit__(self, *_):
+                return False
+            def geturl(self):
+                return m.TARGET
+            def read(self, *_):
+                raise AssertionError("Must reject non-HTML before reading")
+
+        with patch.object(m, "urlopen", return_value=FakeResponse()):
+            with self.assertRaisesRegex(m.VerificationError, "Content-Type is not HTML"):
+                m.fetch_exact(m.TARGET, 25300)
+
         base, patched = fixture()
         self.assertEqual(len(patched), m.PATCHED_SIZE)
         self.assertTrue(patched.endswith(m.TARGET_FOOTER))
