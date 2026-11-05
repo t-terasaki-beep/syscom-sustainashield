@@ -55,6 +55,21 @@ class ProtectedRouteTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.check_rejected(path, "上書き禁止")
 
+    def test_document_root_prefixes_cannot_bypass_protection(self):
+        # FTP_REMOTE_ROOT can be "/" rather than "/public_html/".
+        # The manifest can therefore embed a document-root folder. This still
+        # targets the protected live page and must never reach the network.
+        for path in (
+            "public_html/column/chiba-suigai-hinanjo-dengen/index.html",
+            "public_html/photo-diagnosis/index.html",
+            "public_html/shindan.html",
+            "www/column/chiba-suigai-hinanjo-dengen/assets/tracker.js",
+            "httpdocs/photo-diagnosis",
+            "site/legacy/shindan.html",
+        ):
+            with self.subTest(path=path):
+                self.check_rejected(path, "上書き禁止")
+
     def test_url_encoded_and_url_suffix_aliases_rejected(self):
         # A remote server or intermediary can decode URL syntax differently.
         # Reject these ambiguous forms rather than risk bypassing protected paths.
