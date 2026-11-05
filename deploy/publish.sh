@@ -38,7 +38,11 @@ case "$FTP_REMOTE_ROOT" in
   *) echo "停止: FTP_REMOTE_ROOT は / で始まる正規パスが必要"; exit 3 ;;
 esac
 case "$FTP_REMOTE_ROOT" in
-  *'%'*|*'\\'*|*'?'*|*'#'*|*//*|*/../*|*/./*|*
+  *'%'*|*'\'*|*'?'*|*'#'*|*//*|*/../*|*/./*)
+    echo "停止: 非正規の FTP_REMOTE_ROOT。公開先を見直してください"; exit 3 ;;
+esac
+
+CHANGESET="${1:?使い方: publish.sh <changesetファイル> [--yes]}"
 CONFIRM_FLAG="${2:-}"
 [ -f "$CHANGESET" ] || { echo "停止: changeset が見つからない: $CHANGESET"; exit 2; }
 
