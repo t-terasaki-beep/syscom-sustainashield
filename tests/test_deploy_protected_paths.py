@@ -79,13 +79,22 @@ class ProtectedRouteTests(unittest.TestCase):
             ("/public_html/column/chiba-suigai-hinanjo-dengen/", "index.html"),
             ("/public_html/photo-diagnosis/", "index.html"),
             ("/site/legacy/shindan.html/", "index.html"),
-            ("/column/shoene2024-data-leak-alert/", "index.html"),
         ):
             with self.subTest(root=root, path=path):
-                # The unrelated sibling is intentionally NOT protected here.
-                if "shoene2024" in root:
-                    continue
                 self.check_rejected(path, "上書き禁止", remote_root=root)
+
+    def test_ambiguous_ftp_remote_root_is_rejected_pre_network(self):
+        # Dot segments, URL encodings, and double slashes can be normalized
+        # by the FTP server AFTER an innocent-looking manifest is checked.
+        for root in (
+            "/public_html/column/other/../chiba-suigai-hinanjo-dengen/",
+            "/public_html/photo-diagnosis/./",
+            "/public_html%2Fcolumn/chiba-suigai-hinanjo-dengen/",
+            "/public_html//column/chiba-suigai-hinanjo-dengen/",
+            "public_html/column/chiba-suigai-hinanjo-dengen/",
+        ):
+            with self.subTest(root=root):
+                self.check_rejected("index.html", "FTP_REMOTE_ROOT", remote_root=root)
 
     def test_url_encoded_and_url_suffix_aliases_rejected(self):
         # A remote server or intermediary can decode URL syntax differently.
