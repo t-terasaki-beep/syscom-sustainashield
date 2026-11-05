@@ -133,6 +133,40 @@ class AnalyticsAssetPreflightTests(unittest.TestCase):
 
 
 class PatchTests(unittest.TestCase):
+class ArticleMimeTests(unittest.TestCase):
+    def test_html_mime_accepts_html_and_rejects_plain_text(self):
+        for mime in ("text/html", "TEXT/HTML; charset=utf-8", "application/xhtml+xml"):
+            preflight.require_html_media_type(mime)
+        for mime in (None, "", "text/plain", "application/octet-stream", "text/javascript"):
+            with self.subTest(mime=mime), self.assertRaisesRegex(
+                preflight.PreflightError, "Content-Type is not HTML"
+            ):
+                preflight.require_html_media_type(mime)
+
+    def test_target_and_sibling_fetch_stop_if_server_serves_plain_text(self):
+        class FakeResponse:
+            status = 200
+            headers = {"ETag": '"6262-65f3790c0687e"', "Content-Type": "text/plain"}
+            def __init__(self, url):
+                self.url = url
+            def __enter__(self):
+                return self
+            def __exit__(self, *_):
+                return False
+            def geturl(self):
+                return self.url
+            def read(self, *_):
+                raise AssertionError("Must reject MIME before reading HTML")
+
+        for method, url in ((preflight.fetch_live, preflight.URL),
+                            (preflight.fetch_sibling_live, preflight.SIBLING_URL)):
+            with self.subTest(url=url), patch.object(
+                preflight, "urlopen", return_value=FakeResponse(url)
+            ):
+                with self.assertRaisesRegex(preflight.PreflightError, "Content-Type is not HTML"):
+                    method()
+
+
     def test_insertion_is_exactly_one_tag(self):
         raw = sample()
         edited = preflight.build_one_line_patch(raw, expected_sha256=preflight.sha256(raw))
