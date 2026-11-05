@@ -147,7 +147,9 @@ jobs:
               count = report["sitemap_page_count"]
               lines += [
                   f"Observed UTC: {report['observed_at_utc']}",
-                  f"Pages: {report['http_200_count']}/{count} HTTP200",
+                  f"Pages: {count} sitemap-listed; {report['http_200_count']} HTTP200; "
+                  f"verified old-URL 301: {report['verified_legacy_301_count']}",
+                  f"Legacy redirect still listed in sitemap: {report['sitemap_contains_legacy_redirect_url']}",
                   f"Old /shindan.html anchors: {report['anchor_totals']['/shindan.html']}",
                   f"Current /photo-diagnosis/ anchors: {report['anchor_totals']['/photo-diagnosis/']}",
                   f"Pages containing old links: {', '.join(report['pages_with_old_url']) or '(none)'}",
