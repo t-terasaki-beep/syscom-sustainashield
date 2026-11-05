@@ -20,6 +20,9 @@ TARGET = "https://syscom-sustaina-shield.com/column/chiba-suigai-hinanjo-dengen/
 SIBLING = "https://syscom-sustaina-shield.com/column/shoene2024-data-leak-alert/"
 ORIGINAL_ETAG = "6262-65f3790c0687e"
 ORIGINAL_SHA256 = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
+# Immutable production digest pins; fixture tests may override ORIGINAL_SHA256 only.
+PRODUCTION_ORIGINAL_SHA256 = ORIGINAL_SHA256
+APPROVED_PATCHED_SHA256 = "831db16253bcd1b17d9ca3e3bbc366ee986ba1c16217453627c88b5e6d7fa9b8"
 # Independently observed unchanged sibling: 2026-11-03 production GET baseline.
 # The operator-supplied under-lock hash alone must NOT be allowed to authorize
 # an already-modified sibling as its own clean reference.
@@ -71,6 +74,13 @@ def check_target(raw: bytes, etag: str) -> dict:
     restored = raw.replace(TAG, b"", 1)
     if sha256(restored) != ORIGINAL_SHA256:
         raise VerificationError("P0 target content differs beyond the approved one-line insertion")
+    # Pin the completed HTML independently, as required by the publication
+    # handoff. Never report HTTP verification PASS if the complete production
+    # digest differs, even when the restored-source check succeeded.
+    # Offline synthetic fixtures override ORIGINAL_SHA256; only actual production
+    # must match this immutable, independently recorded final digest.
+    if ORIGINAL_SHA256 == PRODUCTION_ORIGINAL_SHA256 and sha256(raw) != APPROVED_PATCHED_SHA256:
+        raise VerificationError("P0 completed HTML differs from approved SHA-256; STOP")
     return {"status": "PASS", "http": 200, "bytes": len(raw), "etag": etag,
             "sha256": sha256(raw), "analytics_tag_count": 1,
             "original_restored_sha256": sha256(restored)}
