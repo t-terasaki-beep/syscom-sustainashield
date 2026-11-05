@@ -29,6 +29,7 @@ on:
         description: 公開する changeset（deploy/changesets/ 配下）
         type: choice
         options:
+          - window-20261105
           - chiba-blackout
           - residential-thermal
           - column-20260930
