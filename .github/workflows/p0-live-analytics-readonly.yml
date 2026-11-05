@@ -57,14 +57,18 @@ jobs:
               with urllib.request.urlopen(req, timeout=20) as response:
                   status, actual_url = response.status, response.geturl()
                   etag = response.headers.get("ETag")
+                  content_type = response.headers.get("Content-Type")
                   body = response.read(1024 * 1024 + 1)
               if len(body) > 1024 * 1024:
                   raise ValueError("Unexpectedly large HTML")
+              html_mime = (content_type or "").split(";", 1)[0].strip().lower()
               return {
                   "url": url,
                   "http": status,
                   "exact_url": actual_url == url,
                   "etag": etag,
+                  "html_content_type": html_mime,
+                  "valid_html_content_type": html_mime in {"text/html", "application/xhtml+xml"},
                   "bytes": len(body),
                   "sha256": hashlib.sha256(body).hexdigest(),
                   "analytics_references": body.count(script_ref),
@@ -177,6 +181,7 @@ jobs:
               )
 
           sibling_unchanged = (s["http"] == 200 and s["exact_url"] and
+                               s["valid_html_content_type"] and
                                strong_etag_matches(s["etag"], expected_sibling_etag) and
                                s["bytes"] == expected_sibling_size and
                                s["sha256"] == expected_sibling_sha and
@@ -184,6 +189,7 @@ jobs:
 
           asset_ok = asset["valid_browser_script_response"]
           safe = (asset_ok and t["http"] == 200 and t["exact_url"] and
+                  t["valid_html_content_type"] and
                   strong_etag_matches(t["etag"], expected_etag) and
                   t["bytes"] == expected_size and
                   t["sha256"] == expected_sha and
@@ -197,6 +203,7 @@ jobs:
               if not t["expected_one_line_patch_sha256"]:
                   raise ValueError("Cannot derive patch digest from approved baseline")
           elif (asset_ok and t["http"] == 200 and t["exact_url"] and t["has_h1"] and
+                t["valid_html_content_type"] and
                 strong_etag_changed(t["etag"], expected_etag) and
                 t["verified_expected_patch"] and not t["alternate_ga4"] and
                 sibling_unchanged):
