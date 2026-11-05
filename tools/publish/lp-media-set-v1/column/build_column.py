@@ -21,7 +21,7 @@ ICON = {"solar": "M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12
         "ecocute": "M7 3h10v18H7zM10 7h4M10 11h4", "energy": "M13 2L4 14h7l-1 8 9-12h-7z", "home": "M3 11l9-7 9 7v9H3zM9 20v-6h6v6",
         "subsidy": "M5 4h14v16H5zM9 8h6M9 12h6M9 16h3", "biz": "M3 21V8l6-4v17M9 21h12V11l-6-3M13 13h2M13 17h2",
         "local": "M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11zM12 8a2 2 0 100 4 2 2 0 000-4z", "news": "M4 5h16v11H8l-4 4z"}
-LINE = {"home": ("https://line.me/R/ti/p/%40631cqlgf", "住まいのLINEで相談する"),
+LINE = {"home": ("https://line.me/R/ti/p/%40829oslez", "住まいのLINEで相談する"),
         "biz": ("https://line.me/R/ti/p/%40119upwsl", "法人・事業のLINEで相談する")}
 LEAF = '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M34 4C16 4 6 14 6 28c0 3 1 5 2 7 3-11 10-18 20-23-8 6-14 13-17 23 16 2 26-10 23-31z" fill="#16A34A"/></svg>'
 E = html.escape
@@ -47,12 +47,12 @@ def head(title, desc, canon, depth):
 <header class="cl-hd"><div class="cl-wrap">
 <a class="cl-logo" href="/">{LEAF}<span>サステナシールド<small>SUSTAINA SHIELD</small></span></a>
 <nav class="cl-nav" aria-label="メインメニュー"><a href="/">ホーム</a><a href="/business/">法人のお客様</a><a href="/residential/">住宅のお客様</a><a href="/service.html">製品・サービス</a><a href="/hojokin/">補助金・制度</a><a href="/videos/">解説動画</a><a href="/column/" aria-current="page">コラム</a><a href="/company.html">会社案内</a></nav>
-<div class="cl-btns"><a class="cl-btn" href="/contact.html">お問い合わせ</a><a class="cl-btn line" href="https://line.me/R/ti/p/%40631cqlgf" data-event="line_click">LINEで相談</a></div>
+<div class="cl-btns"><a class="cl-btn" href="/contact.html">お問い合わせ</a><a class="cl-btn line" href="https://line.me/R/ti/p/%40829oslez" data-event="line_click">LINEで相談</a></div>
 </div></header>
 '''
 
 
-FOOT = '''<footer class="cl-ft"><div class="cl-wrap">© シスコムサステナシールド｜<a href="/privacy.html">プライバシーポリシー</a>｜<a href="/column/">コラム</a>｜<a href="/videos/">解説動画</a>｜<a href="/download/">資料ダウンロード</a></div></footer>
+FOOT = '''<footer class="cl-ft"><div class="cl-wrap">© サステナシールド｜<a href="/privacy.html">プライバシーポリシー</a>｜<a href="/column/">コラム</a>｜<a href="/videos/">解説動画</a>｜<a href="/download/">資料ダウンロード</a></div></footer>
 '''
 
 
@@ -138,7 +138,7 @@ document.getElementById('cl-q').addEventListener('input',function(e){{q=e.target
         lurl, llabel = LINE[a["audience"]]
         ld = {"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["summary"],
               "datePublished": a["date"].replace(".", "-"), "author": {"@type": "Person", "name": "寺嵜忠弘"},
-              "publisher": {"@type": "Organization", "name": "シスコムサステナシールド"},
+              "publisher": {"@type": "Organization", "name": "サステナシールド"},
               "image": f'{SITE}/column/img/{a["img"]}.jpg', "mainEntityOfPage": f'{SITE}{a["url"]}'}
         pg = head(f'{a["title"]}｜サステナシールド コラム', a["summary"], a["url"], 2)
         pg += f'''<main class="ca-wrap">
