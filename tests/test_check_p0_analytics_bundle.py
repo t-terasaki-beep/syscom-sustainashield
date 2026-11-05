@@ -29,12 +29,22 @@ def fixtures():
     return original, candidate, sibling, report, live_sibling
 
 
+def valid_asset_evidence():
+    # Metadata mirrors an independently verified GET. No live JS or network in tests.
+    return {
+        "status": 200, "url": p0.ASSET_URL, "mime": "application/javascript",
+        "bytes": p0.EXPECTED_ASSET_SIZE, "sha256": p0.EXPECTED_ASSET_SHA256,
+        "ga4_measurement_id_present": True,
+    }
+
+
 class BackupBundleTests(unittest.TestCase):
     def check(self, original, candidate, sibling, report, live_sibling, **kw):
         return bundle.check_bundle(
             original, candidate, sibling, report,
             kw.pop("live_html", original),
             kw.pop("live_etag", p0.EXPECTED_ETAG), live_sibling,
+            kw.pop("live_asset", valid_asset_evidence()),
             expected_original_sha=kw.pop("expected_original_sha", p0.sha256(original)),
             expected_sibling_sha=kw.pop("expected_sibling_sha", p0.sha256(sibling)))
 
@@ -44,6 +54,8 @@ class BackupBundleTests(unittest.TestCase):
         self.assertEqual(r["result"], "BACKUP_CANDIDATE_LIVE_BYTES_MATCH")
         self.assertFalse(r["publish_lock_verified_by_this_tool"])
         self.assertFalse(r["ga4_event_receipt_verified"])
+        self.assertEqual(r["fresh_analytics_asset_sha256"], p0.EXPECTED_ASSET_SHA256)
+        self.assertEqual(r["analytics_asset_recheck_scope"], "HTTP_CONTENT_ONLY_NOT_GA4_RECEIPT")
         self.assertFalse(r["published_by_this_tool"])
 
     def test_wrong_backup_same_size_rejected(self):
@@ -74,6 +86,24 @@ class BackupBundleTests(unittest.TestCase):
                        sibling, report, live_sibling)
         with self.assertRaisesRegex(p0.PreflightError, "Preflight report"):
             self.check(original, candidate, sibling, dict(report, prepared_sha256="bad"), live_sibling)
+
+    def test_missing_or_changed_fresh_analytics_asset_stops(self):
+        original, candidate, sibling, report, live_sibling = fixtures()
+        baseline = valid_asset_evidence()
+        broken = [
+            None,
+            dict(baseline, status=301),
+            dict(baseline, url="https://example.org/analytics.js"),
+            dict(baseline, mime="text/html"),
+            dict(baseline, bytes=p0.EXPECTED_ASSET_SIZE - 1),
+            dict(baseline, sha256="0" * 64),  # Same size, changed JS bytes.
+            dict(baseline, ga4_measurement_id_present=False),
+        ]
+        for evidence in broken:
+            with self.subTest(evidence=evidence), self.assertRaisesRegex(
+                    p0.PreflightError, "Analytics JS fresh live evidence"):
+                self.check(original, candidate, sibling, report, live_sibling,
+                           live_asset=evidence)
 
     def test_sibling_backup_missing_tag_rejected(self):
         original, candidate, sibling, report, live_sibling = fixtures()
