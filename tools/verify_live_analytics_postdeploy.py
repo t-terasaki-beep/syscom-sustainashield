@@ -168,7 +168,7 @@ def main() -> int:
     if args.evidence_json is not None:
         with args.evidence_json.open("x", encoding="utf-8") as evidence:
             json.dump(result, evidence, ensure_ascii=False, indent=2)
-            evidence.write("\\n")
+            evidence.write("\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
