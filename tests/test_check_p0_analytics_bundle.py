@@ -25,6 +25,19 @@ def fixtures():
               "production_etag_at_read": p0.EXPECTED_ETAG,
               "original_sha256": p0.sha256(original), "prepared_sha256": p0.sha256(candidate),
               "production_original_bytes": len(original), "prepared_bytes": len(candidate)}
+    report["sibling_read_only_preflight"] = {
+        "url": p0.SIBLING_URL, "etag": p0.EXPECTED_SIBLING_ETAG,
+        "bytes": len(sibling), "sha256": p0.sha256(sibling),
+        "analytics_tag_count": 1,
+        "capture_stage": "PREFLIGHT_ONLY_NOT_UNDER_LOCK",
+    }
+    report["analytics_asset_read_only_preflight"] = {
+        "url": p0.ASSET_URL, "status": 200, "mime": "application/javascript",
+        "bytes": p0.EXPECTED_ASSET_SIZE, "sha256": p0.EXPECTED_ASSET_SHA256,
+        "ga4_measurement_id_present": True,
+        "capture_stage": "PREFLIGHT_ONLY_NOT_UNDER_LOCK",
+        "ga4_event_receipt_verified": False,
+    }
     live_sibling = {"sha256": p0.sha256(sibling), "etag": p0.EXPECTED_SIBLING_ETAG}
     return original, candidate, sibling, report, live_sibling
 
@@ -104,6 +117,33 @@ class BackupBundleTests(unittest.TestCase):
                     p0.PreflightError, "Analytics JS fresh live evidence"):
                 self.check(original, candidate, sibling, report, live_sibling,
                            live_asset=evidence)
+
+    def test_handoff_report_missing_preflight_evidence_stops(self):
+        original, candidate, sibling, report, live_sibling = fixtures()
+        for missing in ("sibling_read_only_preflight",
+                        "analytics_asset_read_only_preflight"):
+            with self.subTest(missing=missing), self.assertRaisesRegex(
+                    p0.PreflightError, "Preflight (sibling|analytics asset) evidence"):
+                bad = dict(report)
+                bad.pop(missing)
+                self.check(original, candidate, sibling, bad, live_sibling)
+
+    def test_handoff_report_tampered_preflight_evidence_stops(self):
+        original, candidate, sibling, report, live_sibling = fixtures()
+        bad_cases = (
+            ("sibling_read_only_preflight", "sha256", "0" * 64),
+            ("sibling_read_only_preflight", "analytics_tag_count", 0),
+            ("sibling_read_only_preflight", "capture_stage", "AFTER_UPLOAD"),
+            ("analytics_asset_read_only_preflight", "sha256", "0" * 64),
+            ("analytics_asset_read_only_preflight", "mime", "text/html"),
+            ("analytics_asset_read_only_preflight", "ga4_event_receipt_verified", True),
+        )
+        for section, field, value in bad_cases:
+            with self.subTest(section=section, field=field), self.assertRaisesRegex(
+                    p0.PreflightError, "Preflight (sibling|analytics asset) evidence"):
+                bad = dict(report)
+                bad[section] = dict(report[section], **{field: value})
+                self.check(original, candidate, sibling, bad, live_sibling)
 
     def test_sibling_backup_missing_tag_rejected(self):
         original, candidate, sibling, report, live_sibling = fixtures()
