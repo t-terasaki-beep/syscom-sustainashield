@@ -12,6 +12,8 @@ import argparse
 import hashlib
 import json
 import re
+from datetime import datetime, timezone
+from pathlib import Path
 from urllib.request import Request, urlopen
 
 TARGET = "https://syscom-sustaina-shield.com/column/chiba-suigai-hinanjo-dengen/"
@@ -140,19 +142,33 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sibling-before-sha256", required=True,
                         help="Sibling HTML SHA-256 captured under publish lock before upload")
+    parser.add_argument("--evidence-json", type=Path,
+                        help="Optional local evidence file (exclusive create; never overwrites). Not GA4 event proof.")
     args = parser.parse_args()
+    if args.evidence_json is not None and args.evidence_json.exists():
+        raise VerificationError("Evidence JSON already exists; refusing overwrite")
     if not re.fullmatch(r"[a-f0-9]{64}", args.sibling_before_sha256):
         raise VerificationError("Invalid sibling baseline SHA-256")
     target, target_etag = fetch_exact(TARGET, 25300)
     sibling, sibling_etag = fetch_exact(SIBLING, 300000)
     asset = fetch_analytics_asset()
     result = {"publication_verification": "PASS_FOR_HTTP_CONTENT_ONLY",
+              "observed_at_utc": datetime.now(timezone.utc).isoformat(),
+              "evidence_scope": "POSTDEPLOY_HTTP_BYTES_ONLY_GA4_EVENT_UNVERIFIED",
               "target": check_target(target, target_etag),
               "sibling_unchanged": check_sibling(sibling, sibling_etag, args.sibling_before_sha256),
               "analytics_asset_http_check": asset,
               "ga4_page_view_delivery_verified": False,
               "ga4_check_required": "Confirm GA4 real-time page_view receipt in authorized session",
               "publish_and_ftp_operations": 0}
+    # The authorized operator may retain this GET-only evidence locally, beside
+    # (not inside) the deployment backup. Exclusive creation avoids overwriting
+    # a previous verification record; stdout remains the default behavior.
+    # GA4 event receipt must be recorded separately by the authorized operator.
+    if args.evidence_json is not None:
+        with args.evidence_json.open("x", encoding="utf-8") as evidence:
+            json.dump(result, evidence, ensure_ascii=False, indent=2)
+            evidence.write("\\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
