@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P2旧屋号の再混入を検知する静的検査（15ページ限定・本番操作なし）。
+"""P2旧屋号の再混入を検知する静的検査（16ページ限定・本番操作なし）。
 
 PR #19のレビュー候補だけを検査する。全サイトの旧表記ゼロは主張しない。
 株式会社シスコムネットなど法的な法人表示は検査で禁止しない。
@@ -18,6 +18,7 @@ PAGES = (
     "faq.html",
     "flow.html",
     "grid-battery/index.html",
+    "lp/gaichu-block/index.html",
     "lp/index.html",
     "privacy.html",
     "service.html",
