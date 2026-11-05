@@ -65,6 +65,32 @@ def check_bundle(
         report.get("prepared_bytes") != len(candidate_html),
     )):
         raise p0.PreflightError("Preflight report does not match backups and candidate; STOP")
+    # Keep provenance of the earlier GET-only preflight. The fresh under-lock
+    # checks above are mandatory but cannot replace missing/tampered evidence
+    # that the handed-off candidate was prepared against the approved sibling
+    # and analytics asset in the first place.
+    earlier_sibling = report.get("sibling_read_only_preflight")
+    if not isinstance(earlier_sibling, dict) or any((
+        earlier_sibling.get("url") != p0.SIBLING_URL,
+        earlier_sibling.get("etag") != p0.EXPECTED_SIBLING_ETAG,
+        earlier_sibling.get("bytes") != len(sibling_backup),
+        earlier_sibling.get("sha256") != expected_sibling_sha,
+        earlier_sibling.get("analytics_tag_count") != 1,
+        earlier_sibling.get("capture_stage") != "PREFLIGHT_ONLY_NOT_UNDER_LOCK",
+    )):
+        raise p0.PreflightError("Preflight sibling evidence missing or altered; STOP")
+    earlier_asset = report.get("analytics_asset_read_only_preflight")
+    if not isinstance(earlier_asset, dict) or any((
+        earlier_asset.get("url") != p0.ASSET_URL,
+        earlier_asset.get("status") != 200,
+        earlier_asset.get("mime") not in p0.VALID_SCRIPT_MIMES,
+        earlier_asset.get("bytes") != p0.EXPECTED_ASSET_SIZE,
+        earlier_asset.get("sha256") != p0.EXPECTED_ASSET_SHA256,
+        earlier_asset.get("ga4_measurement_id_present") is not True,
+        earlier_asset.get("capture_stage") != "PREFLIGHT_ONLY_NOT_UNDER_LOCK",
+        earlier_asset.get("ga4_event_receipt_verified") is not False,
+    )):
+        raise p0.PreflightError("Preflight analytics asset evidence missing or altered; STOP")
     return {
         "result": "BACKUP_CANDIDATE_LIVE_BYTES_MATCH",
         "original_sha256": p0.sha256(original_backup),
