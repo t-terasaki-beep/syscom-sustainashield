@@ -1,5 +1,7 @@
 """No network or production operations; exact-byte regression tests."""
 import importlib.util
+import json
+import tempfile
 from pathlib import Path
 import unittest
 from unittest.mock import patch
@@ -153,6 +155,46 @@ class VerifyTests(unittest.TestCase):
     def test_bad_sibling_hash_fails(self):
         with self.assertRaises(m.VerificationError):
             m.check_sibling(b"x", "etag", "bad")
+
+
+    def test_cli_writes_local_http_evidence_once_without_claiming_ga4_receipt(self):
+        base, patched = fixture()
+        sibling = b"<h1>Sibling</h1>" + m.TAG
+        with tempfile.TemporaryDirectory() as folder:
+            evidence_path = Path(folder) / "http_postdeploy.json"
+            with patch.object(m, "ORIGINAL_SHA256", m.sha256(base)), \
+                 patch.object(m, "SIBLING_APPROVED_SHA256", m.sha256(sibling)), \
+                 patch.object(m, "fetch_exact", side_effect=[
+                     (patched, "patched-etag"), (sibling, "sibling-etag")
+                 ]) as fetch_mock, \
+                 patch.object(m, "fetch_analytics_asset", return_value={
+                     "status": "PASS", "ga4_event_receipt_verified": False
+                 }), \
+                 patch("sys.argv", ["verify_live_analytics_postdeploy.py",
+                                   "--sibling-before-sha256", m.sha256(sibling),
+                                   "--evidence-json", str(evidence_path)]):
+                self.assertEqual(m.main(), 0)
+                self.assertEqual(fetch_mock.call_count, 2)
+            record = json.loads(evidence_path.read_text(encoding="utf-8"))
+            self.assertEqual(record["publication_verification"], "PASS_FOR_HTTP_CONTENT_ONLY")
+            self.assertFalse(record["ga4_page_view_delivery_verified"])
+            self.assertEqual(record["sibling_unchanged"]["sha256"], m.sha256(sibling))
+            self.assertIn("observed_at_utc", record)
+            self.assertEqual(record["evidence_scope"],
+                             "POSTDEPLOY_HTTP_BYTES_ONLY_GA4_EVENT_UNVERIFIED")
+
+    def test_cli_existing_evidence_file_stops_before_network_and_preserves_bytes(self):
+        with tempfile.TemporaryDirectory() as folder:
+            evidence_path = Path(folder) / "http_postdeploy.json"
+            evidence_path.write_text("untouched", encoding="utf-8")
+            with patch("sys.argv", ["verify_live_analytics_postdeploy.py",
+                                   "--sibling-before-sha256", "a" * 64,
+                                   "--evidence-json", str(evidence_path)]), \
+                 patch.object(m, "fetch_exact") as fetch_mock, \
+                 self.assertRaisesRegex(m.VerificationError, "refusing overwrite"):
+                m.main()
+            fetch_mock.assert_not_called()
+            self.assertEqual(evidence_path.read_text(encoding="utf-8"), "untouched")
 
 
 if __name__ == "__main__":
