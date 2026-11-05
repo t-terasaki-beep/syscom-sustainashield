@@ -52,10 +52,26 @@ def audit(root: Path) -> dict:
         issues = check_text(body)
         if issues:
             errors.append({"path": relative, "issues": issues})
+    # Source-of-truth for future /column/ output. Never regenerate or publish
+    # production-only articles as part of this static audit.
+    generator_path = "tools/publish/lp-media-set-v1/column/build_column.py"
+    try:
+        generator = (root / generator_path).read_text(encoding="utf-8")
+        template_issues = check_text(generator)
+        if "%40631cqlgf" in generator:
+            template_issues.append("住宅LINEの旧アカウントIDが残存")
+        if generator.count("%40829oslez") != 2:
+            template_issues.append("住宅LINEの正本リンクがヘッダーと記事CTAの2箇所に揃っていない")
+    except (OSError, UnicodeError) as exc:
+        template_issues = [type(exc).__name__]
+    if template_issues:
+        errors.append({"path": generator_path, "issues": template_issues})
     return {
         "scope": "PR #19 P2 review-only HTML files; NOT production or site-wide coverage",
         "checked_pages": len(PAGES),
-        "failed_pages": len(errors),
+        "checked_generators": 1,
+        "failed_pages": sum(1 for row in errors if row["path"] in PAGES),
+        "failed_generators": sum(1 for row in errors if row["path"] == generator_path),
         "errors": errors,
         "production_reads": 0,
         "production_writes": 0,
