@@ -87,6 +87,19 @@ class ProtectedRouteTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.check_rejected(path, "非正規")
 
+    def test_crlf_and_embedded_carriage_returns_stop_before_ftp(self):
+        # A Windows changeset may carry CRLF. Without an explicit CR check,
+        # the remote filename is parsed as shindan.html\\r and bypasses
+        # exact protected-route matching. Reject all CR, even on benign paths.
+        for path in (
+            "shindan.html\\r",
+            "photo-diagnosis/index.html\\r",
+            "ordinary.html\\r",
+            "column/chiba-suigai-hinanjo-dengen/\\rindex.html",
+        ):
+            with self.subTest(path=repr(path)):
+                self.check_rejected(path.replace("\\r", "\r"), "CR 制御文字")
+
     def test_noncanonical_remote_paths_rejected(self):
         for path in (
             "./shindan.html",
