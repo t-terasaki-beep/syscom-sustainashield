@@ -142,6 +142,26 @@ class PatchTests(unittest.TestCase):
         self.assertTrue(edited.endswith(preflight.TAG + b"</body></html>\n"))
         self.assertEqual(edited[:-len(b"</body></html>\n")].count(b"</script>\n"), 1)
 
+    def test_independent_patched_sha_pin_rejects_mismatch(self):
+        # A correctly sized, exactly one-tag candidate must also match the
+        # independently recorded publication SHA, not just the source digest.
+        raw = sample()
+        original_sha = preflight.sha256(raw)
+        with patch.object(preflight, "EXPECTED_ORIGINAL_SHA256", original_sha), \
+             patch.object(preflight, "EXPECTED_PATCHED_SHA256", "0" * 64):
+            with self.assertRaisesRegex(preflight.PreflightError, "Patched SHA-256"):
+                preflight.build_one_line_patch(raw, expected_sha256=original_sha)
+
+    def test_independent_patched_sha_pin_accepts_exact_candidate(self):
+        raw = sample()
+        original_sha = preflight.sha256(raw)
+        candidate = raw.replace(b"</body>", preflight.TAG + b"</body>", 1)
+        with patch.object(preflight, "EXPECTED_ORIGINAL_SHA256", original_sha), \
+             patch.object(preflight, "EXPECTED_PATCHED_SHA256", preflight.sha256(candidate)):
+            actual = preflight.build_one_line_patch(raw, expected_sha256=original_sha)
+        self.assertEqual(actual, candidate)
+        self.assertEqual(len(actual), preflight.EXPECTED_PATCHED_SIZE)
+
     def test_same_size_and_shape_but_wrong_sha_fails_closed(self):
         # An old or altered production page could be exactly the same length.
         # The standalone builder must refuse it even without fetch_live().
