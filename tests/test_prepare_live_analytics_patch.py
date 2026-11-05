@@ -1,5 +1,7 @@
 """Offline tests. No network, credentials, FTP, or publication."""
 import importlib.util
+import json
+import tempfile
 from pathlib import Path
 import unittest
 from unittest.mock import patch
@@ -202,6 +204,61 @@ class PatchTests(unittest.TestCase):
         # Whitespace around an otherwise valid quoted validator is harmless.
         self.assertEqual(preflight.normalize_etag('  "6262-65f3790c0687e"  '),
                          preflight.EXPECTED_ETAG)
+
+
+
+class LocalPreflightOutputTests(unittest.TestCase):
+    """No network and no real production HTML is ever written here."""
+
+    def test_creates_matching_local_pair_without_publication(self):
+        with tempfile.TemporaryDirectory() as folder:
+            dest = Path(folder)
+            report = {"publication_status": "NOT_PUBLISHED"}
+            output = preflight.write_local_preflight_outputs(
+                dest, b"fixture-only", report
+            )
+            self.assertEqual(output, dest / "preflight.json")
+            self.assertEqual((dest / "index.html").read_bytes(), b"fixture-only")
+            self.assertEqual(json.loads(output.read_text(encoding="utf-8")), report)
+
+    def test_existing_candidate_is_never_overwritten(self):
+        with tempfile.TemporaryDirectory() as folder:
+            dest = Path(folder)
+            (dest / "index.html").write_bytes(b"original-bytes")
+            with self.assertRaisesRegex(preflight.PreflightError, "refusing overwrite"):
+                preflight.write_local_preflight_outputs(dest, b"new", {})
+            self.assertEqual((dest / "index.html").read_bytes(), b"original-bytes")
+            self.assertFalse((dest / "preflight.json").exists())
+
+    def test_race_existing_html_is_rejected_even_if_precheck_misses(self):
+        with tempfile.TemporaryDirectory() as folder:
+            dest = Path(folder)
+            (dest / "index.html").write_bytes(b"keep-me")
+            with patch.object(Path, "exists", return_value=False):
+                with self.assertRaises(FileExistsError):
+                    preflight.write_local_preflight_outputs(dest, b"replace-me", {})
+            self.assertEqual((dest / "index.html").read_bytes(), b"keep-me")
+
+    def test_race_existing_json_preserved_and_new_html_rolled_back(self):
+        with tempfile.TemporaryDirectory() as folder:
+            dest = Path(folder)
+            (dest / "preflight.json").write_text("keep-me", encoding="utf-8")
+            with patch.object(Path, "exists", return_value=False):
+                with self.assertRaises(FileExistsError):
+                    preflight.write_local_preflight_outputs(dest, b"temporary", {})
+            self.assertEqual((dest / "preflight.json").read_text(encoding="utf-8"),
+                             "keep-me")
+            self.assertFalse((dest / "index.html").exists())
+
+    def test_json_write_failure_cleans_both_new_local_files(self):
+        with tempfile.TemporaryDirectory() as folder:
+            dest = Path(folder)
+            with patch.object(preflight.json, "dump", side_effect=OSError("disk-full")):
+                with self.assertRaisesRegex(OSError, "disk-full"):
+                    preflight.write_local_preflight_outputs(dest, b"temporary", {})
+            self.assertFalse((dest / "index.html").exists())
+            self.assertFalse((dest / "preflight.json").exists())
+
 
 
 if __name__ == "__main__":
