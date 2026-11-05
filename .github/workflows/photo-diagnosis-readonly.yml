@@ -1,0 +1,238 @@
+name: P1 photo diagnosis URL evidence (read-only)
+# No publish, no secrets, no cron. Do not infer canonical direction from this alone.
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/photo-diagnosis-readonly.yml'
+      - 'tools/audit_photo_diagnosis_repo_links.py'
+      - 'tests/test_audit_photo_diagnosis_repo_links.py'
+      - 'tools/audit_photo_diagnosis_live_links.py'
+      - 'tests/test_audit_photo_diagnosis_live_links.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Inspect actual HTTP/HTML and selected production links (GET only)
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, sys, urllib.request, urllib.error
+          from datetime import datetime, timezone
+          from html.parser import HTMLParser
+          from urllib.parse import urljoin, urlsplit
+          
+          origin = "https://syscom-sustaina-shield.com"
+          paths = ["/photo-diagnosis/", "/shindan.html"]
+          sources = ["/", "/residential/"]
+          
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+          
+          opener = urllib.request.build_opener(NoRedirect)
+          
+          class Extract(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.canonical, self.robots, self.hrefs = [], [], []
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag == "link" and "canonical" in attrs.get("rel", "").lower().split():
+                      self.canonical.append(attrs.get("href", ""))
+                  if tag == "meta" and attrs.get("name", "").lower() in ("robots", "googlebot"):
+                      self.robots.append({"name": attrs.get("name"), "content": attrs.get("content")})
+                  if tag == "a" and attrs.get("href"):
+                      self.hrefs.append(attrs["href"])
+          
+          def fetch(path):
+              url = origin + path
+              req = urllib.request.Request(url, headers={
+                  "Cache-Control": "no-cache", "Pragma": "no-cache",
+                  "User-Agent": "SustainaShield-P1-ReadOnlyAudit/1.0"
+              })
+              try:
+                  response = opener.open(req, timeout=15)
+              except urllib.error.HTTPError as err:
+                  response = err  # 3xx and 4xx are evidence, never auto-follow.
+              with response:
+                  data = response.read(1024*1024 + 1)
+                  if len(data) > 1024*1024:
+                      raise ValueError("response exceeds read-only 1 MiB safety cap")
+                  headers = response.headers
+                  status = response.status
+              parsed = Extract()
+              if status == 200 and "html" in headers.get("Content-Type", ""):
+                  parsed.feed(data.decode("utf-8", errors="replace"))
+              item = {
+                  "url": url, "http": status, "location": headers.get("Location"),
+                  "etag": headers.get("ETag"), "bytes": len(data),
+                  "sha256": hashlib.sha256(data).hexdigest(),
+                  "canonical": parsed.canonical, "robots": parsed.robots,
+                  "http_link_canonical": headers.get("Link"),
+              }
+              return item, parsed.hrefs
+          
+          def normalized_target(source_path, href):
+              absolute = urlsplit(urljoin(origin + source_path, href))
+              if absolute.scheme != "https" or absolute.netloc != "syscom-sustaina-shield.com":
+                  return None
+              if absolute.query:
+                  return None
+              return absolute.path if absolute.path in paths else None
+          
+          report = {
+              "observed_utc": datetime.now(timezone.utc).isoformat(),
+              "scope": "Public GET only; no redirects followed; selected entry pages, not full site or GSC",
+              "pages": {}, "selected_internal_links": {}, "errors": []
+          }
+          for path in paths + sources:
+              try:
+                  result, hrefs = fetch(path)
+                  report["pages"][path] = result
+                  if path in sources:
+                      counts = {x:0 for x in paths}
+                      for href in hrefs:
+                          p = normalized_target(path, href)
+                          if p:
+                              counts[p] += 1
+                      report["selected_internal_links"][path] = counts
+              except Exception as exc:
+                  report["errors"].append({"path":path, "error_type":type(exc).__name__})
+          first = report["pages"].get(paths[0])
+          second = report["pages"].get(paths[1])
+          if first and second and first["http"] == second["http"] == 200:
+              report["byte_identical"] = (first["bytes"] == second["bytes"] and
+                                          first["sha256"] == second["sha256"])
+          else:
+              report["byte_identical"] = None
+          # Observed on 2026-11-03 13:03 JST, using redirects disabled:
+          # /photo-diagnosis/ was 200; /shindan.html was already 301 to it.
+          # This is monitoring of an EXISTING production redirect, NOT an
+          # instruction to create/change a redirect or choose a canonical.
+          destination = report["pages"].get(paths[0])
+          legacy = report["pages"].get(paths[1])
+          destination_unchanged = (
+              destination is not None and destination["http"] == 200
+              and not destination["location"] and destination["canonical"] == []
+              and not any("noindex" in (r.get("content") or "").lower()
+                          for r in destination["robots"])
+          )
+          legacy_redirect_unchanged = (
+              legacy is not None and legacy["http"] == 301
+              and legacy["location"] == origin + paths[0]
+          )
+          report["known_route_baseline"] = {
+              "observed_jst": "2026-11-03 13:03",
+              "destination": "/photo-diagnosis/ HTTP 200, no canonical/noindex",
+              "legacy": "/shindan.html HTTP 301 to /photo-diagnosis/",
+          }
+          report["destination_unchanged"] = destination_unchanged
+          report["legacy_redirect_unchanged"] = legacy_redirect_unchanged
+          report["decision"] = (
+              "HOLD_CANONICAL_AND_301_PENDING_GSC_AND_EXTERNAL_LINKS"
+              if destination_unchanged and legacy_redirect_unchanged else
+              "STOP_REVIEW_P1_PRODUCTION_ROUTE_DRIFT"
+          )
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          
+          summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary:
+              with open(summary, "a", encoding="utf-8") as fp:
+                  fp.write("## P1 photo diagnosis — direct HTTP evidence (GET only)\n\n")
+                  fp.write(f"- Both HTTP 200 and byte-identical: `{report['byte_identical']}` (None means unknown)\n")
+                  for path in paths:
+                      item = report["pages"].get(path)
+                      fp.write(f"- `{path}`: HTTP {item['http'] if item else 'FETCH_FAILED'}; "
+                               f"Location `{item['location'] if item else 'unknown'}`; "
+                               f"canonical `{item['canonical'] if item else 'unknown'}`\n")
+                  fp.write(f"- Selected entry-point link counts: `{report['selected_internal_links']}`\n")
+                  fp.write(f"- Fetch failures: `{report['errors']}`\n")
+                  fp.write(f"- Existing 2026-11-03 routing unchanged (200 + already-present 301): `{report['destination_unchanged'] and report['legacy_redirect_unchanged']}`\n")
+                  fp.write("- **No canonical/301/delete decision**. Confirm GSC and external links first.\n")
+                  fp.write("- No FTP, public writes, analytics changes, paid ads, or customer contact.\n")
+          if any(p not in report["pages"] for p in paths):
+              print("::warning title=Live P1 audit incomplete::One or more target URLs could not be fetched; no conclusion.")
+              sys.exit(2)
+          if not (destination_unchanged and legacy_redirect_unchanged):
+              print("::error title=P1 production route drift::The previously observed 200/301 routing or destination indexability changed; review before any canonical/301 decision.")
+              sys.exit(1)
+          PY
+
+  inspect-repository-inlinks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run read-only link classifier tests
+        run: python -m unittest discover -s tests -p 'test_audit_photo_diagnosis_repo_links.py' -v
+      - name: Audit all checkout HTML links (not production)
+        shell: bash
+        run: |
+          python tools/audit_photo_diagnosis_repo_links.py . > /tmp/p1-repo-inlinks.json
+          python - <<'PY'
+          import json, os
+          with open('/tmp/p1-repo-inlinks.json', encoding='utf-8') as f:
+              report = json.load(f)
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          summary = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary:
+              with open(summary, 'a', encoding='utf-8') as f:
+                  f.write('## P1 repository inbound links — offline snapshot\n\n')
+                  f.write('Checkout HTML only; not live pages or external backlinks.\n\n')
+                  f.write(f"- HTML files scanned: {report['html_files_scanned']}\n")
+                  f.write(f"- Direct href counts: {report['counts']}\n")
+                  f.write(f"- Files with matching links: {len(report['sources'])}\n")
+                  f.write(f"- Decode errors: {report['decode_errors']}\n")
+                  for item in report['sources'][:15]:
+                      f.write(f"- {item['file']}: {len(item['matches'])} matching links\n")
+                  f.write('\nNo route, canonical, redirect, or production file changed. '
+                          'Hold canonical until verified live and GSC/external-link evidence.\n')
+          PY
+
+  inspect-live-sitemap-inlinks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify offline sitemap and href parser tests
+        run: python -m unittest discover -s tests -p 'test_audit_photo_diagnosis_live_links.py' -v
+      - name: Survey sitemap-listed production HTML links (GET only; no follow redirects)
+        shell: bash
+        run: |
+          python tools/audit_photo_diagnosis_live_links.py > /tmp/p1-live-inlinks.json
+          python - <<'PY'
+          import json, os
+          with open('/tmp/p1-live-inlinks.json', encoding='utf-8') as fp:
+              d = json.load(fp)
+          print(json.dumps(d, ensure_ascii=False, indent=2))
+          summary = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary:
+              with open(summary, 'a', encoding='utf-8') as fp:
+                  fp.write('## P1 site-wide live internal links (GET-only)\n\n')
+                  fp.write(f"- Sitemap URLs: {d['sitemap_urls']}, HTTP200 HTML: {d['http200_html_pages']}, "
+                           f"existing legacy 301: {d['verified_existing_legacy_301']}\n")
+                  fp.write(f"- Link counts: {d['href_counts']}\n")
+                  fp.write(f"- Sitemap 301 hygiene: {d['sitemap_seo_hygiene']['status']} (observation only)\n")
+                  fp.write("- Do not edit sitemap, canonical, or existing 301 without GSC and external-link review.\n")
+                  fp.write(f"- Unique linking source pages: {d['unique_source_page_counts']}\n")
+                  fp.write(f"- Fetch failures: {len(d['errors'])}, complete: {d['complete']}\n")
+                  fp.write('No redirect, canonical, page, advertising or GSC changes. External backlinks and GSC remain unverified.\n')
+          PY
+      - name: Preserve read-only audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-live-inlinks-evidence
+          path: /tmp/p1-live-inlinks.json
+          if-no-files-found: ignore
+          retention-days: 14

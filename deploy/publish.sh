@@ -30,6 +30,18 @@ case "$FTP_REMOTE_ROOT" in
   *) echo "停止: FTP_REMOTE_ROOT は末尾スラッシュが必要（例 / ）"; exit 2 ;;
 esac
 
+# Never let FTP_REMOTE_ROOT normalize path separators, dot segments or
+# encoded aliases into a production-only URL after the rp-only guard runs.
+# A safe FTP destination root is an absolute, plain path ending in '/'.
+case "$FTP_REMOTE_ROOT" in
+  /*) : ;;
+  *) echo "停止: FTP_REMOTE_ROOT は / で始まる正規パスが必要"; exit 3 ;;
+esac
+case "$FTP_REMOTE_ROOT" in
+  *'%'*|*'\'*|*'?'*|*'#'*|*//*|*/../*|*/./*)
+    echo "停止: 非正規の FTP_REMOTE_ROOT。公開先を見直してください"; exit 3 ;;
+esac
+
 CHANGESET="${1:?使い方: publish.sh <changesetファイル> [--yes]}"
 CONFIRM_FLAG="${2:-}"
 [ -f "$CHANGESET" ] || { echo "停止: changeset が見つからない: $CHANGESET"; exit 2; }
@@ -45,9 +57,38 @@ CURL="curl --fail --show-error --silent --connect-timeout 20 --max-time 180"
 # ---- changeset 読み込み（"local  remote"、2列目省略時は1列目を流用）--------
 LOCS=""; REMS=""
 while IFS= read -r line || [ -n "$line" ]; do
+  # Windows CRLF or embedded CR can turn a protected target into a different
+  # FTP remote filename when awk parses a trailing carriage return.
+  # Reject ambiguous changesets before checking protected production paths.
+  case "$line" in
+    *$'\r'*) echo "停止: changeset に CR 制御文字があります。LF 改行に変換してください"; exit 3 ;;
+  esac
   case "$line" in ''|\#*) continue ;; esac
   lp="$(printf '%s\n' "$line" | awk '{print $1}')"
   rp="$(printf '%s\n' "$line" | awk '{if ($2!="") print $2; else print $1}')"
+  # Production-only or live-divergent files and their entire subtrees
+  # are NOT deployable from GitHub (including newly added assets).
+  # P0 column repair must use the separately authorized, locked live-file
+  # patch workflow, never a repository-generated replacement.
+  # Reject URL-encoded separators/aliases, Windows separators, URL suffixes,
+  # and terminal dot segments BEFORE any network activity.
+  # This is intentionally conservative: release paths must be plain relative paths.
+  # FTP_REMOTE_ROOT may be / or /public_html/; reject protected target paths
+  # even when a changeset embeds public_html/, www/, or another parent prefix.
+  case "$rp" in
+    /*|./*|../*|*/../*|*/./*|*//*|*/..|*/.|.|..|*'%'*|*'\'*|*'?'*|*'#'*)
+      echo "停止: 非正規のリモート相対パス: $rp"; exit 3 ;;
+    column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|*/column/chiba-suigai-hinanjo-dengen|*/column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|*/photo-diagnosis|*/photo-diagnosis/*|shindan.html|*/shindan.html|shindan.html/*|*/shindan.html/*)
+      echo "停止: 本番専用・差異ありの保護URLはGitHubから上書き禁止: $rp"; exit 3 ;;
+  esac
+  # Guard the EFFECTIVE FTP destination, not only the manifest's rp.
+  # FTP_REMOTE_ROOT may itself point at a protected article directory, making
+  # an apparently safe 'index.html' write overwrite the production-only page.
+  effective_rp="${FTP_REMOTE_ROOT#/}$rp"
+  case "$effective_rp" in
+    column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|*/column/chiba-suigai-hinanjo-dengen|*/column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|*/photo-diagnosis|*/photo-diagnosis/*|shindan.html|*/shindan.html|shindan.html/*|*/shindan.html/*)
+      echo "停止: FTP_REMOTE_ROOT を含む実効公開先が本番保護URLです。GitHubから上書き禁止: $effective_rp"; exit 3 ;;
+  esac
   [ -f "$LOCAL_ROOT/$lp" ] || { echo "停止: ローカルに無い: $LOCAL_ROOT/$lp"; exit 2; }
   LOCS="$LOCS$lp"$'\n'; REMS="$REMS$rp"$'\n'
 done < "$CHANGESET"
