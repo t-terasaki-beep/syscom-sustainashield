@@ -275,6 +275,43 @@ class LocalPreflightOutputTests(unittest.TestCase):
             self.assertEqual((dest / "index.html").read_bytes(), b"fixture-only")
             self.assertEqual(json.loads(output.read_text(encoding="utf-8")), report)
 
+    def test_candidate_cannot_be_written_to_common_public_webroots(self):
+        # Even local preparation must not accidentally serve the HTML before
+        # lock, backup and explicit approval. No GET/FTP/publish is involved.
+        with tempfile.TemporaryDirectory() as folder:
+            for root in ("public_html", "WWW", "htdocs", "httpdocs",
+                         "wwwroot", "webroot", "public"):
+                with self.subTest(root=root):
+                    dest = Path(folder) / root / "staging"
+                    with self.assertRaisesRegex(
+                        preflight.PreflightError, "public web root"
+                    ):
+                        preflight.write_local_preflight_outputs(
+                            dest, b"fixture-only", {"publication_status": "NOT_PUBLISHED"}
+                        )
+                    self.assertFalse((dest / "index.html").exists())
+                    self.assertFalse((dest / "preflight.json").exists())
+
+    def test_symlink_to_webroot_is_rejected_without_writing(self):
+        # Resolve aliases too: a harmless-looking private path might point
+        # into an actual web document root.
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder)
+            target = base / "public_html"
+            target.mkdir()
+            alias = base / "alias"
+            try:
+                alias.symlink_to(target, target_is_directory=True)
+            except (OSError, NotImplementedError):
+                self.skipTest("Directory symlinks unavailable")
+            with self.assertRaisesRegex(
+                preflight.PreflightError, "public web root"
+            ):
+                preflight.write_local_preflight_outputs(
+                    alias / "staging", b"fixture-only", {}
+                )
+            self.assertFalse((target / "staging").exists())
+
     def test_existing_candidate_is_never_overwritten(self):
         with tempfile.TemporaryDirectory() as folder:
             dest = Path(folder)
