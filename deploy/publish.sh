@@ -55,10 +55,12 @@ while IFS= read -r line || [ -n "$line" ]; do
   # Reject URL-encoded separators/aliases, Windows separators, URL suffixes,
   # and terminal dot segments BEFORE any network activity.
   # This is intentionally conservative: release paths must be plain relative paths.
+  # FTP_REMOTE_ROOT may be / or /public_html/; reject protected target paths
+  # even when a changeset embeds public_html/, www/, or another parent prefix.
   case "$rp" in
     /*|./*|../*|*/../*|*/./*|*//*|*/..|*/.|.|..|*'%'*|*'\'*|*'?'*|*'#'*)
       echo "停止: 非正規のリモート相対パス: $rp"; exit 3 ;;
-    column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|shindan.html)
+    column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|*/column/chiba-suigai-hinanjo-dengen|*/column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|*/photo-diagnosis|*/photo-diagnosis/*|shindan.html|*/shindan.html)
       echo "停止: 本番専用・差異ありの保護URLはGitHubから上書き禁止: $rp"; exit 3 ;;
   esac
   [ -f "$LOCAL_ROOT/$lp" ] || { echo "停止: ローカルに無い: $LOCAL_ROOT/$lp"; exit 2; }
