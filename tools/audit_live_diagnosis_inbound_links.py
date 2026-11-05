@@ -67,6 +67,11 @@ def inspect(opener, path):
         etag = resp.headers.get("ETag")
         record = {"page": path, "http_status": status, "etag": etag}
         if status != 200:
+            # Preserve the raw Location of a non-followed redirect for a
+            # separate, exact-target validation in the sitemap audit.
+            location = resp.headers.get("Location")
+            if location:
+                record["location"] = location
             return record
         body = resp.read(MAX_BYTES + 1)
         if len(body) > MAX_BYTES:
