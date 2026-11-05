@@ -21,7 +21,6 @@ def fixture():
 
 
 class VerifyTests(unittest.TestCase):
-    def test_expected_size_and_one_line(self):
     def test_article_mime_accepts_html_and_rejects_non_html(self):
         for mime in ("text/html", "TEXT/HTML; charset=UTF-8", "application/xhtml+xml"):
             m.require_html_media_type(mime)
@@ -48,6 +47,7 @@ class VerifyTests(unittest.TestCase):
             with self.assertRaisesRegex(m.VerificationError, "Content-Type is not HTML"):
                 m.fetch_exact(m.TARGET, 25300)
 
+    def test_expected_size_and_one_line(self):
         base, patched = fixture()
         self.assertEqual(len(patched), m.PATCHED_SIZE)
         self.assertTrue(patched.endswith(m.TARGET_FOOTER))
