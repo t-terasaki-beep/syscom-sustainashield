@@ -138,6 +138,25 @@ def fetch_analytics_asset() -> dict:
     return check_analytics_asset(raw, content_type)
 
 
+def write_verification_evidence(path: Path, record: dict) -> None:
+    """Save a complete local JSON proof without overwriting or leaving fragments.
+
+    Serialize fully before creating the file. Exclusive creation also rejects
+    a competing publisher's file that appears after the CLI precheck.
+    A failed write removes only the file created by this invocation.
+    """
+    serialized = json.dumps(record, ensure_ascii=False, indent=2) + "\n"
+    created = False
+    try:
+        with path.open("x", encoding="utf-8") as evidence:
+            created = True
+            evidence.write(serialized)
+    except BaseException:
+        if created:
+            path.unlink(missing_ok=True)
+        raise
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sibling-before-sha256", required=True,
@@ -166,9 +185,7 @@ def main() -> int:
     # a previous verification record; stdout remains the default behavior.
     # GA4 event receipt must be recorded separately by the authorized operator.
     if args.evidence_json is not None:
-        with args.evidence_json.open("x", encoding="utf-8") as evidence:
-            json.dump(result, evidence, ensure_ascii=False, indent=2)
-            evidence.write("\n")
+        write_verification_evidence(args.evidence_json, result)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
