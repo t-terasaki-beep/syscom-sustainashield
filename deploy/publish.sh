@@ -78,7 +78,7 @@ while IFS= read -r line || [ -n "$line" ]; do
   case "$rp" in
     /*|./*|../*|*/../*|*/./*|*//*|*/..|*/.|.|..|*'%'*|*'\'*|*'?'*|*'#'*)
       echo "停止: 非正規のリモート相対パス: $rp"; exit 3 ;;
-    column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|*/column/chiba-suigai-hinanjo-dengen|*/column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|*/photo-diagnosis|*/photo-diagnosis/*|shindan.html|*/shindan.html)
+    column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|*/column/chiba-suigai-hinanjo-dengen|*/column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|*/photo-diagnosis|*/photo-diagnosis/*|shindan.html|*/shindan.html|shindan.html/*|*/shindan.html/*)
       echo "停止: 本番専用・差異ありの保護URLはGitHubから上書き禁止: $rp"; exit 3 ;;
   esac
   # Guard the EFFECTIVE FTP destination, not only the manifest's rp.
@@ -86,7 +86,7 @@ while IFS= read -r line || [ -n "$line" ]; do
   # an apparently safe 'index.html' write overwrite the production-only page.
   effective_rp="${FTP_REMOTE_ROOT#/}$rp"
   case "$effective_rp" in
-    column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|*/column/chiba-suigai-hinanjo-dengen|*/column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|*/photo-diagnosis|*/photo-diagnosis/*|shindan.html|*/shindan.html)
+    column/chiba-suigai-hinanjo-dengen|column/chiba-suigai-hinanjo-dengen/*|*/column/chiba-suigai-hinanjo-dengen|*/column/chiba-suigai-hinanjo-dengen/*|photo-diagnosis|photo-diagnosis/*|*/photo-diagnosis|*/photo-diagnosis/*|shindan.html|*/shindan.html|shindan.html/*|*/shindan.html/*)
       echo "停止: FTP_REMOTE_ROOT を含む実効公開先が本番保護URLです。GitHubから上書き禁止: $effective_rp"; exit 3 ;;
   esac
   [ -f "$LOCAL_ROOT/$lp" ] || { echo "停止: ローカルに無い: $LOCAL_ROOT/$lp"; exit 2; }
