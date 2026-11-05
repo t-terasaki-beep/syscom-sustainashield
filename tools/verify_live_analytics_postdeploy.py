@@ -39,6 +39,7 @@ ANALYTICS_ASSET_EXPECTED_SIZE = 8607
 ANALYTICS_ASSET_EXPECTED_SHA256 = "d31313584ab615a35581de2d8ccd9e4380cb95f14133b174269bca4d761f9ed3"
 # A 200 response with the right GA4 ID is insufficient if the browser refuses to execute it.
 # A JavaScript media type is required; HTML/text fallback must not be marked verified.
+HTML_MEDIA_TYPES = frozenset({"text/html", "application/xhtml+xml"})
 JAVASCRIPT_MEDIA_TYPES = frozenset({
     "text/javascript", "application/javascript", "text/ecmascript",
     "application/ecmascript", "application/x-javascript",
@@ -57,6 +58,13 @@ def strong_etag(raw: str | None) -> str:
     if not raw or raw.startswith("W/") or not re.fullmatch(r'"[^"]+"', raw.strip()):
         raise VerificationError("Missing, weak, or malformed ETag: cannot verify production revision")
     return raw.strip()[1:-1]
+
+
+def require_html_media_type(content_type: str | None) -> None:
+    """A byte-perfect HTML page served as plain text cannot execute analytics."""
+    mime = (content_type or "").split(";", 1)[0].strip().lower()
+    if mime not in HTML_MEDIA_TYPES:
+        raise VerificationError("Article Content-Type is not HTML; STOP")
 
 
 def check_target(raw: bytes, etag: str) -> dict:
@@ -106,6 +114,7 @@ def fetch_exact(url: str, max_bytes: int) -> tuple[bytes, str]:
     with urlopen(req, timeout=20) as res:
         if res.status != 200 or res.geturl() != url:
             raise VerificationError(f"Wrong status or redirected URL for {url}")
+        require_html_media_type(res.headers.get("Content-Type"))
         etag = strong_etag(res.headers.get("ETag"))
         blob = res.read(max_bytes + 1)
     if len(blob) > max_bytes:
