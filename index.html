@@ -12,7 +12,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Montserrat:wght@600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -1069,6 +1069,53 @@ a{ color:inherit; text-decoration:none; }
 .rdn-fab a{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;font-weight:800;font-size:15px;color:#fff;background:#06C755;box-shadow:0 12px 30px rgba(6,199,85,.45)}
 .rdn-fab a:hover{filter:brightness(1.06)}
 @media(max-width:560px){.rdn-fab a{padding:12px 18px;font-size:13px}}
+
+/* ===== 困りごと入口（P0-1 法人HUB / 2026-09-26）配色正本：白基調・スカイブルー#00AEEF罫・オレンジ#102F40 CTA ===== */
+.kd{ background:#ffffff; padding:72px 0; border-top:3px solid #00AEEF; }
+@media(max-width:640px){ .kd{ padding:48px 0; } }
+/* kd-*：困りごと入口（2026-09-26 明るい・今時の型：淡水色の帯＋白い角丸カード＋丸ボタン。kadai.css と同じ値） */
+.kd{ background:#E8F7FD; }
+.kd-inner{ max-width:1200px; margin:0 auto; padding:0 20px; }
+.kd .section-eyebrow{ font-family:"Montserrat","Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#0093CF; }
+.kd .section-title, .kd-trust .section-title{ font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif; font-weight:900; letter-spacing:.04em; color:#102F40; position:relative; padding-bottom:16px; }
+.kd .section-title::after, .kd-trust .section-title::after{ content:""; position:absolute; left:0; bottom:0; width:30px; height:3px; background:#00AEEF; border-radius:2px; }
+.kd-title .l{ display:inline-block; }
+.kd-title br.pc{ display:none; }
+@media(min-width:861px){ .kd-title br.pc{ display:inline; } }
+@media(max-width:640px){ .kd-title{ font-size:26px; } }
+.kd-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:24px; }
+@media(min-width:701px){ .kd-grid{ grid-template-columns:repeat(2,1fr); gap:16px; } }
+.kd-card{ display:flex; flex-direction:column; padding:20px 18px 18px; background:#fff; border-radius:20px; transition:transform .15s; }
+.kd-card:active{ transform:scale(.99); }
+.kd-card .kd-num{ font-family:"Montserrat",sans-serif; font-size:12px; letter-spacing:.08em; color:#0093CF; font-weight:700; }
+.kd-card h3{ font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif; font-size:19px; line-height:1.45; color:#102F40; margin:6px 0 12px; font-weight:700; padding-left:12px; border-left:3px solid #00AEEF; }
+.kd-card dl{ font-size:13.5px; color:#4F6472; line-height:1.75; display:grid; grid-template-columns:auto 1fr; column-gap:10px; row-gap:4px; margin:0; }
+.kd-card dt{ font-weight:700; color:#102F40; white-space:nowrap; }
+.kd-card dt::after{ content:"："; }
+.kd-card dd{ margin:0; }
+.kd-card .kd-go{ margin-top:auto; padding-top:14px; font-size:14px; font-weight:700; color:#0093CF; display:flex; align-items:center; gap:6px; }
+.kd-card .kd-go::after{ content:""; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(-45deg); }
+.kd-note{ font-size:13px; color:#4F6472; margin-top:18px; }
+.kd-note a{ color:#0093CF; font-weight:700; }
+.kd-trust{ background:#ffffff; color:#102F40; padding:56px 0 64px; }
+@media(max-width:640px){ .kd-trust{ padding:44px 0 48px; } }
+.kd-trust .section-eyebrow{ font-family:"Montserrat","Zen Kaku Gothic New",sans-serif; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#0093CF; }
+.kd-trust .section-sub{ color:#4F6472; }
+.kd-trust-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:24px; counter-reset:kdt; }
+@media(min-width:761px){ .kd-trust-grid{ grid-template-columns:repeat(3,1fr); gap:16px; } }
+.kd-trust-item{ padding:20px 18px; background:#F3FBFE; border-radius:20px; counter-increment:kdt; }
+.kd-trust-item::before{ content:"0" counter(kdt); font-family:"Montserrat",sans-serif; font-size:12px; letter-spacing:.08em; color:#0093CF; font-weight:700; display:block; margin-bottom:6px; }
+.kd-trust-item h3{ font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif; font-size:18px; color:#102F40; margin-bottom:8px; font-weight:700; line-height:1.45; }
+.kd-trust-item p{ font-size:14px; color:#4F6472; line-height:1.85; }
+.kd-face{ display:flex; gap:20px; align-items:center; margin-top:24px; padding:24px 20px; background:#F3FBFE; border-radius:24px; }
+.kd-face img{ width:96px; height:96px; border-radius:50%; object-fit:cover; object-position:center top; flex:0 0 96px; }
+.kd-face .t{ font-size:15px; color:#102F40; line-height:1.8; }
+.kd-face .t b{ display:block; font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif; font-size:19px; font-weight:700; margin-bottom:4px; line-height:1.45; }
+.kd-face .btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.kd-face .btns a{ display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:12px 24px; border-radius:999px; font-weight:700; font-size:15px; }
+.kd-face .b1{ background:#0093CF; color:#fff; } .kd-face .b1:hover{ background:#0079AD; }
+.kd-face .b2{ background:#06C755; color:#fff; } .kd-face .b2:hover{ background:#05B04C; }
+@media(max-width:560px){ .kd-face{ flex-direction:column; align-items:flex-start; } .kd-face .btns{ flex-direction:column; width:100%; } .kd-face .btns a{ width:100%; } }
 </style>
 </head>
 <body>
@@ -1092,8 +1139,10 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </a>
     <nav class="gnav">
+      <a href="#komarigoto">困りごとから探す</a>
       <a href="#services">サービス</a>
       <a href="#why">選ばれる理由</a>
+      <a href="residential/">ご家庭の方</a>
       <a href="company.html">会社案内</a>
       <a href="simulator/">シミュレーター</a>
       <div class="header-social">
@@ -1133,8 +1182,8 @@ a{ color:inherit; text-decoration:none; }
       電気代の高騰も、脱炭素も、建物の老朽化も、<strong>ひとつの窓口で</strong>
     </p>
     <div class="hero-ctas">
-      <a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" class="cta cta-primary">無料診断を申し込む</a>
-      <a href="simulator/" class="cta cta-secondary">シミュレーターを試す</a>
+      <a href="#komarigoto" class="cta cta-primary">困りごとから探す</a>
+      <a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" class="cta cta-secondary">無料診断を申し込む</a>
     </div>
     <div class="hero-badges">
       <span class="hero-badge">電気業界27年</span>
@@ -1145,8 +1194,88 @@ a{ color:inherit; text-decoration:none; }
   </div>
 </section>
 
+<!-- ▼ 困りごと入口（P0-1 法人HUB / 2026-09-26） -->
+<section class="kd" id="komarigoto">
+  <div class="kd-inner">
+    <div class="section-eyebrow reveal">困りごとから探す</div>
+    <h2 class="section-title reveal kd-title"><span class="l">現場の暑さも 電気代も</span><br class="pc"><span class="l accent">それぞれの事情から</span> <span class="l">一緒に考える</span></h2>
+    <p class="section-sub reveal">工場 倉庫 店舗 ビルの設備と省エネ。使う人、管理する人、予算を考える人の希望を整理してご提案します。商品ではなく困りごとから選ぶと、考えられる原因・主な解決策・まず確認するものと、次に読むページへ進みます。</p>
+    <div class="kd-grid">
+      <a class="kd-card reveal" href="business/atsui/">
+        <div class="kd-num">01</div>
+        <h3>工場・倉庫が暑い 空調が効かない</h3>
+        <dl><dt>考えられる原因</dt><dd>屋根の輻射熱、窓、換気不足、空調の能力・運転、機器の発熱</dd><dt>主な解決策</dt><dd>屋根の遮熱、窓のコーティング、換気・空調運転の見直し</dd><dt>まず確認するもの</dt><dd>サーモカメラの温度分布、屋根材、天井・窓・換気の状況</dd></dl>
+        <span class="kd-go">原因の切り分けから読む</span>
+      </a>
+      <a class="kd-card reveal" href="business/denkidai/">
+        <div class="kd-num">02</div>
+        <h3>電気代・デマンドが高い</h3>
+        <dl><dt>考えられる原因</dt><dd>基本料金のピーク、空調負荷、稼働時間帯、契約種別、負荷の偏り</dd><dt>主な解決策</dt><dd>運用改善、遮熱、EMS、自家消費太陽光、設備更新</dd><dt>まず確認するもの</dt><dd>電気料金明細12か月分と30分値</dd></dl>
+        <span class="kd-go">明細と30分値の読み方へ</span>
+      </a>
+      <a class="kd-card reveal" href="lp/#triple-guard">
+        <div class="kd-num">03</div>
+        <h3>屋根の雨漏り・錆・暑さを まとめて直したい</h3>
+        <dl><dt>考えられる原因</dt><dd>塗膜の劣化、塩害、板金の錆、屋根の輻射熱</dd><dt>主な解決策</dt><dd>補修と遮熱・防水・防錆を兼ねたコーティング</dd><dt>まず確認するもの</dt><dd>屋根材、築年、雨漏りの跡、サーモの温度分布</dd></dl>
+        <span class="kd-go">屋根・外壁のコーティングを見る</span>
+      </a>
+      <a class="kd-card reveal" href="business/cubicle/">
+        <div class="kd-num">04</div>
+        <h3>キュービクル・受変電設備の 更新時期が不安</h3>
+        <dl><dt>考えられる原因</dt><dd>設置年、点検の指摘、部品供給、使用環境</dd><dt>主な解決策</dt><dd>部分更新、全更新、機器単位更新、工程分割</dd><dt>まず確認するもの</dt><dd>銘板、設置年、単線結線図、点検報告書</dd></dl>
+        <span class="kd-go">更新範囲の決め方を読む</span>
+      </a>
+      <a class="kd-card reveal" href="lp/#order">
+        <div class="kd-num">05</div>
+        <h3>停電時に何時間動かせるか 知りたい</h3>
+        <dl><dt>考えられる原因</dt><dd>止めてはいけない設備が未整理、蓄電容量と出力、自立運転の範囲</dd><dt>主な解決策</dt><dd>太陽光と蓄電池の組み合わせ、重要負荷の絞り込み</dd><dt>まず確認するもの</dt><dd>止められない設備の一覧と消費電力、停電の許容時間</dd></dl>
+        <span class="kd-go">太陽光と蓄電池の説明を見る</span>
+      </a>
+      <a class="kd-card reveal" href="business/denkidai/#c-solar">
+        <div class="kd-num">06</div>
+        <h3>自家消費太陽光の採算を 知りたい</h3>
+        <dl><dt>考えられる原因</dt><dd>昼間の使用量、屋根条件、買取条件、買い方</dd><dt>主な解決策</dt><dd>自家消費を軸にした条件別の試算</dd><dt>まず確認するもの</dt><dd>電気料金明細12か月分、屋根の面積と向き</dd></dl>
+        <span class="kd-go">電気代の構造から採算へ</span>
+      </a>
+      <a class="kd-card reveal" href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener">
+        <div class="kd-num">07</div>
+        <h3>複数店舗・複数施設の 修繕をまとめたい</h3>
+        <dl><dt>考えられる原因</dt><dd>拠点ごとに業者・仕様・時期がばらばら</dd><dt>主な解決策</dt><dd>仕様の統一、優先順位づけ、年度計画</dd><dt>まず確認するもの</dt><dd>拠点一覧、築年、直近の修繕履歴</dd></dl>
+        <span class="kd-go">拠点一覧を送って整理を依頼する</span>
+      </a>
+      <a class="kd-card reveal" href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener">
+        <div class="kd-num">08</div>
+        <h3>補助金を使える改修か 確認したい</h3>
+        <dl><dt>考えられる原因</dt><dd>制度は年度・公募・要件で変わり、対象と断定できない</dd><dt>主な解決策</dt><dd>設備と工事内容を確認してから最新の公募要領で照合</dd><dt>まず確認するもの</dt><dd>改修の対象設備、予定時期、所有者と用途</dd></dl>
+        <span class="kd-go">公募状況を確認して相談する</span>
+      </a>
+    </div>
+    <p class="kd-note">どれにも当てはまらない、複数が重なる場合は、そのまま <a href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener">無料診断・お問い合わせ</a> からお聞かせください。ご家庭の方は <a href="residential/">住まいの困りごと</a> へ。</p>
+  </div>
+</section>
+
+<section class="kd-trust" id="trust">
+  <div class="kd-inner">
+    <div class="section-eyebrow reveal">寺嵜の約束</div>
+    <h2 class="section-title reveal">まず測る 不要なら不要と言う</h2>
+    <p class="section-sub reveal">サーモカメラ・電力データ・現地条件を確認してから提案します。設備交換を前提にしません。</p>
+    <div class="kd-trust-grid">
+      <div class="kd-trust-item reveal"><h3>まず測る</h3><p>サーモカメラで屋根・天井・窓の温度分布を、電力データで負荷の時間帯を確認します。感覚や一般論ではなく、御社の建物の数字で判断します。</p></div>
+      <div class="kd-trust-item reveal"><h3>不要なら不要と言う</h3><p>測った結果、設備交換や工事が最善でない場合は、そのままお伝えします。運用の見直しや部分対応で済むなら、その提案で終わります。</p></div>
+      <div class="kd-trust-item reveal"><h3>交換を前提にしない</h3><p>既設の設備・屋根・契約を活かせる可能性から順に検討します。費用の大きい選択肢は、比較材料をそろえてからご判断いただきます。</p></div>
+    </div>
+    <div class="kd-face reveal">
+      <img src="assets/terasaki-profile.jpg" alt="代表 寺嵜忠弘">
+      <div class="t"><b>何を選ぶかより 何から始めるかを一緒に整理します</b>代表 寺嵜忠弘 ｜ 電気業界27年 ｜ 千葉拠点。高い設備から勧めることはありません。必要のない工事は必要ないとお伝えします。
+        <div class="btns"><a class="b1" href="https://forms.gle/3u6ep7TNp73fqY728" target="_blank" rel="noopener" data-event="cta_click" data-cta-type="hub_consult" data-cta-position="hub">電気明細や写真を見てもらう</a><a class="b2" href="https://page.line.me/119upwsl" target="_blank" rel="noopener" data-event="line_click" data-cta-position="hub" data-line-account="@119upwsl">図面・写真をLINEで送る</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ▲ 困りごと入口 ここまで -->
+
 <!-- ▼ 建物まるごと冷暖（reidan由来・2026-06-11追加） -->
-<section class="rdn-proof"><div class="rdn-wrap"><div class="rdn-proof-grid">
+<section class="rdn-proof" id="jisseki"><div class="rdn-wrap"><div class="rdn-proof-grid">
   <div><div class="n">100<small>万㎡+</small></div><div class="l">総施工面積</div><div class="src">冷暖メイスター実績</div></div>
   <div><div class="n">30<small>カ国</small></div><div class="l">遮熱技術の採用国</div><div class="src">冷暖メイスター実績</div></div>
   <div><div class="n">20<small>年</small></div><div class="l">遮熱ポリウレア耐久</div><div class="src">脂肪族ポリウレア</div></div>
@@ -1351,7 +1480,7 @@ a{ color:inherit; text-decoration:none; }
       </a>
 
       <!-- 3: 害虫ブロック -->
-      <a href="proposals/pest-block/" class="service-card">
+      <a href="lp/gaichu-block/" class="service-card">
         <div class="card-img card-img-3">
           <div class="card-img-emoji">🛡</div>
           <div class="card-img-tag">B2B特化</div>
@@ -1459,7 +1588,7 @@ a{ color:inherit; text-decoration:none; }
 
     <div class="profile-card reveal">
       <div class="profile-photo">
-        <img src="images/terasaki-profile.jpg" alt="寺嵜忠弘 / 代表 / 省エネアドバイザー">
+        <img src="assets/terasaki-profile.jpg" alt="寺嵜忠弘 / 代表 / 省エネアドバイザー">
         <div class="photo-tag">REPRESENTATIVE</div>
       </div>
       <div class="profile-info">
@@ -1589,11 +1718,14 @@ a{ color:inherit; text-decoration:none; }
       <div>
         <h4>サービス</h4>
         <ul>
-          <li><a href="simulator/">省エネシミュレーター</a></li>
+          <li><a href="#komarigoto">困りごとから探す（法人）</a></li>
+          <li><a href="business/atsui/">工場・倉庫が暑い</a></li>
+          <li><a href="business/denkidai/">電気代・デマンドが高い</a></li>
+          <li><a href="business/cubicle/">キュービクルの更新</a></li>
           <li><a href="shanetsu-chiba/">千葉の遮熱（屋根遮熱・遮熱塗装）</a></li>
           <li><a href="lp/">省エネ・創エネ ダブルプラン</a></li>
-          <li><a href="proposals/pest-block/">害虫ブロック</a></li>
-          <li><a href="service.html">全サービス一覧</a></li>
+          <li><a href="simulator/">省エネシミュレーター</a></li>
+          <li><a href="residential/">ご家庭の方はこちら（住まいの困りごと）</a></li>
         </ul>
       </div>
 

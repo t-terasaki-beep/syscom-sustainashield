@@ -1,0 +1,220 @@
+/* ==========================================================
+   kadai.css — 困りごと入口（HUB）・課題LP 共通スタイル
+   配色正本：R1 Web全面改修 デザインシステム（2026-08-21 寺嵜承認）
+   白基調70%以上 ／ スカイブルー #00AEEF は見出し点・左罫・区切り線のみ
+   主CTA 濃紺 #102F40（本文色と同じ）／ LINEグリーン ／ 見出し Shippori Mincho B1・本文 Zen Kaku Gothic New
+   絵文字・淡色ベタ塗り背景・グラデーションは使わない
+   ========================================================== */
+:root{
+  --sky:#00AEEF; --sky-deep:#0087BA; --orange:#102F40; --orange-deep:#1B4A63; /* CTAは濃紺（旧オレンジ変数名を流用） */
+  --ink:#102F40; --sub:#4F6472; --muted:#7A8A94; --line:#E1E8EC; --line-soft:#EEF3F6;
+  --white:#FFFFFF; --lineapp:#06C755; --photo:#EAF2F7;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;color:var(--ink);background:var(--white);line-height:1.95;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:16px;font-weight:500}
+.serif,h1,.h2,.kadai-card h3,.cause h3,.path h3,.trust-item h3,.step3 h3,.faq-item h3,.cta-box h3,.footer .name,.nogo h3{font-family:"Shippori Mincho B1","Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;font-weight:700;letter-spacing:.02em}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none}
+b,strong{font-weight:700}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.section{padding:64px 0;border-top:1px solid var(--line)}
+.section.first{border-top:0}
+@media(max-width:640px){.section{padding:44px 0}}
+.eyebrow{font-size:13px;letter-spacing:.08em;color:var(--sub);font-weight:500;margin-bottom:12px}
+.h2{font-size:clamp(22px,3vw,29px);line-height:1.55;color:var(--ink);margin-bottom:14px}
+.lead{font-size:16px;color:var(--sub);line-height:1.95;max-width:760px}
+.note{font-size:13px;color:var(--muted);line-height:1.8;margin-top:14px}
+.alt{background:var(--white)}
+
+/* topbar / header */
+.topbar{background:var(--white);color:var(--sub);font-size:12px;letter-spacing:.03em;padding:8px 0;border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.topbar a{color:var(--ink)}.topbar a:hover{color:var(--sky-deep)}
+.site-header{background:var(--white);border-bottom:3px solid var(--sky);position:sticky;top:0;z-index:100}
+.header-inner{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{width:40px;height:40px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--white);font-family:"Shippori Mincho B1",serif;font-weight:800;font-size:19px;flex:0 0 40px}
+.brand-text .name{font-weight:700;font-size:15px;color:var(--ink);white-space:nowrap}
+.brand-text .sub{font-size:10px;color:var(--muted);letter-spacing:.1em;margin-top:2px}
+.gnav{display:flex;gap:22px;align-items:center}
+.gnav a{font-size:14px;font-weight:600;color:var(--ink)}.gnav a:hover{color:var(--sky-deep)}
+.gnav .cta-mini{background:var(--orange);color:var(--white);padding:10px 18px;border-radius:4px;font-size:14px;font-weight:700;white-space:nowrap}
+.gnav .cta-mini:hover{background:var(--orange-deep);color:var(--white)}
+@media(max-width:900px){.gnav{gap:10px}.gnav a:not(.cta-mini){display:none}.brand-text .sub{display:none}.brand-text .name{font-size:14px}}
+
+/* hero（白基調・写真スロット） */
+.hero{background:var(--white);padding:56px 0 48px;border-bottom:1px solid var(--line)}
+.hero-inner{max-width:1040px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:center}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;gap:26px}}
+.hero .eyebrow{margin-bottom:14px}
+.hero h1{font-size:clamp(24px,3.2vw,34px);line-height:1.5;margin-bottom:16px;letter-spacing:.01em;color:var(--ink);font-weight:800}
+.hero h1 .l{display:inline-block}
+.hero h1 br.pc{display:none}
+@media(min-width:861px){.hero h1 br.pc{display:inline}}
+@media(max-width:400px){.hero h1{font-size:24px}}
+.hero h1 .accent{color:var(--ink)}
+.hero .lead{max-width:640px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.hero-meta{margin-top:16px;font-size:13px;color:var(--sub)}
+.hero-meta b{color:var(--ink)}
+.hero-photo{position:relative;background:var(--photo);border-radius:6px;overflow:hidden;min-height:300px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--sub);font-size:13px;line-height:1.7;padding:20px}
+.hero-photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.hero-photo .ph{display:flex;flex-direction:column;align-items:center;gap:8px}
+.hero-photo .ph svg{width:36px;height:36px;color:var(--sky-deep)}
+@media(max-width:860px){.hero-photo{min-height:200px}}
+.hero-caption{font-size:12px;color:var(--muted);margin-top:8px;border-left:3px solid var(--sky);padding-left:10px;line-height:1.7}
+
+/* ボタン */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 26px;border-radius:4px;font-weight:700;font-size:16px;transition:background .15s,color .15s;text-align:center;line-height:1.3}
+.btn-gold{background:var(--orange);color:var(--white)}
+.btn-gold:hover{background:var(--orange-deep);color:var(--white)}
+.btn-ghost{background:var(--white);color:var(--ink);border:1.5px solid #B9C6CF}
+.btn-ghost:hover{background:var(--line-soft)}
+.btn-navy{background:var(--ink);color:var(--white)}.btn-navy:hover{background:#0B2230;color:var(--white)}
+.btn-line{background:var(--white);color:var(--ink);border:1.5px solid var(--lineapp)}
+.btn-line:hover{background:#F1FCF5}
+.btn-line svg{color:var(--lineapp)}
+.btn-tel{background:var(--white);color:var(--ink);border:1.5px solid var(--line)}
+.btn svg{width:18px;height:18px}
+
+/* 困りごとカード（HUB）：白地・左罫・同形の枠を強調しない */
+.kadai-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px;margin-top:22px;border-top:1px solid var(--line)}
+@media(max-width:700px){.kadai-grid{grid-template-columns:1fr;gap:0}}
+.kadai-card{display:flex;flex-direction:column;padding:22px 0 20px 18px;border-bottom:1px solid var(--line);border-left:3px solid var(--sky);margin-top:-1px;position:relative;transition:background .15s}
+.kadai-card:hover{background:var(--line-soft)}
+.kadai-card .num{font-family:"Shippori Mincho B1",serif;font-size:13px;letter-spacing:.1em;color:var(--sky-deep);font-weight:700}
+.kadai-card h3{font-size:19px;line-height:1.5;color:var(--ink);margin:4px 0 10px;font-weight:700}
+.kadai-card dl{font-size:13.5px;color:var(--sub);line-height:1.75;display:grid;grid-template-columns:auto 1fr;column-gap:10px;row-gap:3px}
+.kadai-card dt{font-weight:700;color:var(--ink);white-space:nowrap}
+.kadai-card dt::after{content:"："}
+.kadai-card dd{margin:0}
+.kadai-card .go{margin-top:auto;padding-top:12px;font-size:14px;font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--sky)}
+
+/* 信頼ブロック（白地・上罫スカイブルー） */
+.trust{background:var(--white);border-top:3px solid var(--sky)}
+.trust-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;margin-top:22px;border-top:1px solid var(--line)}
+@media(max-width:760px){.trust-grid{grid-template-columns:1fr;gap:0}}
+.trust-item{padding:18px 0 18px 16px;border-left:3px solid var(--sky);border-bottom:1px solid var(--line)}
+.trust-item h3{font-size:17px;color:var(--ink);margin-bottom:6px;font-weight:700}
+.trust-item p{font-size:14px;color:var(--sub);line-height:1.8}
+
+/* あなたの場合は（症状チップ） */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.chips a{background:var(--white);border:1px solid var(--ink);color:var(--ink);border-radius:3px;padding:10px 18px;font-size:14.5px;font-weight:700;min-height:44px;display:inline-flex;align-items:center}
+.chips a:hover{background:var(--ink);color:var(--white)}
+
+/* 気づきの場面 */
+.scene{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0 22px 22px;margin-top:18px;border-left:3px solid var(--ink)}
+.scene .tag{font-size:12px;letter-spacing:.1em;color:var(--sub);font-weight:700;margin-bottom:8px}
+.scene p{font-size:15.5px;color:var(--ink);line-height:1.95}
+.scene p+p{margin-top:8px}
+.scene .view{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:15px;color:var(--sub)}
+.scene .view b{color:var(--ink)}
+
+/* 原因・確認リスト */
+.cause-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px;margin-top:20px;border-top:1px solid var(--line)}
+@media(max-width:700px){.cause-grid{grid-template-columns:1fr}}
+.cause{padding:18px 0 18px 16px;border-bottom:1px solid var(--line);border-left:3px solid var(--sky)}
+.cause h3{font-size:17px;color:var(--ink);margin-bottom:6px;font-weight:700}
+.cause p{font-size:14px;color:var(--sub);line-height:1.85}
+.check{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;margin-top:18px}
+.check li{position:relative;padding-left:30px;font-size:15.5px;line-height:1.8;margin-bottom:8px}
+.check li::before{content:"";position:absolute;left:2px;top:8px;width:16px;height:16px;border:2px solid var(--sky);border-radius:3px}
+.check .hint{font-size:13px;color:var(--muted);margin-top:10px}
+
+/* 解決策の分岐 */
+.paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;margin-top:20px;border-top:1px solid var(--line)}
+@media(max-width:820px){.paths{grid-template-columns:1fr}}
+.path{padding:20px 0 20px 16px;display:flex;flex-direction:column;border-bottom:1px solid var(--line);border-left:3px solid var(--line)}
+.path.main{border-left-color:var(--ink)}
+.path .role{font-size:12px;letter-spacing:.12em;font-weight:700;color:var(--sub)}
+.path.main .role{color:var(--ink)}
+.path h3{font-size:18px;color:var(--ink);margin:4px 0 8px;font-weight:700}
+.path p{font-size:14px;color:var(--sub);line-height:1.85}
+.path .fit{font-size:13.5px;margin-top:10px;color:var(--sub);line-height:1.8}
+.path .fit b{color:var(--ink)}
+.path a.more{margin-top:auto;padding-top:12px;font-size:14px;font-weight:700;color:var(--ink);text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--sky)}
+.nogo{margin-top:22px;border-top:3px solid var(--ink);border-bottom:1px solid var(--line);padding:18px 0}
+.nogo h3{font-size:17px;color:var(--ink);margin-bottom:6px;font-weight:700}
+.nogo p{font-size:15px;color:var(--ink);line-height:1.85}
+
+/* 費用の決まり方 */
+.cost-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px;margin-top:18px;border-top:1px solid var(--line)}
+@media(max-width:700px){.cost-list{grid-template-columns:1fr}}
+.cost-list li{padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.8}
+.cost-list li b{color:var(--ink);display:block;font-size:15px}
+.cost-list li b+*{color:var(--sub)}
+
+/* FAQ */
+.faq-item{border-bottom:1px solid var(--line);padding:18px 0}
+.faq-item:first-of-type{border-top:1px solid var(--line)}
+.faq-item h3{font-size:16.5px;color:var(--ink);margin-bottom:8px;font-weight:700}
+.faq-item h3::before{content:"Q ";color:var(--sky-deep);font-weight:900}
+.faq-item p{font-size:14.5px;color:var(--sub);line-height:1.9}
+.faq-item p::before{content:"A ";color:var(--ink);font-weight:900}
+
+/* 次の一歩 */
+.steps3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;margin-top:20px;border-top:1px solid var(--line)}
+@media(max-width:820px){.steps3{grid-template-columns:1fr}}
+.step3{padding:18px 0 18px 16px;border-left:3px solid var(--sky);border-bottom:1px solid var(--line)}
+.step3 .n{font-family:"Shippori Mincho B1",serif;font-size:13px;letter-spacing:.1em;color:var(--sky-deep);font-weight:700}
+.step3 h3{font-size:17px;color:var(--ink);margin:4px 0 6px;font-weight:700}
+.step3 p{font-size:14px;color:var(--sub);line-height:1.85}
+
+/* 相談ブロック（寺嵜本人＋CTA2つ） */
+.cta-box{margin-top:28px;border-top:3px solid var(--sky);padding:28px 0 0;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+@media(max-width:700px){.cta-box{grid-template-columns:1fr}}
+.cta-box .face{width:120px;height:120px;border-radius:50%;overflow:hidden;background:var(--photo);flex:0 0 120px}
+.cta-box .face img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.cta-box h3{font-weight:700;font-size:clamp(19px,2.6vw,25px);line-height:1.5;margin-bottom:8px;color:var(--ink)}
+.cta-box p{font-size:15px;color:var(--sub);margin-bottom:16px;line-height:1.85}
+.cta-box .who{font-size:13px;color:var(--muted);margin-bottom:12px}
+.cta-box .btns{display:flex;gap:10px;flex-wrap:wrap}
+.cta-box .btns .btn{min-width:220px}
+.cta-box .tel{font-size:14px;color:var(--sub);margin-top:12px}
+.cta-box .tel a{font-weight:700;color:var(--ink);border-bottom:1px solid var(--ink)}
+.cta-box .small{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+/* 関連リンク */
+.related{background:var(--white)}
+.related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;margin-top:16px;border-top:1px solid var(--line)}
+@media(max-width:820px){.related-grid{grid-template-columns:1fr}}
+.related-col{padding:16px 0}
+.related-col h4{font-size:12.5px;letter-spacing:.12em;color:var(--sky-deep);margin-bottom:8px;font-weight:700}
+.related-col li{margin-bottom:8px;font-size:14.5px}
+.related-col a{color:var(--ink);font-weight:700;border-bottom:1px solid var(--line)}
+.related-col a:hover{color:var(--sky-deep);border-color:var(--sky)}
+
+/* ミニ計算 */
+.calc{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin-top:18px}
+.calc table{width:100%;border-collapse:collapse;font-size:14.5px}
+.calc th,.calc td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.calc th{font-size:13px;color:var(--sub);font-weight:700}
+.calc input{width:100%;max-width:120px;padding:9px;border:1px solid var(--line);border-radius:4px;font-size:16px;font-family:inherit;color:var(--ink)}
+.calc .result{margin-top:12px;font-size:15px}
+.calc .result b{font-size:24px;color:var(--ink)}
+
+/* 比較表 */
+.cmp{width:100%;border-collapse:collapse;background:var(--white);border-top:1px solid var(--line);font-size:14px;margin-top:18px}
+.cmp th,.cmp td{padding:12px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{color:var(--sub);font-size:13px;font-weight:700}
+.cmp td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
+.cmp-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:640px){.cmp{min-width:560px}}
+
+/* パンくず */
+.crumb{font-size:12.5px;color:var(--muted);padding:12px 0}
+.crumb a{color:var(--sky-deep)}
+.crumb span::before{content:" › ";color:var(--muted)}
+
+/* footer */
+.footer{background:var(--white);color:var(--ink);padding:44px 0 26px;border-top:3px solid var(--sky)}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:28px;margin-bottom:30px}
+@media(max-width:820px){.footer-grid{grid-template-columns:1fr}}
+.footer .name{font-size:18px;font-weight:700;margin-bottom:6px}
+.footer .desc{font-size:13px;color:var(--sub);line-height:1.8}
+.footer h4{font-size:12.5px;color:var(--sky-deep);letter-spacing:.12em;margin-bottom:12px;font-weight:700}
+.footer li{margin-bottom:8px}.footer li a{font-size:14px;color:var(--ink)}.footer li a:hover{color:var(--sky-deep)}
+.footer-bottom{border-top:1px solid var(--line);padding-top:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted)}

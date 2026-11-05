@@ -1,0 +1,55 @@
+/* ==========================================================
+   ss-enelab-bright-v1.css — 千葉エネルギー研究会の特設ページ（用地募集・系統用蓄電池）を
+   研究会トップ（菜の花のヒーロー・スカイ×菜の花イエロー）と同じ明るさに揃える上書きレイヤー（2026-09-28）
+   使い方：/chiba-land-search/ と /grid-battery/ の </head> 直前に1行
+     <link rel="stylesheet" href="/assets/ss-enelab-bright-v1.css?v=1">
+   戻し方：その1行を消す（またはこのファイルを空にする）
+   ========================================================== */
+body{background:#F3FBFE !important}
+/* ヒーロー（:not(#ss-x) はページ内の長いセレクタに負けないための詳細度上げ）：濃い緑の重ね → 研究会トップと同じ菜の花の写真＋青のグラデーション */
+html body .hero:not(#ss-x){background:linear-gradient(90deg,rgba(0,64,120,.66) 0%,rgba(0,88,150,.42) 48%,rgba(0,110,180,.05) 85%),url('/chiba-ene-lab/assets/lab-hero.jpg') center 62%/cover no-repeat !important;background-color:#3A8FD0 !important}
+html body .hero::after{background:radial-gradient(700px 320px at 85% -10%,rgba(255,201,51,.28),transparent 60%) !important}
+html body .hero h1 .hl{color:#FFC933 !important}
+@media(max-width:640px){html body .hero:not(#ss-x){background:linear-gradient(180deg,rgba(0,64,120,.72) 0%,rgba(0,88,150,.5) 60%,rgba(0,110,180,.15) 100%),url('/chiba-ene-lab/assets/lab-hero.jpg') 62% 100%/cover no-repeat !important}}
+/* 小見出し・ボタン：研究会トップと同じ色 */
+html body .eyebrow{color:#0079AD !important}
+html body .btn-out{color:#0079AD !important;border-color:#0093CF !important;background:#fff !important}
+/* 研究会トップへ戻る導線（ヘッダーのロゴ） */
+html body .topbar{border-bottom:3px solid #FFC933 !important}
+
+/* ---------- 2026-09-28 追加：研究会トップと同じヘッダー（研究会TOP・相談の入口・加盟企業・用地募集・系統用蓄電池・電話・LINE） ---------- */
+.lab-hd{position:sticky;top:0;z-index:80;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:3px solid #FFC933;font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
+.lab-hd .in{max-width:1160px;margin:0 auto;padding:8px 20px;display:flex;align-items:center;gap:18px}
+.lab-hd .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#102F40;margin-right:auto}
+.lab-hd .brand img{width:48px;height:48px;object-fit:contain}
+.lab-hd .brand b{display:block;font-size:16px;font-weight:900;line-height:1.3;letter-spacing:.04em}
+.lab-hd .brand small{display:block;font-size:10.5px;color:#4F6472;letter-spacing:.08em}
+.lab-hd nav{display:flex;gap:18px;font-size:14px;font-weight:700}
+.lab-hd nav a{color:#102F40;text-decoration:none;white-space:nowrap;padding:6px 0;border-bottom:2px solid transparent}
+.lab-hd nav a:hover,.lab-hd nav a[aria-current]{color:#0079AD;border-bottom-color:#00AEEF}
+.lab-hd .tel{color:#102F40;text-decoration:none;font-weight:800;font-size:17px;line-height:1.2;white-space:nowrap}
+.lab-hd .tel small{display:block;font-size:10.5px;font-weight:700;color:#4F6472}
+.lab-hd .line{background:#06C755;color:#fff;text-decoration:none;font-weight:900;font-size:14px;border-radius:999px;padding:10px 18px;white-space:nowrap}
+@media(max-width:980px){
+  .lab-hd .in{flex-wrap:wrap;gap:8px 12px;padding:8px 14px}
+  .lab-hd .tel{display:none}
+  .lab-hd nav{order:3;width:100%;overflow-x:auto;gap:6px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .lab-hd nav a{border:1.5px solid #D9E8EF;border-radius:999px;padding:5px 12px;font-size:13px}
+  .lab-hd nav a[aria-current]{background:#E8F7FD;border-color:#00AEEF}
+  .lab-hd .brand img{width:40px;height:40px}
+  .lab-hd .brand b{font-size:15px}
+  .lab-hd .line{padding:8px 14px;font-size:13px}
+}
+/* 「こんなご相談も」帯（用地募集ページ） */
+.lab-also{background:#FFFBEA;border-bottom:1px solid #F3E3A8}
+.lab-also .in{max-width:1040px;margin:0 auto;padding:26px 20px;display:grid;grid-template-columns:auto 1fr;gap:10px 22px;align-items:center}
+.lab-also .t{font-weight:900;color:#102F40;font-size:15px;white-space:nowrap}
+.lab-also ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.lab-also li a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #FFC933;border-radius:999px;padding:8px 16px;font-weight:800;font-size:14px;color:#102F40;text-decoration:none}
+.lab-also li a:after{content:"→";color:#0079AD}
+@media(max-width:640px){.lab-also .in{grid-template-columns:1fr}}
+/* スマホではヘッダーを上に貼り付けない（本文を広く見せる。画面下の電話・LINEバーはそのまま） */
+@media(max-width:700px){.lab-hd{position:static !important}
+  /* 5つのリンクを2行に折り返して全部見せる（横にはみ出さないので、スマホ用メニューのスクリプトにも置き換えられない） */
+  .lab-hd nav{flex-wrap:wrap;overflow:visible;padding-bottom:2px}
+  .lab-hd nav a{padding:5px 11px}}

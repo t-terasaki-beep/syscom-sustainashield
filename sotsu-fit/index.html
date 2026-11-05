@@ -85,6 +85,29 @@
   .sticky .btn{padding:13px;font-size:15px}
   footer{padding:28px 0 110px;text-align:center;color:var(--sub);font-size:13px}
   .footer-brand{font-weight:700;color:var(--ink)}
+  .cmpwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px}
+  .cmp{width:100%;min-width:560px;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:13.5px}
+  .cmp th,.cmp td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  .cmp th{background:var(--green-d);color:#fff;font-size:12.5px}
+  .cmp td:first-child{font-weight:700;color:var(--green-d);white-space:nowrap}
+  .chk{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:14px}
+  .chk ul{list-style:none;margin:0;padding:0}
+  @media(max-width:560px){
+    .cmp{min-width:0}
+    .cmp thead{display:none}
+    .cmp tr{display:block;border-bottom:2px solid var(--line);padding:8px 0}
+    .cmp td{display:block;border:0;padding:4px 10px}
+    .cmp td:first-child{white-space:normal;font-size:15px;padding-top:8px}
+    .cmp td[data-label]::before{content:attr(data-label);display:block;font-size:11.5px;color:var(--sub);font-weight:700}
+  }
+  .chk li{position:relative;padding-left:24px;margin-bottom:6px;font-size:14.5px}
+  .chk li::before{content:"";position:absolute;left:0;top:7px;width:13px;height:13px;border:2px solid var(--green);border-radius:3px}
+  .rel{display:grid;gap:8px;margin-top:12px}
+  .rel a{display:block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-weight:700;color:var(--green-d);font-size:14.5px}
+  .rel a::before{content:"→ ";color:var(--accent)}
+  .promise{background:#0f3f20;color:#fff;border-radius:14px;padding:18px}
+  .promise h3{margin:0 0 6px;font-size:16px;color:#ffe08a}
+  .promise p{margin:0;font-size:14px;opacity:.95}
   @media(min-width:560px){.hero h1{font-size:34px} .hero-cta{grid-template-columns:1.3fr 1fr}}
 </style>
 </head>
@@ -170,6 +193,44 @@
       <div class="opt"><div class="ic">🚗</div><h4>V2H / EV</h4><p>クルマの電池を家の電気に活用。</p></div>
     </div>
     <p class="small muted" style="margin-top:12px">※組み合わせや容量はご家庭の電気の使い方に合わせて最適化します。</p>
+  </div>
+</section>
+
+<!-- 卒FIT 4つの選択肢の比較（P0-4 / 2026-09-26） -->
+<section id="hikaku">
+  <div class="wrap">
+    <p class="eyebrow">卒FIT後どうするか</p>
+    <h2>4つの選択肢を 同じ前提で比べる</h2>
+    <p class="muted small" style="margin-top:-6px">どれが合うかは、年間発電量・自家消費量・給湯の条件で決まります。まず下の3つを確認してから比べてください。</p>
+    <div class="chk">
+      <ul>
+        <li><strong>年間発電量</strong>：発電モニターか、電力会社の売電明細で分かります</li>
+        <li><strong>自家消費量</strong>：発電量から売電量を引いた分。昼間に家で使っている電気です</li>
+        <li><strong>給湯の条件</strong>：給湯器の種類と使用年数、家族の入浴時間帯</li>
+      </ul>
+    </div>
+    <div class="cmpwrap">
+    <table class="cmp">
+      <thead><tr><th>選択肢</th><th>向く家</th><th>先に確認すること</th><th>注意点</th></tr></thead>
+      <tbody>
+        <tr><td>売電を続ける</td><td data-label="向く家">昼間の使用が少なく、設備投資をしたくない家</td><td data-label="先に確認すること">卒FIT後の買取単価と、契約先の選択肢</td><td data-label="注意点">単価は下がるため、「使う」側の価値と比べてから決めます</td></tr>
+        <tr><td>自家消費を増やす</td><td data-label="向く家">昼間に家で電気を使える家</td><td data-label="先に確認すること">昼間に動かせる家電・給湯・充電の有無</td><td data-label="注意点">設備を入れずにできる分から始めます</td></tr>
+        <tr><td>蓄電池</td><td data-label="向く家">夜間の使用が多い、停電の備えも欲しい家</td><td data-label="先に確認すること">停電時に動かしたい機器と必要な電力量</td><td data-label="注意点">容量が合わないと過剰投資になります。付けない選択肢も並べます</td></tr>
+        <tr><td>おひさまエコキュート（昼間沸き上げ）</td><td data-label="向く家">給湯器が交換時期で、昼間の余剰が多い家</td><td data-label="先に確認すること">今の給湯器の種類・年数、設置場所の条件</td><td data-label="注意点">給湯器が新しい場合は急がず、交換時期に合わせます</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="promise" style="margin-top:14px">
+      <h3>まず測る 不要なら不要と言う</h3>
+      <p>発電量・自家消費量・給湯条件を確認してから提案します。蓄電池もエコキュートも、今は入れない方がよい場合はそのままお伝えします。</p>
+    </div>
+    <p class="eyebrow" style="margin-top:22px">次に知りたいこと</p>
+    <div class="rel">
+      <a href="../residential/battery/">蓄電池は本当に必要か 停電で何時間使えるか</a>
+      <a href="../residential/ecocute/">エコキュートの交換費用と故障 直すか替えるか</a>
+      <a href="../residential/solar/">太陽光は元が取れるか（増設・買い替えを考える方へ）</a>
+      <a href="../residential/#komarigoto">住まいの困りごとから探す（入口へ戻る）</a>
+    </div>
   </div>
 </section>
 

@@ -1,0 +1,124 @@
+/* ==========================================================
+   ss-bright-legacy-v1.css — 旧型の住宅クラスタページを住宅HUB（明るい型）に揃える上書きレイヤー（2026-09-27）
+   対象：/taiyoko-chiba/ /ecocute-chiba/* /sotsufit-chiba/* /teiden-taisaku-chiba/* /atsusa-taisaku-chiba/* /residential/propane/
+         （ページ内に同じ <style> を直書きした「ターコイズ・リズム v1」テンプレート：.ss-top / .ss-hd / .ss-sub / .ss-mcta）
+   使い方：各ページの </head> 直前に1行だけ追加
+     <link rel="stylesheet" href="/assets/ss-bright-legacy-v1.css?v=1">
+   戻し方：その1行を消す（またはこのファイルを空にする）。HTML本文・既存CSSは変更しない
+   値の出典：ss-bright-v1.css（住宅HUB）と同じトークン。CTAはスカイ #0093CF（2026-09-27 寺嵜決定）
+   ========================================================== */
+
+/* ---------- 色の変数を住宅HUBの色へ（ページ内の var() がすべて追従する） ---------- */
+:root{
+  --sky:#00AEEF; --sky-d:#0093CF; --sky-dd:#0079AD;
+  --pale:#E8F7FD; --pale2:#F3FBFE; --pale3:#E8F7FD;
+  --org:#0093CF; --org-d:#0079AD; --org-pale:#E8F7FD; --on-org:#fff;
+  --ink:#102F40; --soft:#4F6472; --line:#D9E8EF;
+  --ssl-cta:#0093CF; --ssl-cta-deep:#0079AD; --ssl-band:#E8F7FD; --ssl-band-light:#F3FBFE;
+}
+
+/* ---------- 書体：住宅HUBと同じ Noto Sans JP ---------- */
+h1,h2,h3,.sec-title,.hd{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,sans-serif !important;letter-spacing:.04em !important}
+
+/* ---------- 最上部の帯：濃紺 → 淡い水色 ---------- */
+.ss-top{background:var(--ssl-band-light) !important;color:var(--ink) !important;border-bottom:1px solid var(--line)}
+.ss-top a{color:var(--sky-dd) !important}
+
+/* ---------- ヘッダー：白・丸いボタン ---------- */
+.ss-hd{border-bottom:1px solid var(--line) !important}
+.ss-hd .go{background:var(--ssl-cta) !important;color:#fff !important;border-radius:999px !important;padding:12px 20px !important}
+.ss-hd .go:hover{background:var(--ssl-cta-deep) !important}
+.ss-hd .sw{border-radius:999px !important;border-color:#B9D3DF !important;color:var(--ink) !important;border-width:1.5px !important}
+.ss-hd .nav a:hover{color:var(--sky-d) !important}
+
+/* ---------- サービス帯（屋根・外壁／窓／太陽光…）：住宅HUBのサービスナビと同じ ---------- */
+.ss-sub{background:var(--ssl-band-light) !important}
+.ss-sub a{color:var(--ink) !important}
+.ss-sub a:hover{color:var(--sky-d) !important}
+.ss-sub a[aria-current]{color:var(--sky-dd) !important;box-shadow:inset 0 -3px 0 var(--sky) !important}
+
+/* ---------- ページ内メニュー（夜型で十分な家…）：白地の丸ボタン、現在地と相談はスカイ ---------- */
+.solarnav{box-shadow:none !important;border-bottom:1px solid var(--line) !important}
+.solarnav a{border:1.5px solid #B9D3DF !important;border-radius:999px !important}
+.solarnav a[aria-current],.solarnav a.talk{background:var(--ssl-cta) !important;border-color:var(--ssl-cta) !important;color:#fff !important}
+
+/* ---------- 青緑の点線の区切りをやめる（住宅HUBは帯の色で区切る） ---------- */
+html body section.sec,html body main section.section{background-image:none !important}
+.sec-pale{background:var(--ssl-band-light) !important}
+.sec-sky{background:var(--ssl-band) !important}
+
+/* ---------- 見出しまわり：丸いラベル＋見出し下の短い罫 ---------- */
+.eyebrow{background:var(--ssl-band);color:var(--sky-dd) !important;border-radius:999px;padding:5px 13px !important;font-size:12.5px !important;font-weight:700 !important}
+.eyebrow::before{display:none !important}
+.sec-pale .eyebrow,.sec-sky .eyebrow,.final .eyebrow{background:#fff}
+.sec-head h2{position:relative;padding-bottom:16px}
+.sec-head h2::after{content:"";position:absolute;left:0;bottom:0;width:30px;height:3px;background:var(--sky);border-radius:2px}
+.sec-head.center h2::after,.center .sec-head h2::after,.sec-head[style*="center"] h2::after{left:50%;transform:translateX(-50%)}
+.hero-tag{border:0 !important;background:var(--ssl-band) !important;color:var(--sky-dd) !important;font-size:13px !important}
+
+/* ---------- 表：見出し行を濃紺ベタ → 淡い水色 ---------- */
+table.t thead th{background:var(--ssl-band) !important;color:var(--ink) !important}
+table.t thead th.hi{background:var(--ssl-cta) !important;color:#fff !important}
+table.t tbody th{background:var(--ssl-band-light) !important}
+
+/* ---------- 直書き（style属性）の旧色：表の見出しセル（#0B6F81）と「詳しくはこちら！」ボタン（#FF6B00） ---------- */
+th[style*="#0B6F81" i],th[style*="#0E9AB4" i],th[style*="#102F40" i]{background:var(--ssl-band) !important;color:var(--ink) !important}
+a[style*="#FF6B00" i]{background:var(--ssl-cta) !important;color:#fff !important;border-radius:999px !important}
+a[style*="#FF6B00" i]:hover{background:var(--ssl-cta-deep) !important}
+span[style*="#0B6F81" i][class*="tag"],.tqsp-tag{background:var(--ssl-cta) !important;color:#fff !important}
+
+/* ---------- ボタン類：スカイの丸ボタン ---------- */
+#amida .go{background:var(--ssl-cta) !important;color:#fff !important;border-radius:999px !important}
+#amida .go:hover{background:var(--ssl-cta-deep) !important}
+#amidaRes .go-link,.gates .go{color:var(--sky-dd) !important}
+.cta-main{border-radius:20px !important}
+.cta-sub a{border-radius:20px !important;border-width:1.5px !important}
+.faq details{border-radius:16px !important;border-width:1.5px !important}
+.terasaki .lbl{border-radius:999px !important}
+
+/* ---------- カード：角丸20px・淡い地 ---------- */
+.three article{border-radius:20px !important;border-top-width:0 !important;background:var(--ssl-band-light) !important;border-color:transparent !important}
+.legacy-more,.eco-roi,#amida .simbox{border-radius:20px !important;border-width:1.5px !important}
+.quo{background:var(--ssl-band-light) !important;border:1.5px solid var(--line) !important;border-radius:20px !important}
+
+/* ---------- 最終CTA帯・フッター：住宅HUBと同じ ---------- */
+.final{background:var(--ssl-band) !important}
+html body footer,html body .ss-ft{background:var(--ink) !important}
+.ss-ft .fmenu .grp{border-left-color:var(--sky) !important}
+.ss-ft a[aria-current]::before{background:var(--sky) !important}
+
+/* ---------- スマホ下部の固定バー：白地＋丸ボタン（電話＝スカイ／LINE＝緑／フォーム＝白） ---------- */
+.ss-mcta{background:rgba(255,255,255,.96) !important;border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(16,47,64,.08)}
+.ss-mcta a{border-radius:999px !important}
+.ss-mcta .t,.ss-mcta.ss-mcta-3 .t{background:var(--ssl-cta) !important;color:#fff !important}
+.ss-mcta .l,.ss-mcta.ss-mcta-3 .l{background:#06C755 !important;color:#fff !important}
+.ss-mcta.ss-mcta-3 .f{background:#fff !important;color:var(--ink) !important;border:1.5px solid #B9D3DF !important}
+
+/* ---------- 2026-09-27 追加：遮熱系ページ ---------- */
+/* ヒーローと相談欄のオレンジのボタン（.c1）→ スカイの丸ボタン */
+.hero-cta a.c1,.btns a.c1,a.c1[href*="forms.gle"]{background:var(--ssl-cta) !important;border-color:var(--ssl-cta) !important;color:#fff !important;border-radius:999px !important}
+/* スマホではヘッダーの電話番号と「戸建ての方」を隠す（ロゴ文字が縦に押しつぶされるのを防ぐ。メニュー内と下部バーに同じ導線あり） */
+@media(max-width:760px){.ss-hd .nav .tel,.ss-hd .nav .sw,.ss-hd .nav .opt{display:none !important}}
+/* 濃紺ヒーローの本文が #444 固定で読めない不具合（公開前から）→ 白に。濃紺ヒーローを持つのは .hero-inner のページだけ */
+.hero .hero-inner .lead{color:rgba(255,255,255,.92) !important}
+/* スマホのメニューバー（ss-mobile-menu.js）：濃紺の帯 → 白地＋細枠の丸ボタン（住宅HUBと同じ） */
+html body .ssmm-bar{background:#fff !important;border-bottom:1px solid var(--line)}
+html body .ssmm-b{background:#fff !important;color:var(--ink) !important;border:1.5px solid #B9D3DF !important;border-radius:999px !important;box-shadow:none !important}
+html body .ssmm-b .ic i{background:var(--ink) !important}
+html body .ssmm-p{background:var(--ssl-band-light)}
+html body .ssmm-t{color:var(--sky-d)}
+html body .ssmm-l a[aria-current]{background:var(--ink) !important;color:#fff !important}
+html body .ssmm-tel{background:var(--ssl-cta) !important;border-color:var(--ssl-cta) !important;color:#fff !important;border-radius:999px !important}
+
+/* ---------- 2026-09-27 追加：ヘッダーを住宅HUB・法人TOPと同じ構成に ---------- */
+/* 最上部の帯は「戸建て／法人」の重複リンクだけなので出さない */
+.ss-top{display:none !important}
+/* ヘッダーは ロゴ＋文字リンク＋相談ボタン だけに（電話は画面下の固定バー・相談欄にある） */
+.ss-hd .nav .tel{display:none !important}
+.ss-hd .nav .sw{border:0 !important;padding:0 !important;min-height:44px;color:var(--ink) !important;font-weight:700 !important;background:none !important}
+.ss-hd .nav .sw:hover{color:var(--sky-d) !important}
+/* サービスの帯：1行・中央ぞろえ（はみ出した「業種別・特設ページ」も同じ行に） */
+.ss-sub{display:flex !important;justify-content:center;align-items:center;flex-wrap:nowrap;overflow-x:auto;gap:0 4px;border-bottom:1px solid var(--line) !important}
+.ss-sub .in{display:flex !important;flex-wrap:nowrap;align-items:center;margin:0 !important;max-width:none !important;padding:0 !important;gap:0 4px}
+.ss-sub a{white-space:nowrap;padding:0 14px !important}
+@media(max-width:760px){.ss-sub{justify-content:flex-start}}
