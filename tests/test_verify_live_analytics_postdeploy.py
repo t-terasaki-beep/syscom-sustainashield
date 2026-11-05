@@ -292,5 +292,42 @@ class VerifyTests(unittest.TestCase):
             self.assertFalse(evidence_path.exists())
 
 
+    def test_evidence_json_refuses_public_webroots_before_writing(self):
+        with tempfile.TemporaryDirectory() as folder:
+            for webroot in ("public_html", "WWW", "htdocs", "httpdocs",
+                            "wwwroot", "webroot", "public"):
+                with self.subTest(webroot=webroot):
+                    path = Path(folder) / webroot / "inspection.json"
+                    with self.assertRaisesRegex(m.VerificationError, "public web root"):
+                        m.write_verification_evidence(path, {"status": "PASS"})
+                    self.assertFalse(path.exists())
+
+    def test_evidence_json_symlink_to_webroot_refused(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            webroot = root / "public_html"
+            webroot.mkdir()
+            alias = root / "private_alias"
+            try:
+                alias.symlink_to(webroot, target_is_directory=True)
+            except (OSError, NotImplementedError):
+                self.skipTest("Directory symlinks unavailable")
+            with self.assertRaisesRegex(m.VerificationError, "public web root"):
+                m.write_verification_evidence(alias / "inspection.json", {"status": "PASS"})
+            self.assertFalse((webroot / "inspection.json").exists())
+
+    def test_cli_public_evidence_path_stops_before_network(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "www" / "inspection.json"
+            with patch("sys.argv", ["verify_live_analytics_postdeploy.py",
+                                   "--sibling-before-sha256", "a" * 64,
+                                   "--evidence-json", str(path)]), \
+                 patch.object(m, "fetch_exact") as fetch_mock, \
+                 self.assertRaisesRegex(m.VerificationError, "public web root"):
+                m.main()
+            fetch_mock.assert_not_called()
+            self.assertFalse(path.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
