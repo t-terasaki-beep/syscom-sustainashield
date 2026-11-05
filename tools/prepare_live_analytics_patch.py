@@ -22,6 +22,8 @@ EXPECTED_SIBLING_SHA256 = "2a7af2f43473f03c58ffca47b284b4fdc9b9ca97779e4b2486f23
 EXPECTED_ETAG = "6262-65f3790c0687e"
 EXPECTED_ORIGINAL_SIZE = 25186
 EXPECTED_PATCHED_SIZE = 25239
+# Independently recorded expected SHA-256 of the ONLY approved 53-byte insertion.
+EXPECTED_PATCHED_SHA256 = "831db16253bcd1b17d9ca3e3bbc366ee986ba1c16217453627c88b5e6d7fa9b8"
 TAG = b'<script src="/assets/ss-analytics.js" defer></script>'
 SUFFIX = b"</script>\n</body></html>\n"
 EXPECTED_ORIGINAL_SHA256 = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
@@ -85,6 +87,11 @@ def build_one_line_patch(raw: bytes, *, expected_sha256: str = EXPECTED_ORIGINAL
         raise PreflightError("Patched size mismatch")
     if changed.count(TAG) != 1:
         raise PreflightError("Expected exactly one analytics tag")
+    # Production candidate must also match the independently approved final
+    # SHA-256 recorded by the publishing operator. Synthetic offline fixtures
+    # override the original baseline and are exempt from this production pin.
+    if expected_sha256 == EXPECTED_ORIGINAL_SHA256 and sha256(changed) != EXPECTED_PATCHED_SHA256:
+        raise PreflightError("Patched SHA-256 differs from approved one-line result. STOP")
     # Byte-for-byte proof that the patch is only a single insertion.
     if changed[:position] != raw[:position] or changed[position + len(TAG):] != raw[position:]:
         raise PreflightError("Unexpected differences beyond one insertion")
