@@ -24,6 +24,7 @@ def check_bundle(
     live_html: bytes,
     live_etag: str,
     live_sibling: dict,
+    live_asset: dict,
     *,
     expected_original_sha: str = p0.EXPECTED_ORIGINAL_SHA256,
     expected_sibling_sha: str = p0.EXPECTED_SIBLING_SHA256,
@@ -39,6 +40,18 @@ def check_bundle(
         raise p0.PreflightError("Sibling backup tracker count differs; STOP")
     if live_sibling.get("sha256") != p0.sha256(sibling_backup) or live_sibling.get("etag") != p0.EXPECTED_SIBLING_ETAG:
         raise p0.PreflightError("Sibling changed since backup; STOP")
+    # Preflight alone cannot guarantee that the GA4 loader is still browser-loadable
+    # when the authorized operator reaches the upload gate. Recheck the live asset
+    # here, independently of the earlier preflight report; fail closed on drift.
+    if not isinstance(live_asset, dict) or any((
+        live_asset.get("status") != 200,
+        live_asset.get("url") != p0.ASSET_URL,
+        live_asset.get("mime") not in p0.VALID_SCRIPT_MIMES,
+        live_asset.get("bytes") != p0.EXPECTED_ASSET_SIZE,
+        live_asset.get("sha256") != p0.EXPECTED_ASSET_SHA256,
+        live_asset.get("ga4_measurement_id_present") is not True,
+    )):
+        raise p0.PreflightError("Analytics JS fresh live evidence missing/changed; STOP")
     expected_candidate = p0.build_one_line_patch(original_backup, expected_sha256=expected_original_sha)
     if candidate_html != expected_candidate:
         raise p0.PreflightError("Candidate is not exactly the approved one-line insertion; STOP")
@@ -57,6 +70,8 @@ def check_bundle(
         "original_sha256": p0.sha256(original_backup),
         "candidate_sha256": p0.sha256(candidate_html),
         "sibling_sha256": p0.sha256(sibling_backup),
+        "fresh_analytics_asset_sha256": live_asset["sha256"],
+        "analytics_asset_recheck_scope": "HTTP_CONTENT_ONLY_NOT_GA4_RECEIPT",
         "live_etag": live_etag,
         "publish_lock_verified_by_this_tool": False,
         "operator_approval_verified_by_this_tool": False,
@@ -76,10 +91,13 @@ def main() -> int:
     # GET again immediately before authorized manual publication. No write or FTP.
     live_html, live_etag = p0.fetch_live()
     live_sibling = p0.fetch_sibling_live()
+    # Fresh GET is required inside the operator's existing publish session.
+    # Any fetch/status/MIME/size/SHA failure stops before a PASS can be emitted.
+    live_asset = p0.fetch_analytics_asset()
     result = check_bundle(
         args.original_backup.read_bytes(), args.candidate_html.read_bytes(),
         args.sibling_backup.read_bytes(), json.loads(args.preflight_json.read_text(encoding="utf-8")),
-        live_html, live_etag, live_sibling,
+        live_html, live_etag, live_sibling, live_asset,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
