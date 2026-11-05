@@ -45,6 +45,12 @@ CURL="curl --fail --show-error --silent --connect-timeout 20 --max-time 180"
 # ---- changeset 読み込み（"local  remote"、2列目省略時は1列目を流用）--------
 LOCS=""; REMS=""
 while IFS= read -r line || [ -n "$line" ]; do
+  # Windows CRLF or embedded CR can turn a protected target into a different
+  # FTP remote filename when awk parses a trailing carriage return.
+  # Reject ambiguous changesets before checking protected production paths.
+  case "$line" in
+    *$'\r'*) echo "停止: changeset に CR 制御文字があります。LF 改行に変換してください"; exit 3 ;;
+  esac
   case "$line" in ''|\#*) continue ;; esac
   lp="$(printf '%s\n' "$line" | awk '{print $1}')"
   rp="$(printf '%s\n' "$line" | awk '{if ($2!="") print $2; else print $1}')"
