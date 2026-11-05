@@ -204,6 +204,39 @@ def sha256(blob: bytes) -> str:
     return hashlib.sha256(blob).hexdigest()
 
 
+
+def write_local_preflight_outputs(dest: Path, changed: bytes, report: dict) -> Path:
+    """Create the local patch and JSON without an overwrite race.
+
+    An exists() precheck alone cannot protect against concurrent scheduled runs.
+    Exclusive create ('x') refuses an existing file or symlink even if it
+    appears between precheck and open. Nothing here uploads or publishes.
+    """
+    dest.mkdir(parents=True, exist_ok=True)
+    html_path, report_path = dest / "index.html", dest / "preflight.json"
+    if html_path.exists() or report_path.exists():
+        raise PreflightError("Output files exist; refusing overwrite")
+
+    html_created = False
+    report_created = False
+    try:
+        with html_path.open("xb") as html:
+            html_created = True
+            html.write(changed)
+        with report_path.open("x", encoding="utf-8") as evidence:
+            report_created = True
+            json.dump(report, evidence, ensure_ascii=False, indent=2)
+            evidence.write("\n")
+    except BaseException:
+        # Roll back only the files exclusively created by this invocation.
+        if report_created:
+            report_path.unlink(missing_ok=True)
+        if html_created:
+            html_path.unlink(missing_ok=True)
+        raise
+    return report_path
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", required=True,
@@ -215,11 +248,6 @@ def main() -> int:
     sibling = fetch_sibling_live()  # Fail closed before writing any candidate files.
     asset = fetch_analytics_asset()  # A missing/altered JS must not yield preflight PASS.
     dest = Path(args.output_dir).resolve()
-    dest.mkdir(parents=True, exist_ok=True)
-    html_path = dest / "index.html"
-    report_path = dest / "preflight.json"
-    if html_path.exists() or report_path.exists():
-        raise PreflightError("Output files exist; refusing overwrite")
     report = {
         "publication_status": "NOT_PUBLISHED",
         "source_url": URL,
@@ -240,9 +268,7 @@ def main() -> int:
             "Release publish lock and retain rollback backup",
         ],
     }
-    html_path.write_bytes(changed)
-    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n",
-                           encoding="utf-8")
+    report_path = write_local_preflight_outputs(dest, changed, report)
     print(json.dumps({"local_preflight": "PASS", "published": False,
                       "report": str(report_path)}, ensure_ascii=False))
     return 0
