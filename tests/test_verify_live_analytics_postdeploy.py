@@ -34,6 +34,26 @@ class VerifyTests(unittest.TestCase):
         finally:
             m.ORIGINAL_SHA256 = old
 
+    def test_production_completed_html_sha_pin_accepts_exact_candidate(self):
+        base, patched = fixture()
+        source_sha = m.sha256(base)
+        with patch.object(m, "ORIGINAL_SHA256", source_sha), \
+             patch.object(m, "PRODUCTION_ORIGINAL_SHA256", source_sha), \
+             patch.object(m, "APPROVED_PATCHED_SHA256", m.sha256(patched)):
+            result = m.check_target(patched, "new-etag")
+        self.assertEqual(result["sha256"], m.sha256(patched))
+
+    def test_production_completed_html_wrong_approved_sha_stops(self):
+        # Even if the restored original SHA matches, the independently pinned
+        # completed-file digest is a mandatory separate publication criterion.
+        base, patched = fixture()
+        source_sha = m.sha256(base)
+        with patch.object(m, "ORIGINAL_SHA256", source_sha), \
+             patch.object(m, "PRODUCTION_ORIGINAL_SHA256", source_sha), \
+             patch.object(m, "APPROVED_PATCHED_SHA256", "0" * 64):
+            with self.assertRaisesRegex(m.VerificationError, "approved SHA-256"):
+                m.check_target(patched, "new-etag")
+
     def test_no_script_fails(self):
         base, _ = fixture()
         with self.assertRaises(m.VerificationError):
