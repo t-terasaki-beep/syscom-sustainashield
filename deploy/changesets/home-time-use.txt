@@ -1,0 +1,7 @@
+# 卒FIT住宅「家で使う時間」診断 追記（2026-10-02 完成施策A）
+# 本番へ出すのは sotsu-fit の index.html のみ（既存比較部への内容追記）
+# /residential/ecocute/ は本リポジトリに存在しないため、
+#   deploy/snippets/home-time-use-ecocute.html を本番の既存ページへ手動で貼り付ける
+#   （新規URL・新規ファイルは作らない方針）
+# ローカル相対パス  リモート相対パス（FTP_REMOTE_ROOT 基準）
+sotsu-fit/index.html   sotsu-fit/index.html

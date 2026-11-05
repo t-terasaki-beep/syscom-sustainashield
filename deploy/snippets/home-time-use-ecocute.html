@@ -1,0 +1,76 @@
+<!-- ===========================================================================
+  家で使う時間診断ブロック（2026-10-02 完成施策A）
+  貼り付け先：本番の既存ページ /residential/ecocute/ の「比較部」付近
+  ※このブロックは独自class（htu2-）と自前<style>で完結しており、
+    貼り付け先ページのCSSに依存しません（新規URL・新規ファイルは作りません）。
+  ※原稿・数値・出典は Notion「2026-10-02 完成施策A」正本に準拠。
+    公開前に給湯省エネの申請額割合を公式で再確認してください（確認日2026-10-02／次回2026-10-08）。
+============================================================================ -->
+<section id="home-time-use" class="htu2">
+  <style>
+    .htu2{max-width:720px;margin:0 auto;padding:36px 18px;color:#1c2520;
+      font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;line-height:1.75}
+    .htu2 .eb{color:#1f7a3d;font-weight:700;font-size:14px;margin:0 0 6px}
+    .htu2 h2{font-size:22px;line-height:1.45;margin:0 0 14px}
+    .htu2 .box{background:#eef6f0;border:1px solid #cfe6d6;border-radius:14px;padding:18px}
+    .htu2 .box>p{margin:0 0 14px}
+    .htu2 .cw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .htu2 table{width:100%;min-width:560px;border-collapse:collapse;font-size:13.5px}
+    .htu2 th,.htu2 td{border:1px solid #e2e9e3;padding:8px 10px;text-align:left;vertical-align:top}
+    .htu2 thead th{background:#f1f6f2;color:#155c2d;white-space:nowrap}
+    .htu2 tbody th{background:#f1f6f2;color:#155c2d;white-space:nowrap}
+    .htu2 .tag{display:inline-block;font-size:11px;color:#5b6b62}
+    .htu2 .mini{font-size:12.5px;color:#5b6b62;margin-top:10px}
+    .htu2 .mask{background:#fff8ec;border:1px solid #f3d79b;border-radius:12px;padding:12px 14px;font-size:13px;margin-top:12px}
+    .htu2 .mask b{color:#9a6a00}
+    .htu2 .cta{display:inline-flex;align-items:center;justify-content:center;margin-top:16px;
+      padding:14px 20px;border-radius:999px;font-weight:700;text-decoration:none;font-size:16px;background:#fff;color:#155c2d;border:2px solid #1f7a3d}
+    .htu2 .src{background:#fff;border:1px solid #e2e9e3;border-radius:12px;padding:14px;margin-top:14px;font-size:13px;color:#5b6b62}
+    .htu2 .src h4{margin:0 0 8px;font-size:14px;color:#1c2520}
+    .htu2 .src ul{margin:0;padding-left:18px}.htu2 .src li{margin-bottom:8px}
+    .htu2 .src a{color:#155c2d;word-break:break-all}
+  </style>
+  <p class="eb">エコキュート交換を考える前に</p>
+  <h2>買う機器の前に、電気を使う時間を見ませんか。</h2>
+  <div class="box">
+    <p>卒FIT後は、売る・沸かす・ためるを別々に考えると、同じ余剰電力を重ねて見積もることがあります。電気明細、太陽光モニター、給湯器の写真から、まず運転時間の見直しで足りるか、給湯・蓄電池のどちらを先にするかを整理します。</p>
+    <div class="cw">
+      <table>
+        <thead><tr><th>選択肢</th><th>余剰の使い道</th><th>向く条件</th><th>費用・補助の考え方</th></tr></thead>
+        <tbody>
+          <tr><th>現状維持</th><td>今までどおり売電</td><td>余剰がほぼない／給湯設備が新しい／停電対策の必要が小さい</td><td>追加投資なし。今は交換しないという結論も残します</td></tr>
+          <tr><th>運用変更</th><td>沸き上げや家電の時間を昼へ寄せる</td><td>生活リズムを調整できる／まず費用をかけずに試したい</td><td>機器を替えずタイマー・生活調整で対応</td></tr>
+          <tr><th>給湯のみ<span class="tag">（通常／おひさまエコキュート）</span></th><td>昼の余剰でお湯を沸かす</td><td>給湯の使用量が多い／給湯器の更新時期が近い</td><td>通常型で十分な場合もあります。設置・配管条件を確認</td></tr>
+          <tr><th>蓄電池のみ</th><td>給湯に回した後の残りを夜・停電へ</td><td>夜間の使用が多い／停電に備えたい</td><td>必要kWhと非常時に残す回路から容量を決めます</td></tr>
+          <tr><th>組合せ<span class="tag">（給湯＋蓄電池）</span></th><td>給湯で使い切れない余剰だけを蓄電へ</td><td>余剰が大きい／昼夜ともに自家消費を増やしたい</td><td>同じ余剰を給湯と蓄電で二重に数えません</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mini">※時間帯ごとの余剰（発電−その時間の使用）を、まず給湯へ、使い切れなかった分だけを蓄電へ割り当てて比べます。同じ電気を給湯と蓄電の両方の効果として重ねて計算しません。実測や機種仕様、料金の将来値が確認できない項目は、削減額・回収年数を空欄のままにします。</p>
+    <div class="mask"><b>写真を送る前に：</b>電気明細や銘板の写真は、<b>お客様番号・口座番号・氏名</b>が写る部分を隠してからで大丈夫です。型式や使用量が分かれば一次診断を始められます。</div>
+    <!-- CTA href は本番ページの相談導線（LINE/フォーム）に合わせて差し替え。data-event はGA4候補名。既存イベントとの重複確認後に計測を有効化してください（本スニペットはクリックを相談完了として送信しません）。 -->
+    <a class="cta" data-cta="sim" data-event="home_time_use_start" href="#contact">明細・発電・給湯器の3点で診断する</a>
+    <div class="src">
+      <h4>根拠と確認日（確認日 2026-10-02／次回確認 2026-10-08）</h4>
+      <ul>
+        <li>家庭内の機器が電力需給に合わせて運転時間を動かす実例として、パナソニックの冷蔵庫と東京電力EP「エコ・省エネチャレンジ」のDR連携（2026年10月1日開始）があります。対象は冷蔵庫で、余剰が出る時間帯に霜取りを移し、需給がひっ迫する時間帯は事前に冷やして消費を抑えます。<b>エコキュートや蓄電池がこのサービスへ自動で連携するわけではありません。</b><br>出典：<a href="https://news.panasonic.com/jp/press/jn260826-2" target="_blank" rel="noopener">パナソニック公式発表</a></li>
+        <li>給湯省エネ2026事業の予算に対する申請額の割合は、2026年10月2日0時時点で通常分47％・撤去加算23％です。予算上限（100％）に達し次第、受付は終了します。<b>残額・受付の継続・補助額は保証できません。</b>登録事業者・対象製品・着工などの条件とあわせて、ご案内の直前に公式で再確認します。<br>出典：<a href="https://kyutou-shoene2026.meti.go.jp/" target="_blank" rel="noopener">給湯省エネ2026事業 公式サイト</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 追加で、ページ既存のFAQブロックへ以下4問を足してください（任意・推奨） -->
+<!--
+Q DR対応の冷蔵庫なら電気代は必ず下がりますか？
+A 対象機種・契約・サービスの条件があり、ポイントや料金への効果はご利用状況によります。本診断は冷蔵庫の販売を前提にしていません。
+
+Q 給湯省エネの補助金はまだ半分以上残っていますか？
+A 2026年10月の時点で予算に対する申請額の割合は47％ですが、残額や受付の継続を保証できません。登録事業者・対象製品・着工などの条件を、申請の前に確認します。
+
+Q 卒FITなら蓄電池は必要ですか？
+A 夜間の利用、停電への備え、余剰の量で判断します。給湯の時間を変える、あるいは現状のままが適切な場合もあります。
+
+Q おひさまエコキュートと通常型のどちらがよいですか？
+A 太陽光の余剰、給湯量、設置・配管の条件、更新時期を確認します。通常型で十分な場合もあります。
+-->
