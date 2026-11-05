@@ -197,5 +197,54 @@ class VerifyTests(unittest.TestCase):
             self.assertEqual(evidence_path.read_text(encoding="utf-8"), "untouched")
 
 
+    def test_evidence_writer_refuses_existing_file_even_after_precheck_race(self):
+        # The final open("x"), not the earlier exists(), is the safety gate.
+        with tempfile.TemporaryDirectory() as folder:
+            evidence_path = Path(folder) / "http_postdeploy.json"
+            evidence_path.write_text("another-run", encoding="utf-8")
+            with self.assertRaises(FileExistsError):
+                m.write_verification_evidence(evidence_path, {"status": "PASS"})
+            self.assertEqual(evidence_path.read_text(encoding="utf-8"), "another-run")
+
+    def test_evidence_writer_serializes_before_creating_file(self):
+        with tempfile.TemporaryDirectory() as folder:
+            evidence_path = Path(folder) / "http_postdeploy.json"
+            with self.assertRaises(TypeError):
+                m.write_verification_evidence(evidence_path, {"bad": object()})
+            self.assertFalse(evidence_path.exists())
+
+    def test_evidence_writer_interrupted_write_removes_partial_file(self):
+        with tempfile.TemporaryDirectory() as folder:
+            evidence_path = Path(folder) / "http_postdeploy.json"
+            real_open = Path.open
+
+            class InterruptedWriter:
+                def __init__(self, stream):
+                    self.stream = stream
+
+                def __enter__(self):
+                    self.stream.__enter__()
+                    return self
+
+                def __exit__(self, *args):
+                    return self.stream.__exit__(*args)
+
+                def write(self, payload):
+                    self.stream.write(payload[:8])
+                    self.stream.flush()
+                    raise OSError("simulated-disk-full")
+
+            def open_with_failure(path, *args, **kwargs):
+                stream = real_open(path, *args, **kwargs)
+                if path == evidence_path and args and args[0] == "x":
+                    return InterruptedWriter(stream)
+                return stream
+
+            with patch.object(Path, "open", open_with_failure):
+                with self.assertRaisesRegex(OSError, "simulated-disk-full"):
+                    m.write_verification_evidence(evidence_path, {"status": "PASS"})
+            self.assertFalse(evidence_path.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
