@@ -222,6 +222,25 @@ def sha256(blob: bytes) -> str:
 
 
 
+# This tool creates a full HTML candidate. Accidentally pointing --output-dir at
+# a live document root could expose that candidate without the publish lock,
+# approval or backup. Refuse recognizable web-serving folders, including when
+# reached through a symlink. This is a safeguard, not proof of private storage.
+WEBROOT_DIR_NAMES = frozenset({
+    "public_html", "httpdocs", "htdocs", "www", "wwwroot", "webroot", "public",
+})
+
+
+def require_non_webroot_output(dest: Path) -> Path:
+    resolved = dest.resolve()
+    path_parts = {part.lower() for part in (*dest.parts, *resolved.parts)}
+    if path_parts & WEBROOT_DIR_NAMES:
+        raise PreflightError(
+            "Output path appears inside a public web root; no candidate written. STOP"
+        )
+    return resolved
+
+
 def write_local_preflight_outputs(dest: Path, changed: bytes, report: dict) -> Path:
     """Create the local patch and JSON without an overwrite race.
 
@@ -229,6 +248,7 @@ def write_local_preflight_outputs(dest: Path, changed: bytes, report: dict) -> P
     Exclusive create ('x') refuses an existing file or symlink even if it
     appears between precheck and open. Nothing here uploads or publishes.
     """
+    dest = require_non_webroot_output(dest)
     dest.mkdir(parents=True, exist_ok=True)
     html_path, report_path = dest / "index.html", dest / "preflight.json"
     if html_path.exists() or report_path.exists():
