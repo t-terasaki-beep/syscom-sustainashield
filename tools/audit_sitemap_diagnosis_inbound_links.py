@@ -119,14 +119,33 @@ def collect_sitewide(opener_factory, paths, sitemap_files):
         pages = list(pool.map(inspect_path, paths))
     totals = {target: sum(row.get("tracked_anchor_counts", {}).get(target, 0)
                           for row in pages) for target in sampler.TRACKED}
-    complete = all(row.get("http_status") == 200 and "error" not in row
-                   for row in pages)
+    # A sitemap may still list the legacy diagnosis URL. Its independently
+    # observed, exact 301 to the live current 200 page is expected, not an
+    # unreadable HTML page. Never treat a different status/Location as success.
+    by_path = {row["page"]: row for row in pages}
+    old = by_path.get("/shindan.html", {})
+    current = by_path.get("/photo-diagnosis/", {})
+    verified_legacy_redirect = (
+        old.get("http_status") == 301
+        and old.get("location") == sampler.SITE + "/photo-diagnosis/"
+        and "error" not in old
+        and current.get("http_status") == 200
+        and "error" not in current
+    )
+    complete = all(
+        (row.get("http_status") == 200 and "error" not in row)
+        or (verified_legacy_redirect and row["page"] == "/shindan.html")
+        for row in pages
+    )
     return {
         "observed_at_utc": datetime.now(timezone.utc).isoformat(),
         "scope": "Sitemap-listed LIVE HTML only; <a href> only (no JS links or external backlinks)",
         "sitemap_files": sitemap_files,
         "sitemap_page_count": len(paths),
         "http_200_count": sum(row.get("http_status") == 200 for row in pages),
+        "verified_legacy_301_count": int(verified_legacy_redirect),
+        "verified_legacy_301_location": old.get("location") if verified_legacy_redirect else None,
+        "sitemap_contains_legacy_redirect_url": "/shindan.html" in by_path,
         "complete": complete,
         "anchor_totals": totals,
         "pages_with_old_url": [r["page"] for r in pages
