@@ -50,6 +50,23 @@ class VerificationError(ValueError):
     pass
 
 
+# Keep post-publication evidence out of recognizable web-serving document roots.
+# The preflight HTML candidate is already guarded separately; this closes the
+# remaining path for an operator to accidentally expose the inspection JSON.
+WEBROOT_DIR_NAMES = frozenset({
+    "public_html", "httpdocs", "htdocs", "www", "wwwroot", "webroot", "public",
+})
+
+
+def require_private_evidence_path(path: Path) -> None:
+    # Check both the operator-supplied spelling and the resolved parent path,
+    # so a symlink alias to a public document root cannot bypass this gate.
+    resolved_parent = path.parent.resolve()
+    parts = {part.casefold() for part in (*path.parts, *resolved_parent.parts)}
+    if parts & WEBROOT_DIR_NAMES:
+        raise VerificationError("Evidence JSON path is inside a public web root; STOP")
+
+
 def sha256(blob: bytes) -> str:
     return hashlib.sha256(blob).hexdigest()
 
@@ -164,6 +181,7 @@ def write_verification_evidence(path: Path, record: dict) -> None:
     a competing publisher's file that appears after the CLI precheck.
     A failed write removes only the file created by this invocation.
     """
+    require_private_evidence_path(path)
     serialized = json.dumps(record, ensure_ascii=False, indent=2) + "\n"
     created = False
     try:
@@ -183,8 +201,10 @@ def main() -> int:
     parser.add_argument("--evidence-json", type=Path,
                         help="Optional local evidence file (exclusive create; never overwrites). Not GA4 event proof.")
     args = parser.parse_args()
-    if args.evidence_json is not None and args.evidence_json.exists():
-        raise VerificationError("Evidence JSON already exists; refusing overwrite")
+    if args.evidence_json is not None:
+        require_private_evidence_path(args.evidence_json)  # STOP before any live GET
+        if args.evidence_json.exists():
+            raise VerificationError("Evidence JSON already exists; refusing overwrite")
     if not re.fullmatch(r"[a-f0-9]{64}", args.sibling_before_sha256):
         raise VerificationError("Invalid sibling baseline SHA-256")
     target, target_etag = fetch_exact(TARGET, 25300)
