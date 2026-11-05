@@ -132,7 +132,6 @@ class AnalyticsAssetPreflightTests(unittest.TestCase):
 
 
 
-class PatchTests(unittest.TestCase):
 class ArticleMimeTests(unittest.TestCase):
     def test_html_mime_accepts_html_and_rejects_plain_text(self):
         for mime in ("text/html", "TEXT/HTML; charset=utf-8", "application/xhtml+xml"):
@@ -167,6 +166,7 @@ class ArticleMimeTests(unittest.TestCase):
                     method()
 
 
+class PatchTests(unittest.TestCase):
     def test_insertion_is_exactly_one_tag(self):
         raw = sample()
         edited = preflight.build_one_line_patch(raw, expected_sha256=preflight.sha256(raw))
