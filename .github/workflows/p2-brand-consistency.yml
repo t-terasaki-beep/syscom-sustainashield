@@ -18,6 +18,7 @@ on:
       - 'sotsu-fit/index.html'
       - 'terasaki_lp.html'
       - 'voice.html'
+      - 'tools/publish/lp-media-set-v1/column/build_column.py'
       - 'tools/check_old_brand_in_p2_pages.py'
       - '.github/workflows/p2-brand-consistency.yml'
   workflow_dispatch:
@@ -32,7 +33,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Check exactly the 16 P2 review files (no network)
+      - name: Check 16 P2 pages and the column source template (no network)
         run: |
           python -m py_compile tools/check_old_brand_in_p2_pages.py
           python tools/check_old_brand_in_p2_pages.py
