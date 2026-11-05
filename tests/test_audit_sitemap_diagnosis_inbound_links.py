@@ -11,10 +11,12 @@ spec.loader.exec_module(m)
 
 
 class Response:
-    def __init__(self, payload, status=200):
+    def __init__(self, payload, status=200, location=None):
         self.payload = payload
         self.status = status
         self.headers = Message()
+        if location is not None:
+            self.headers["Location"] = location
 
     def __enter__(self): return self
     def __exit__(self, *_): pass
@@ -103,6 +105,36 @@ class SitemapAuditTests(unittest.TestCase):
                                         ["/", "/faq.html"], ["/sitemap.xml"])
         self.assertFalse(incomplete["complete"])
         self.assertEqual(incomplete["http_200_count"], 1)
+
+    def test_known_legacy_301_to_current_200_is_classified_separately(self):
+        root = m.sampler.SITE
+        payloads = {
+            root + "/shindan.html": Response(b"", status=301,
+                                            location=root + "/photo-diagnosis/"),
+            root + "/photo-diagnosis/": Response(b'<a href="/photo-diagnosis/">new</a>'),
+        }
+        result = m.collect_sitewide(lambda: FakeOpener(payloads),
+                                    ["/shindan.html", "/photo-diagnosis/"], ["/sitemap.xml"])
+        self.assertTrue(result["complete"])
+        self.assertEqual(result["http_200_count"], 1)
+        self.assertEqual(result["verified_legacy_301_count"], 1)
+        self.assertTrue(result["sitemap_contains_legacy_redirect_url"])
+        self.assertEqual(result["anchor_totals"], {"/shindan.html": 0,
+                                                   "/photo-diagnosis/": 1})
+
+    def test_wrong_legacy_redirect_or_missing_destination_remains_incomplete(self):
+        root = m.sampler.SITE
+        for location, current_status in ((root + "/wrong/", 200),
+                                         (root + "/photo-diagnosis/", 404)):
+            with self.subTest(location=location, current_status=current_status):
+                payloads = {
+                    root + "/shindan.html": Response(b"", status=301, location=location),
+                    root + "/photo-diagnosis/": Response(b"", status=current_status),
+                }
+                report = m.collect_sitewide(lambda: FakeOpener(payloads),
+                                            ["/shindan.html", "/photo-diagnosis/"], ["/sitemap.xml"])
+                self.assertFalse(report["complete"])
+                self.assertEqual(report["verified_legacy_301_count"], 0)
 
 
 if __name__ == "__main__":
