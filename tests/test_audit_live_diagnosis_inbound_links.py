@@ -45,10 +45,13 @@ class TestSampler(unittest.TestCase):
 
     def test_no_redirect_follow_and_no_false_counts(self):
         url = m.SITE + '/faq.html'
-        exc = HTTPError(url, 301, 'Moved', Message(), None)
+        headers = Message()
+        headers["Location"] = m.SITE + "/photo-diagnosis/"
+        exc = HTTPError(url, 301, 'Moved', headers, None)
         opener = FakeOpener({url: exc})
         result = m.inspect(opener, '/faq.html')
         self.assertEqual(result['http_status'], 301)
+        self.assertEqual(result['location'], m.SITE + "/photo-diagnosis/")
         self.assertNotIn('tracked_anchor_counts', result)
         self.assertEqual(opener.requests, [(url, 'GET', 10)])
 
