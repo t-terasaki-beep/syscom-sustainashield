@@ -9,7 +9,7 @@ PUBLISH = Path(__file__).resolve().parents[1] / "deploy" / "publish.sh"
 
 
 class ProtectedRouteTests(unittest.TestCase):
-    def check_rejected(self, remote_path: str, expected_message: str) -> None:
+    def check_rejected(self, remote_path: str, expected_message: str, remote_root: str = "/public_html/") -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
             (root / "deploy").mkdir()
@@ -21,7 +21,7 @@ class ProtectedRouteTests(unittest.TestCase):
                 "FTP_HOST": "ftp.invalid.example",
                 "FTP_USER": "fixture",
                 "FTP_PASS": "fixture",
-                "FTP_REMOTE_ROOT": "/public_html/",
+                "FTP_REMOTE_ROOT": remote_root,
             })
             result = subprocess.run(
                 ["bash", str(PUBLISH), str(manifest)],
@@ -69,6 +69,23 @@ class ProtectedRouteTests(unittest.TestCase):
         ):
             with self.subTest(path=path):
                 self.check_rejected(path, "上書き禁止")
+
+    def test_protected_destination_cannot_hide_inside_ftp_remote_root(self):
+        # Even a manifest containing only index.html targets the production
+        # article when FTP_REMOTE_ROOT points directly at its directory.
+        # The guard must stop before any FTP request or backup attempt.
+        for root, path in (
+            ("/column/chiba-suigai-hinanjo-dengen/", "index.html"),
+            ("/public_html/column/chiba-suigai-hinanjo-dengen/", "index.html"),
+            ("/public_html/photo-diagnosis/", "index.html"),
+            ("/site/legacy/shindan.html/", "index.html"),
+            ("/column/shoene2024-data-leak-alert/", "index.html"),
+        ):
+            with self.subTest(root=root, path=path):
+                # The unrelated sibling is intentionally NOT protected here.
+                if "shoene2024" in root:
+                    continue
+                self.check_rejected(path, "上書き禁止", remote_root=root)
 
     def test_url_encoded_and_url_suffix_aliases_rejected(self):
         # A remote server or intermediary can decode URL syntax differently.
