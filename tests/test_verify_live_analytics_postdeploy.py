@@ -1,6 +1,7 @@
 """No network or production operations; exact-byte regression tests."""
 import importlib.util
 import json
+import os
 import tempfile
 from pathlib import Path
 import unittest
@@ -262,7 +263,7 @@ class VerifyTests(unittest.TestCase):
     def test_evidence_writer_interrupted_write_removes_partial_file(self):
         with tempfile.TemporaryDirectory() as folder:
             evidence_path = Path(folder) / "http_postdeploy.json"
-            real_open = Path.open
+            real_fdopen = os.fdopen
 
             class InterruptedWriter:
                 def __init__(self, stream):
@@ -280,17 +281,57 @@ class VerifyTests(unittest.TestCase):
                     self.stream.flush()
                     raise OSError("simulated-disk-full")
 
-            def open_with_failure(path, *args, **kwargs):
-                stream = real_open(path, *args, **kwargs)
-                if path == evidence_path and args and args[0] == "x":
-                    return InterruptedWriter(stream)
-                return stream
+            def fdopen_with_failure(fd, *args, **kwargs):
+                return InterruptedWriter(real_fdopen(fd, *args, **kwargs))
 
-            with patch.object(Path, "open", open_with_failure):
+            with patch.object(m.os, "fdopen", fdopen_with_failure):
                 with self.assertRaisesRegex(OSError, "simulated-disk-full"):
                     m.write_verification_evidence(evidence_path, {"status": "PASS"})
             self.assertFalse(evidence_path.exists())
 
+
+
+    def test_postdeploy_evidence_is_0600_even_with_world_readable_umask(self):
+        # Mirrors the private preflight candidate: permissions set at creation.
+        if os.name != "posix":
+            self.skipTest("POSIX file modes required")
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "http_postdeploy.json"
+            previous_umask = os.umask(0)
+            try:
+                m.write_verification_evidence(path, {"status": "PASS"})
+            finally:
+                os.umask(previous_umask)
+            self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(json.loads(path.read_text(encoding="utf-8"))["status"], "PASS")
+
+    def test_shared_evidence_directory_stops_before_writing(self):
+        if os.name != "posix":
+            self.skipTest("POSIX directory modes required")
+        with tempfile.TemporaryDirectory() as folder:
+            shared = Path(folder) / "shared-evidence"
+            shared.mkdir(mode=0o755)
+            path = shared / "http_postdeploy.json"
+            with self.assertRaisesRegex(m.VerificationError, "operator-owned and private"):
+                m.write_verification_evidence(path, {"status": "PASS"})
+            self.assertFalse(path.exists())
+            self.assertEqual(shared.stat().st_mode & 0o777, 0o755)
+
+    def test_shared_evidence_directory_stops_cli_before_network(self):
+        if os.name != "posix":
+            self.skipTest("POSIX directory modes required")
+        with tempfile.TemporaryDirectory() as folder:
+            shared = Path(folder) / "shared-evidence"
+            shared.mkdir(mode=0o755)
+            path = shared / "http_postdeploy.json"
+            with patch("sys.argv", ["verify_live_analytics_postdeploy.py",
+                                    "--sibling-before-sha256", "a" * 64,
+                                    "--evidence-json", str(path)]), \\
+                 patch.object(m, "fetch_exact") as fetch_mock, \\
+                 self.assertRaisesRegex(m.VerificationError, "operator-owned and private"):
+                m.main()
+            fetch_mock.assert_not_called()
+            self.assertFalse(path.exists())
 
     def test_evidence_json_refuses_public_webroots_before_writing(self):
         with tempfile.TemporaryDirectory() as folder:
