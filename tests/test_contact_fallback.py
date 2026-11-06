@@ -1,6 +1,5 @@
 """No-network checks for the contact page's truthful, non-collecting fallback."""
 from pathlib import Path
-import re
 import unittest
 
 HTML = (Path(__file__).resolve().parents[1] / "contact.html").read_text(encoding="utf-8")
