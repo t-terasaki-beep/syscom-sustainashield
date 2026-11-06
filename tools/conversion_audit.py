@@ -13,6 +13,8 @@ class Page(HTMLParser):
         self.title = False
         self.title_text = ""
         self.links = []
+        # Track only the active anchor: text outside </a> is never CTA text.
+        self.active_link = None
         self.forms = 0
         self.placeholder_forms = 0
         self.inputs = []
@@ -24,7 +26,9 @@ class Page(HTMLParser):
         a = dict(attrs)
         if tag == "title": self.title = True
         if tag == "h1": self.headings += 1
-        if tag == "a": self.links.append({"href": a.get("href", ""), "text": ""})
+        if tag == "a":
+            self.active_link = {"href": a.get("href", ""), "text": ""}
+            self.links.append(self.active_link)
         if tag == "form":
             self.forms += 1
             # A known unimplemented inline submit handler blocks real inquiries.
@@ -40,10 +44,12 @@ class Page(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag == "title": self.title = False
+        if tag == "a": self.active_link = None
 
     def handle_data(self, data):
         if self.title: self.title_text += data.strip()
-        if self.links: self.links[-1]["text"] += data.strip()
+        if self.active_link is not None:
+            self.active_link["text"] += data.strip()
 
 def audit(root):
     results = []
