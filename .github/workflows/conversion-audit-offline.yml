@@ -1,0 +1,32 @@
+name: Conversion audit offline regression
+
+on:
+  push:
+    branches:
+      - feature/conversion-audit-v1-20261102
+    paths:
+      - tools/conversion_audit.py
+      - tests/test_conversion_audit.py
+      - contact.html
+      - .github/workflows/conversion-audit-offline.yml
+  pull_request:
+    paths:
+      - tools/conversion_audit.py
+      - tests/test_conversion_audit.py
+      - contact.html
+      - .github/workflows/conversion-audit-offline.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline regression tests (no site access or credentials)
+        run: python -m unittest discover -s tests -p 'test_conversion_audit.py' -v
