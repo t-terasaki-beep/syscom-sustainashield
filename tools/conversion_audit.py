@@ -7,6 +7,7 @@ import posixpath
 from html.parser import HTMLParser
 import json
 import sys
+from urllib.parse import urlsplit
 
 class Page(HTMLParser):
     def __init__(self):
@@ -59,23 +60,45 @@ def is_placeholder_cta_href(link):
     return is_cta_text and href in ("", "#", "#!", "javascript:void(0)", "javascript:void(0);")
 
 def is_self_referential_cta(link, page_path):
-    """Identify CTA anchors that only navigate back to the same HTML page.
+    """Flag same-document inquiry CTA links, including live absolute and directory URLs.
 
-    This is a static routing warning, not a claim about browser-side handlers.
+    Static heuristic only: a fragment or reload is not an alternative contact
+    endpoint. Unrelated domains, tel/mailto, and cross-page links are preserved.
     """
     href = (link["href"] or "").strip()
     if not any(word in link["text"] for word in ("相談", "問い合わせ", "見積")):
         return False
-    if not href or href.startswith(("//", "#")):
+    if not href or is_placeholder_cta_href(link):
         return False
-    if ":" in href.split("/", 1)[0]:
-        return False  # schemes such as tel:, https:, mailto:, javascript:
-    route = href.split("#", 1)[0].split("?", 1)[0]
+
+    try:
+        parsed = urlsplit(href)
+        if parsed.scheme or parsed.netloc:
+            if parsed.scheme not in ("", "http", "https"):
+                return False
+            if parsed.hostname not in (
+                "syscom-sustaina-shield.com", "www.syscom-sustaina-shield.com"
+            ):
+                return False
+            route = parsed.path or "/"
+        else:
+            route = parsed.path
+    except ValueError:
+        return False
+
+    # "#consult" and "?source=..." revisit this document; they do not
+    # become independent consultation destinations by having a fragment/query.
     if not route:
-        return False
-    target = (posixpath.normpath(route.lstrip("/")) if route.startswith("/")
-              else posixpath.normpath(posixpath.join(posixpath.dirname(page_path), route)))
-    return target == page_path
+        return bool(parsed.query or parsed.fragment)
+
+    def document_path(path):
+        # On GitHub, /residential/ is residential/index.html, not residential.
+        return posixpath.normpath((path.lstrip("/") + "index.html")
+                                 if path.endswith("/") else path.lstrip("/"))
+
+    target = (document_path(route) if route.startswith("/")
+              else document_path(posixpath.join(posixpath.dirname(page_path), route)))
+    return target == document_path(page_path)
 
 
 def audit(root):
