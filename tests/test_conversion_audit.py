@@ -185,5 +185,62 @@ class SelfReferentialCtaTests(unittest.TestCase):
 
 
 
+class CanonicalSelfLinkTests(unittest.TestCase):
+    """Cover real-world self-links missed by the initial same-path heuristic."""
+
+    def check(self, filename, markup):
+        with tempfile.TemporaryDirectory() as dirname:
+            root = Path(dirname)
+            path = root / filename
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(
+                '<title>Test</title><meta name="description" content="x">'
+                '<h1>Test</h1>' + markup, encoding="utf-8"
+            )
+            return next(row for row in audit(root) if row["path"] == filename)
+
+    def test_absolute_production_url_to_same_contact_page_is_not_a_conversion(self):
+        result = self.check(
+            "contact.html",
+            '<a href="https://syscom-sustaina-shield.com/contact.html?campaign=footer#form">'
+            '無料相談はこちら</a>'
+        )
+        self.assertEqual(len(result["self_referential_cta_links"]), 1)
+        self.assertEqual(result["cta_links"], [])
+        self.assertIn("no_obvious_cta", result["warnings"])
+
+    def test_directory_style_index_link_is_self_referential(self):
+        result = self.check(
+            "residential/index.html",
+            '<a href="/residential/">お見積もり相談はこちら</a>'
+            '<a href="./">お問い合わせはこちら</a>'
+        )
+        self.assertEqual(len(result["self_referential_cta_links"]), 2)
+        self.assertEqual(result["cta_links"], [])
+        self.assertIn("no_obvious_cta", result["warnings"])
+
+    def test_same_page_fragment_is_not_an_independent_contact_destination(self):
+        result = self.check(
+            "contact.html",
+            '<a href="#consultation">無料相談</a>'
+        )
+        self.assertEqual(len(result["self_referential_cta_links"]), 1)
+        self.assertEqual(result["cta_links"], [])
+
+    def test_other_site_and_distinct_contact_page_are_not_self_links(self):
+        result = self.check(
+            "residential/index.html",
+            '<a href="https://example.com/residential/">無料相談</a>'
+            '<a href="/contact.html">お問い合わせ</a>'
+        )
+        self.assertEqual(result["self_referential_cta_links"], [])
+        self.assertEqual(len(result["cta_links"]), 2)
+
+    def test_root_directory_link_is_self_from_top_index(self):
+        result = self.check("index.html", '<a href="/">無料相談</a>')
+        self.assertEqual(len(result["self_referential_cta_links"]), 1)
+        self.assertIn("no_obvious_cta", result["warnings"])
+
+
 if __name__ == "__main__":
     unittest.main()
