@@ -1,0 +1,30 @@
+name: Contact page fallback offline safety
+
+on:
+  push:
+    branches:
+      - fix/contact-line-dead-cta-20261106
+    paths:
+      - contact.html
+      - tests/test_contact_fallback.py
+      - .github/workflows/contact-fallback-offline.yml
+  pull_request:
+    paths:
+      - contact.html
+      - tests/test_contact_fallback.py
+      - .github/workflows/contact-fallback-offline.yml
+
+permissions:
+  contents: read
+
+jobs:
+  contact-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline non-collecting fallback tests
+        run: python -m unittest discover -s tests -p 'test_contact_fallback.py' -v
