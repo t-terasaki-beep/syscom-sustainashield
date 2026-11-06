@@ -132,5 +132,58 @@ class ActionableCtaTests(unittest.TestCase):
         self.assertNotIn("placeholder_cta_href", result["warnings"])
 
 
+
+
+class SelfReferentialCtaTests(unittest.TestCase):
+    """A CTA that links to its own page is not a working inquiry destination."""
+
+    def check(self, filename, markup):
+        with tempfile.TemporaryDirectory() as dirname:
+            root = Path(dirname)
+            path = root / filename
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(
+                '<title>Test</title><meta name="description" content="x">'
+                '<h1>Test</h1>' + markup, encoding="utf-8"
+            )
+            return next(row for row in audit(root) if row["path"] == filename)
+
+    def test_contact_self_links_do_not_mask_dead_end(self):
+        result = self.check(
+            "contact.html",
+            '<a href="contact.html">お問い合わせ</a>'
+            '<a href="/contact.html?from=footer#form">無料相談</a>'
+            '<form onsubmit="alert(\'送信先を実装してください\'); return false;">'
+            '<button>送信する</button></form>'
+        )
+        self.assertEqual(len(result["self_referential_cta_links"]), 2)
+        self.assertEqual(result["cta_links"], [])
+        self.assertIn("self_referential_cta_href", result["warnings"])
+        self.assertIn("placeholder_form_submit", result["warnings"])
+        self.assertIn("no_obvious_cta", result["warnings"])
+
+    def test_link_to_contact_from_other_page_remains_actionable(self):
+        result = self.check("company.html", '<a href="contact.html">無料相談</a>')
+        self.assertEqual(result["self_referential_cta_links"], [])
+        self.assertEqual(len(result["cta_links"]), 1)
+        self.assertNotIn("no_obvious_cta", result["warnings"])
+
+    def test_nested_relative_self_route_is_detected(self):
+        result = self.check("residential/index.html", '<a href="./index.html">お見積り相談</a>')
+        self.assertEqual(len(result["self_referential_cta_links"]), 1)
+        self.assertIn("no_obvious_cta", result["warnings"])
+
+    def test_real_phone_cta_still_counts_beside_self_link(self):
+        result = self.check(
+            "contact.html",
+            '<a href="contact.html">お問い合わせ</a>'
+            '<a href="tel:09000000000">電話する</a>'
+        )
+        self.assertEqual(len(result["self_referential_cta_links"]), 1)
+        self.assertEqual(len(result["cta_links"]), 1)
+        self.assertNotIn("no_obvious_cta", result["warnings"])
+
+
+
 if __name__ == "__main__":
     unittest.main()
