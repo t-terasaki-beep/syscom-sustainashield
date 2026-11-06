@@ -6,12 +6,16 @@ on:
       - feature/conversion-audit-v1-20261102
     paths:
       - tools/conversion_audit.py
+      - tools/summarize_diagnosis_links.py
+      - tests/test_diagnosis_link_summary.py
       - tests/test_conversion_audit.py
       - contact.html
       - .github/workflows/conversion-audit-offline.yml
   pull_request:
     paths:
       - tools/conversion_audit.py
+      - tools/summarize_diagnosis_links.py
+      - tests/test_diagnosis_link_summary.py
       - tests/test_conversion_audit.py
       - contact.html
       - .github/workflows/conversion-audit-offline.yml
@@ -29,4 +33,15 @@ jobs:
         with:
           python-version: '3.11'
       - name: Offline regression tests (no site access or credentials)
-        run: python -m unittest discover -s tests -p 'test_conversion_audit.py' -v
+        run: |
+          python -m unittest discover -s tests -p 'test_conversion_audit.py' -v
+          python -m unittest discover -s tests -p 'test_diagnosis_link_summary.py' -v
+      - name: Inventory diagnosis alias links in GitHub HTML (not live site)
+        run: python tools/summarize_diagnosis_links.py . > diagnosis-alias-inventory.json
+      - name: Keep read-only link inventory as evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnosis-alias-inventory
+          path: diagnosis-alias-inventory.json
+          if-no-files-found: error
+          retention-days: 7
