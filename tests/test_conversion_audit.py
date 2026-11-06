@@ -86,5 +86,51 @@ class AnchorTextIsolationTests(unittest.TestCase):
 
 
 
+class ActionableCtaTests(unittest.TestCase):
+    def audit_markup(self, markup):
+        with tempfile.TemporaryDirectory() as dirname:
+            root = Path(dirname)
+            (root / "sample.html").write_text(
+                '<html><head><title>Test</title><meta name="description" content="x"></head>'
+                '<body><h1>Test</h1>' + markup + '</body></html>',
+                encoding="utf-8",
+            )
+            return audit(root)[0]
+
+    def test_only_unimplemented_form_does_not_suppress_no_cta(self):
+        result = self.audit_markup(
+            '<form onsubmit="alert(\'送信先を実装してください\'); return false;">'
+            '<input name="email"><button>送信</button></form>'
+        )
+        self.assertEqual(result["forms"], 1)
+        self.assertEqual(result["placeholder_forms"], 1)
+        self.assertIn("placeholder_form_submit", result["warnings"])
+        self.assertIn("no_obvious_cta", result["warnings"])
+
+    def test_hash_cta_is_not_actionable(self):
+        result = self.audit_markup('<a href="#">無料相談はこちら</a>')
+        self.assertEqual(result["cta_links"], [])
+        self.assertEqual(len(result["placeholder_cta_links"]), 1)
+        self.assertIn("placeholder_cta_href", result["warnings"])
+        self.assertIn("no_obvious_cta", result["warnings"])
+
+    def test_real_contact_link_remains_actionable(self):
+        result = self.audit_markup('<a href="/contact.html">無料相談はこちら</a>')
+        self.assertEqual(len(result["cta_links"]), 1)
+        self.assertEqual(result["placeholder_cta_links"], [])
+        self.assertNotIn("no_obvious_cta", result["warnings"])
+
+    def test_valid_action_form_remains_actionable(self):
+        result = self.audit_markup('<form action="/api/contact" method="post"><button>送信</button></form>')
+        self.assertEqual(result["placeholder_forms"], 0)
+        self.assertNotIn("no_obvious_cta", result["warnings"])
+
+    def test_javascript_handler_not_claimed_as_proven_working_cta(self):
+        result = self.audit_markup('<a href="javascript:openConsultation()">無料相談</a>')
+        self.assertEqual(result["cta_links"], [])
+        self.assertIn("no_obvious_cta", result["warnings"])
+        self.assertNotIn("placeholder_cta_href", result["warnings"])
+
+
 if __name__ == "__main__":
     unittest.main()
