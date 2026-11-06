@@ -63,6 +63,8 @@ def check_bundle(
         report.get("prepared_sha256") != p0.sha256(candidate_html),
         report.get("production_original_bytes") != len(original_backup),
         report.get("prepared_bytes") != len(candidate_html),
+        report.get("change") != p0.APPROVED_CHANGE,
+        report.get("mandatory_next_steps") != list(p0.MANDATORY_NEXT_STEPS),
     )):
         raise p0.PreflightError("Preflight report does not match backups and candidate; STOP")
     # Keep provenance of the earlier GET-only preflight. The fresh under-lock
