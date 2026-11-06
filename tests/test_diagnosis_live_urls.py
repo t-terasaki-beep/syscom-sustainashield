@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Offline, network-free tests for safe diagnosis alias HTTP evidence."""
+import hashlib
+import io
+import sys
+import unittest
+from pathlib import Path
+from urllib.error import HTTPError, URLError
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+from inspect_diagnosis_live_urls import (  # noqa: E402
+    BASE, NoRedirect, inspect_one, snapshot
+)
+
+
+class FakeResponse:
+    def __init__(self, url, status=200, body=b"", headers=None):
+        self.url, self.status, self.body = url, status, body
+        self.headers = headers or {"Content-Type": "text/html"}
+        self.code = status
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return False
+
+    def geturl(self):
+        return self.url
+
+    def read(self, size=-1):
+        return self.body[:size]
+
+
+class FakeOpener:
+    def __init__(self, responses):
+        self.responses = list(responses)
+        self.calls = []
+
+    def open(self, request, timeout=None):
+        self.calls.append((request.full_url, request.get_method(), timeout))
+        response = self.responses.pop(0)
+        if isinstance(response, BaseException):
+            raise response
+        return response
+
+
+class DiagnosisLiveAliasTests(unittest.TestCase):
+    def test_200_extracts_canonical_and_robots_but_no_decision(self):
+        data = (b'<html><head><link rel="alternate canonical" '
+                b'href="https://syscom-sustaina-shield.com/photo-diagnosis/">'
+                b'<meta name="robots" content="index,follow"></head></html>')
+        opener = FakeOpener([FakeResponse(BASE + "/photo-diagnosis/", body=data,
+                                          headers={"Content-Type": "text/html; charset=utf-8",
+                                                   "ETag": '"a"'})])
+        result = inspect_one("/photo-diagnosis/", opener)
+        self.assertEqual(result["status"], 200)
+        self.assertEqual(result["bytes"], len(data))
+        self.assertEqual(result["sha256"], hashlib.sha256(data).hexdigest())
+        self.assertEqual(result["canonical_links"], [BASE + "/photo-diagnosis/"])
+        self.assertEqual(result["meta_robots"], ["index,follow"])
+        self.assertEqual(opener.calls[0][1], "GET")
+
+    def test_redirect_status_and_location_are_preserved_without_following(self):
+        url = BASE + "/shindan.html"
+        err = HTTPError(url, 301, "Moved", {"Location": "/photo-diagnosis/"}, io.BytesIO(b""))
+        opener = FakeOpener([err])
+        result = inspect_one("/shindan.html", opener)
+        self.assertEqual(result["status"], 301)
+        self.assertEqual(result["location"], "/photo-diagnosis/")
+        self.assertFalse(result["body_examined"])
+        self.assertFalse(result["redirect_followed"])
+        self.assertEqual(len(opener.calls), 1)
+        self.assertIsNone(NoRedirect().redirect_request(None, None, 301, "Moved", {}, url))
+
+    def test_same_content_does_not_claim_canonical_decision(self):
+        data = b"<html><head></head><body>same</body></html>"
+        opener = FakeOpener([
+            FakeResponse(BASE + "/photo-diagnosis/", body=data),
+            FakeResponse(BASE + "/shindan.html", body=data),
+        ])
+        report = snapshot(opener)
+        self.assertTrue(report["same_body_sha256_if_both_200"])
+        self.assertFalse(report["external_backlinks_checked"])
+        self.assertFalse(report["search_console_checked"])
+        self.assertTrue(report["canonical_decision"].startswith("HOLD"))
+        self.assertEqual(len(opener.calls), 2)
+
+    def test_network_failure_is_unknown_not_a_negative_redirect_proof(self):
+        opener = FakeOpener([URLError("DNS lookup unavailable")])
+        row = inspect_one("/shindan.html", opener)
+        self.assertIsNone(row["status"])
+        self.assertEqual(row["observation"], "unavailable_not_zero")
+
+    def test_unapproved_urls_never_generate_requests(self):
+        opener = FakeOpener([])
+        with self.assertRaises(ValueError):
+            inspect_one("/contact.html", opener)
+        self.assertEqual(opener.calls, [])
+
+    def test_mismatched_body_is_not_marked_as_duplicate(self):
+        opener = FakeOpener([
+            FakeResponse(BASE + "/photo-diagnosis/", body=b"<html>first</html>"),
+            FakeResponse(BASE + "/shindan.html", body=b"<html>second</html>"),
+        ])
+        report = snapshot(opener)
+        self.assertFalse(report["same_body_sha256_if_both_200"])
+
+
+if __name__ == "__main__":
+    unittest.main()
