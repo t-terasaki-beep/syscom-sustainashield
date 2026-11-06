@@ -1,6 +1,7 @@
 """Offline tests. No network, credentials, FTP, or publication."""
 import importlib.util
 import json
+import os
 import tempfile
 from pathlib import Path
 import unittest
@@ -274,6 +275,39 @@ class LocalPreflightOutputTests(unittest.TestCase):
             self.assertEqual(output, dest / "preflight.json")
             self.assertEqual((dest / "index.html").read_bytes(), b"fixture-only")
             self.assertEqual(json.loads(output.read_text(encoding="utf-8")), report)
+
+    def test_private_permissions_even_with_permissive_umask(self):
+        # Preflight artifacts must never inherit 0644/0755 when launched by
+        # an operator with a permissive umask. No real production HTML here.
+        if os.name != "posix":
+            self.skipTest("POSIX ownership and mode checks")
+        with tempfile.TemporaryDirectory() as folder:
+            dest = Path(folder) / "private-preflight"
+            previous = os.umask(0)
+            try:
+                output = preflight.write_local_preflight_outputs(
+                    dest, b"fixture-only", {"publication_status": "NOT_PUBLISHED"}
+                )
+            finally:
+                os.umask(previous)
+            self.assertEqual(dest.stat().st_mode & 0o777, 0o700)
+            self.assertEqual((dest / "index.html").stat().st_mode & 0o777, 0o600)
+            self.assertEqual(output.stat().st_mode & 0o777, 0o600)
+
+    def test_shared_existing_directory_is_rejected_without_modifying_it(self):
+        # Refuse a previously created 0755 destination rather than silently
+        # chmodding shared operator directories.
+        if os.name != "posix":
+            self.skipTest("POSIX ownership and mode checks")
+        with tempfile.TemporaryDirectory() as folder:
+            dest = Path(folder) / "shared-staging"
+            dest.mkdir()
+            dest.chmod(0o755)
+            with self.assertRaisesRegex(preflight.PreflightError, "private"):
+                preflight.write_local_preflight_outputs(dest, b"fixture-only", {})
+            self.assertEqual(dest.stat().st_mode & 0o777, 0o755)
+            self.assertFalse((dest / "index.html").exists())
+            self.assertFalse((dest / "preflight.json").exists())
 
     def test_candidate_cannot_be_written_to_common_public_webroots(self):
         # Even local preparation must not accidentally serve the HTML before
