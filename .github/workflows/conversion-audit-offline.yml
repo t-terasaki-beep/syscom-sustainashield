@@ -7,7 +7,9 @@ on:
     paths:
       - tools/conversion_audit.py
       - tools/summarize_diagnosis_links.py
+      - tools/inspect_diagnosis_live_urls.py
       - tests/test_diagnosis_link_summary.py
+      - tests/test_diagnosis_live_urls.py
       - tests/test_conversion_audit.py
       - contact.html
       - .github/workflows/conversion-audit-offline.yml
@@ -15,7 +17,9 @@ on:
     paths:
       - tools/conversion_audit.py
       - tools/summarize_diagnosis_links.py
+      - tools/inspect_diagnosis_live_urls.py
       - tests/test_diagnosis_link_summary.py
+      - tests/test_diagnosis_live_urls.py
       - tests/test_conversion_audit.py
       - contact.html
       - .github/workflows/conversion-audit-offline.yml
@@ -36,6 +40,7 @@ jobs:
         run: |
           python -m unittest discover -s tests -p 'test_conversion_audit.py' -v
           python -m unittest discover -s tests -p 'test_diagnosis_link_summary.py' -v
+          python -m unittest discover -s tests -p 'test_diagnosis_live_urls.py' -v
       - name: Inventory diagnosis alias links in GitHub HTML (not live site)
         run: python tools/summarize_diagnosis_links.py . > diagnosis-alias-inventory.json
       - name: Keep read-only link inventory as evidence
@@ -43,5 +48,14 @@ jobs:
         with:
           name: diagnosis-alias-inventory
           path: diagnosis-alias-inventory.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: GET-only live alias evidence (no redirects followed; no writes)
+        run: python tools/inspect_diagnosis_live_urls.py > diagnosis-live-http-evidence.json
+      - name: Retain live HTTP status, Location, canonical and SHA observations
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnosis-live-http-evidence
+          path: diagnosis-live-http-evidence.json
           if-no-files-found: error
           retention-days: 7
