@@ -302,6 +302,23 @@ class VerifyTests(unittest.TestCase):
                         m.write_verification_evidence(path, {"status": "PASS"})
                     self.assertFalse(path.exists())
 
+    def test_evidence_json_refuses_nginx_srv_http_and_dist(self):
+        # A successful HTTP inspection is sensitive metadata and must not
+        # become a publicly served file through a common alternate webroot.
+        with tempfile.TemporaryDirectory() as folder:
+            roots = (
+                Path(folder) / "usr" / "share" / "nginx" / "html",
+                Path(folder) / "srv" / "http",
+                Path(folder) / "dist",
+            )
+            for root in roots:
+                path = root / "inspection.json"
+                with self.subTest(root=str(root)), self.assertRaisesRegex(
+                    m.VerificationError, "public web root"
+                ):
+                    m.write_verification_evidence(path, {"status": "PASS"})
+                self.assertFalse(path.exists())
+
     def test_evidence_json_symlink_to_webroot_refused(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
