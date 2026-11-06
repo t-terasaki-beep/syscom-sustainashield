@@ -50,5 +50,41 @@ class PlaceholderFormTests(unittest.TestCase):
         self.assertIn("placeholder_form_submit", result[0]["warnings"])
 
 
+
+class AnchorTextIsolationTests(unittest.TestCase):
+    def test_non_link_text_does_not_create_false_cta(self):
+        with tempfile.TemporaryDirectory() as dirname:
+            root = Path(dirname)
+            (root / "no-cta.html").write_text(
+                '<title>会社情報</title><meta name="description" content="x">'
+                '<h1>会社情報</h1><a href="/company.html">会社概要</a>'
+                '<p>お問い合わせ・お見積もりについての説明です。</p>',
+                encoding="utf-8"
+            )
+            result = audit(root)[0]
+        self.assertEqual(result["cta_links"], [])
+        self.assertIn("no_obvious_cta", result["warnings"])
+
+    def test_nested_anchor_text_is_captured_until_closing_tag(self):
+        page = Page()
+        page.feed(
+            '<a href="/company.html">会社<span>概要</span></a>'
+            '<p>無料相談はこちら</p>'
+            '<a href="/contact.html"><span>無料</span>相談</a>'
+            '<p>見積のご案内</p>'
+        )
+        self.assertEqual([link["text"] for link in page.links], ["会社概要", "無料相談"])
+
+    def test_second_link_does_not_inherit_prior_page_text(self):
+        page = Page()
+        page.feed(
+            '<a href="/company.html">会社概要</a><p>無料相談、見積はこちら</p>'
+            '<a href="tel:0431234567">お電話</a>'
+        )
+        self.assertEqual(page.links[0]["text"], "会社概要")
+        self.assertEqual(page.links[1]["text"], "お電話")
+
+
+
 if __name__ == "__main__":
     unittest.main()
