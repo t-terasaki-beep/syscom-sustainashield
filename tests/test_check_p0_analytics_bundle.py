@@ -24,7 +24,9 @@ def fixtures():
     report = {"publication_status": "NOT_PUBLISHED", "source_url": p0.URL,
               "production_etag_at_read": p0.EXPECTED_ETAG,
               "original_sha256": p0.sha256(original), "prepared_sha256": p0.sha256(candidate),
-              "production_original_bytes": len(original), "prepared_bytes": len(candidate)}
+              "production_original_bytes": len(original), "prepared_bytes": len(candidate),
+              "change": p0.APPROVED_CHANGE,
+              "mandatory_next_steps": list(p0.MANDATORY_NEXT_STEPS)}
     report["sibling_read_only_preflight"] = {
         "url": p0.SIBLING_URL, "etag": p0.EXPECTED_SIBLING_ETAG,
         "bytes": len(sibling), "sha256": p0.sha256(sibling),
@@ -117,6 +119,29 @@ class BackupBundleTests(unittest.TestCase):
                     p0.PreflightError, "Analytics JS fresh live evidence"):
                 self.check(original, candidate, sibling, report, live_sibling,
                            live_asset=evidence)
+
+    def test_handoff_manifest_missing_or_rewritten_safety_steps_stops(self):
+        # A structurally valid HTML candidate must not certify a handoff
+        # whose lock, backups, event checks, or rollback steps were removed.
+        original, candidate, sibling, report, live_sibling = fixtures()
+        cases = [
+            dict(report, mandatory_next_steps=[]),
+            dict(report, mandatory_next_steps=list(p0.MANDATORY_NEXT_STEPS[:-1])),
+            dict(report, change="replace entire article with generated HTML"),
+        ]
+        for bad in cases:
+            with self.subTest(change=bad.get("change"), steps=bad.get("mandatory_next_steps")):
+                with self.assertRaisesRegex(p0.PreflightError, "Preflight report"):
+                    self.check(original, candidate, sibling, bad, live_sibling)
+
+    def test_handoff_manifest_order_and_required_steps_are_exact(self):
+        original, candidate, sibling, report, live_sibling = fixtures()
+        # Reordering the operator instructions is not an approved handoff.
+        tampered = dict(report, mandatory_next_steps=list(reversed(p0.MANDATORY_NEXT_STEPS)))
+        with self.assertRaisesRegex(p0.PreflightError, "Preflight report"):
+            self.check(original, candidate, sibling, tampered, live_sibling)
+        self.assertEqual(self.check(original, candidate, sibling, report, live_sibling)
+                         ["result"], "BACKUP_CANDIDATE_LIVE_BYTES_MATCH")
 
     def test_handoff_report_missing_preflight_evidence_stops(self):
         original, candidate, sibling, report, live_sibling = fixtures()
