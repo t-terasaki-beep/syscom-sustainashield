@@ -53,6 +53,7 @@ jobs:
       - name: GET-only live alias evidence (no redirects followed; no writes)
         run: python tools/inspect_diagnosis_live_urls.py > diagnosis-live-http-evidence.json
       - name: Retain live HTTP status, Location, canonical and SHA observations
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: diagnosis-live-http-evidence
