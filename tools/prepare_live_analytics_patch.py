@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -262,7 +263,16 @@ def write_local_preflight_outputs(dest: Path, changed: bytes, report: dict) -> P
     appears between precheck and open. Nothing here uploads or publishes.
     """
     dest = require_non_webroot_output(dest)
-    dest.mkdir(parents=True, exist_ok=True)
+    # Candidate HTML is a complete copy of a production page. Even outside a
+    # known webroot it must not be readable by other local accounts. Never
+    # chmod an existing directory: fail instead of altering operator files.
+    dest.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if os.name == "posix":
+        stat = dest.stat()
+        if stat.st_uid != os.geteuid() or (stat.st_mode & 0o077):
+            raise PreflightError(
+                "Output directory must be owned by the operator and private (0700); STOP"
+            )
     html_path, report_path = dest / "index.html", dest / "preflight.json"
     if html_path.exists() or report_path.exists():
         raise PreflightError("Output files exist; refusing overwrite")
@@ -270,10 +280,13 @@ def write_local_preflight_outputs(dest: Path, changed: bytes, report: dict) -> P
     html_created = False
     report_created = False
     try:
-        with html_path.open("xb") as html:
+        # Exclusive O_CREAT and 0600 prevent the brief world-readable window
+        # that Path.open('x') can create with a permissive process umask.
+        with os.fdopen(os.open(html_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "wb") as html:
             html_created = True
             html.write(changed)
-        with report_path.open("x", encoding="utf-8") as evidence:
+        with os.fdopen(os.open(report_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600),
+                       "w", encoding="utf-8") as evidence:
             report_created = True
             json.dump(report, evidence, ensure_ascii=False, indent=2)
             evidence.write("\n")
