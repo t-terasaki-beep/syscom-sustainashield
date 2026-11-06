@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -76,6 +77,12 @@ def require_private_evidence_path(path: Path) -> None:
     resolved_parent = path.parent.resolve()
     if _looks_like_public_webroot(path.parts) or _looks_like_public_webroot(resolved_parent.parts):
         raise VerificationError("Evidence JSON path is inside a public web root; STOP")
+    # A 0600 file is not enough when the requested directory is shared or
+    # controlled by another account. Match the private preflight output policy.
+    if os.name == "posix":
+        directory = resolved_parent.stat()
+        if directory.st_uid != os.geteuid() or directory.st_mode & 0o077:
+            raise VerificationError("Evidence directory must be operator-owned and private; STOP")
 
 
 def sha256(blob: bytes) -> str:
@@ -196,7 +203,10 @@ def write_verification_evidence(path: Path, record: dict) -> None:
     serialized = json.dumps(record, ensure_ascii=False, indent=2) + "\n"
     created = False
     try:
-        with path.open("x", encoding="utf-8") as evidence:
+        # Path.open("x") creates mode 0666 & umask (often 0644).
+        # Set 0600 atomically at creation; O_EXCL preserves no-overwrite.
+        with os.fdopen(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600),
+                       "w", encoding="utf-8") as evidence:
             created = True
             evidence.write(serialized)
     except BaseException:
