@@ -89,11 +89,30 @@ def audit(root: Path) -> dict:
         download_issues = [type(exc).__name__]
     if download_issues:
         errors.append({"path": download_path, "issues": download_issues})
+    # Shared media metadata feeds many pages: a renamed HTML title alone cannot
+    # prevent the old company-guide label from reappearing in generated cards.
+    media_map_path = "tools/publish/lp-media-set-v1/media-map.json"
+    try:
+        media_map_text = (root / media_map_path).read_text(encoding="utf-8")
+        media_map_issues = [
+            f"旧屋号 {brand!r} が {media_map_text.count(brand)} 件"
+            for brand in OLD_BRANDS if brand in media_map_text
+        ]
+        media_map = json.loads(media_map_text)
+        title = media_map["docs"]["company-guide"]["title"]
+        if title != "サステナシールド 会社・サービス案内":
+            media_map_issues.append("company-guide の表示名が正式屋号と一致しない")
+    except (OSError, UnicodeError, ValueError, KeyError, TypeError) as exc:
+        media_map_issues = [type(exc).__name__]
+    if media_map_issues:
+        errors.append({"path": media_map_path, "issues": media_map_issues})
     return {
         "scope": "PR #19 P2 review-only HTML files; NOT production or site-wide coverage",
         "checked_pages": len(PAGES),
         "checked_generators": 1,
         "checked_download_templates": 1,
+        "checked_media_maps": 1,
+        "failed_media_maps": sum(1 for row in errors if row["path"] == media_map_path),
         "failed_download_templates": sum(1 for row in errors if row["path"] == download_path),
         "failed_pages": sum(1 for row in errors if row["path"] in PAGES),
         "failed_generators": sum(1 for row in errors if row["path"] == generator_path),
