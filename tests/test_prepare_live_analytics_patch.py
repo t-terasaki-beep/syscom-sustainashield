@@ -402,6 +402,57 @@ class LocalPreflightOutputTests(unittest.TestCase):
             self.assertFalse((dest / "preflight.json").exists())
 
 
+    def test_cli_webroot_stops_before_any_production_get(self):
+        with tempfile.TemporaryDirectory() as folder:
+            unsafe = Path(folder) / "public_html" / "p0-patch"
+            with patch("sys.argv", ["prepare", "--output-dir", str(unsafe)]), \
+                 patch.object(preflight, "fetch_live",
+                              side_effect=AssertionError("HTTP MUST NOT START")) as get:
+                with self.assertRaisesRegex(preflight.PreflightError, "public web root"):
+                    preflight.main()
+                get.assert_not_called()
+            self.assertFalse(unsafe.exists())
+
+    def test_cli_shared_directory_stops_before_any_production_get(self):
+        if os.name != "posix":
+            self.skipTest("POSIX mode enforcement")
+        with tempfile.TemporaryDirectory() as folder:
+            unsafe = Path(folder) / "shared-p0"
+            unsafe.mkdir(mode=0o755)
+            unsafe.chmod(0o755)
+            with patch("sys.argv", ["prepare", "--output-dir", str(unsafe)]), \
+                 patch.object(preflight, "fetch_live",
+                              side_effect=AssertionError("HTTP MUST NOT START")) as get:
+                with self.assertRaisesRegex(preflight.PreflightError, "operator-private"):
+                    preflight.main()
+                get.assert_not_called()
+
+    def test_cli_existing_candidate_stops_before_any_production_get(self):
+        with tempfile.TemporaryDirectory() as folder:
+            private = Path(folder) / "p0-private"
+            private.mkdir(mode=0o700)
+            (private / "index.html").write_bytes(b"keep-this-original")
+            with patch("sys.argv", ["prepare", "--output-dir", str(private)]), \
+                 patch.object(preflight, "fetch_live",
+                              side_effect=AssertionError("HTTP MUST NOT START")) as get:
+                with self.assertRaisesRegex(preflight.PreflightError, "refusing overwrite"):
+                    preflight.main()
+                get.assert_not_called()
+            self.assertEqual((private / "index.html").read_bytes(), b"keep-this-original")
+
+    def test_cli_private_new_destination_reaches_readonly_preflight(self):
+        with tempfile.TemporaryDirectory() as folder:
+            private = Path(folder) / "new-p0-private"
+            with patch("sys.argv", ["prepare", "--output-dir", str(private)]), \
+                 patch.object(preflight, "fetch_live",
+                              side_effect=preflight.PreflightError("stub: live GET attempted")) as get:
+                with self.assertRaisesRegex(preflight.PreflightError, "stub: live GET attempted"):
+                    preflight.main()
+                get.assert_called_once_with()
+            self.assertFalse(private.exists())
+
+
+
 
 if __name__ == "__main__":
     unittest.main()
