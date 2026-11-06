@@ -8,7 +8,7 @@ LINE_URL = "https://line.me/R/ti/p/@829oslez"
 
 class ContactFallbackTests(unittest.TestCase):
     def test_unimplemented_form_cannot_collect_personal_data(self):
-        self.assertNotRegex(HTML, r"<form\\b")
+        self.assertNotRegex(HTML, r"<form\b")
         self.assertNotIn('type="submit"', HTML)
         self.assertNotIn("送信先のフォーム処理を実装してください", HTML)
         self.assertNotIn("この内容で送信する", HTML)
