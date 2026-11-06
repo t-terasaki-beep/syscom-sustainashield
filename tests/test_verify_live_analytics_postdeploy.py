@@ -326,8 +326,8 @@ class VerifyTests(unittest.TestCase):
             path = shared / "http_postdeploy.json"
             with patch("sys.argv", ["verify_live_analytics_postdeploy.py",
                                     "--sibling-before-sha256", "a" * 64,
-                                    "--evidence-json", str(path)]), \\
-                 patch.object(m, "fetch_exact") as fetch_mock, \\
+                                    "--evidence-json", str(path)]), \
+                 patch.object(m, "fetch_exact") as fetch_mock, \
                  self.assertRaisesRegex(m.VerificationError, "operator-owned and private"):
                 m.main()
             fetch_mock.assert_not_called()
