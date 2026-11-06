@@ -55,15 +55,26 @@ class VerificationError(ValueError):
 # remaining path for an operator to accidentally expose the inspection JSON.
 WEBROOT_DIR_NAMES = frozenset({
     "public_html", "httpdocs", "htdocs", "www", "wwwroot", "webroot", "public",
+    "dist",
+})
+WEBROOT_DIR_PAIRS = frozenset({
+    ("nginx", "html"),  # /usr/share/nginx/html
+    ("srv", "http"),    # /srv/http
 })
 
 
+def _looks_like_public_webroot(parts: tuple[str, ...]) -> bool:
+    components = tuple(part.casefold() for part in parts)
+    return bool(set(components) & WEBROOT_DIR_NAMES) or any(
+        components[i:i + 2] in WEBROOT_DIR_PAIRS
+        for i in range(len(components) - 1)
+    )
+
+
 def require_private_evidence_path(path: Path) -> None:
-    # Check both the operator-supplied spelling and the resolved parent path,
-    # so a symlink alias to a public document root cannot bypass this gate.
+    # Check both the typed path and the resolved parent (including symlinks).
     resolved_parent = path.parent.resolve()
-    parts = {part.casefold() for part in (*path.parts, *resolved_parent.parts)}
-    if parts & WEBROOT_DIR_NAMES:
+    if _looks_like_public_webroot(path.parts) or _looks_like_public_webroot(resolved_parent.parts):
         raise VerificationError("Evidence JSON path is inside a public web root; STOP")
 
 
