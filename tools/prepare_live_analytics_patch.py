@@ -34,6 +34,17 @@ ASSET_URL = "https://syscom-sustaina-shield.com/assets/ss-analytics.js"
 EXPECTED_ASSET_SIZE = 8607
 EXPECTED_ASSET_SHA256 = "d31313584ab615a35581de2d8ccd9e4380cb95f14133b174269bca4d761f9ed3"
 GA4_MEASUREMENT_ID = b"G-ELZG7B45NH"
+# Immutable handoff requirements shared with the pre-upload content gate.
+# A certified preflight must not silently omit lock, backup or event checks.
+APPROVED_CHANGE = "insert exactly one ss-analytics.js script before </body>"
+MANDATORY_NEXT_STEPS = (
+    "Claim production publish lock with existing authorized workflow",
+    "Backup production via deployment channel and compare live SHA/ETag again",
+    "Re-capture sibling SHA under publish lock immediately before upload; do not reuse this earlier preflight snapshot",
+    "Upload this one file only after explicit approval; never publish repo-generated page",
+    "Verify HTTP 200, exactly one tag, pageview event, and unchanged sibling page",
+    "Release publish lock and retain rollback backup",
+)
 HTML_MEDIA_TYPES = frozenset(("text/html", "application/xhtml+xml"))
 VALID_SCRIPT_MIMES = frozenset((
     "text/javascript", "application/javascript", "text/ecmascript",
@@ -336,15 +347,8 @@ def main() -> int:
         "prepared_sha256": sha256(changed),
         "sibling_read_only_preflight": sibling,
         "analytics_asset_read_only_preflight": asset,
-        "change": "insert exactly one ss-analytics.js script before </body>",
-        "mandatory_next_steps": [
-            "Claim production publish lock with existing authorized workflow",
-            "Backup production via deployment channel and compare live SHA/ETag again",
-            "Re-capture sibling SHA under publish lock immediately before upload; do not reuse this earlier preflight snapshot",
-            "Upload this one file only after explicit approval; never publish repo-generated page",
-            "Verify HTTP 200, exactly one tag, pageview event, and unchanged sibling page",
-            "Release publish lock and retain rollback backup",
-        ],
+        "change": APPROVED_CHANGE,
+        "mandatory_next_steps": list(MANDATORY_NEXT_STEPS),
     }
     report_path = write_local_preflight_outputs(dest, changed, report)
     print(json.dumps({"local_preflight": "PASS", "published": False,
