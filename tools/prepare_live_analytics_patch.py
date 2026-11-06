@@ -228,13 +228,26 @@ def sha256(blob: bytes) -> str:
 # reached through a symlink. This is a safeguard, not proof of private storage.
 WEBROOT_DIR_NAMES = frozenset({
     "public_html", "httpdocs", "htdocs", "www", "wwwroot", "webroot", "public",
+    # Static-site deployment output: even a locally written candidate could go live.
+    "dist",
 })
+WEBROOT_DIR_PAIRS = frozenset({
+    ("nginx", "html"),  # /usr/share/nginx/html
+    ("srv", "http"),    # /srv/http (common HTTP document root)
+})
+
+
+def _looks_like_public_webroot(parts: tuple[str, ...]) -> bool:
+    components = tuple(part.casefold() for part in parts)
+    return bool(set(components) & WEBROOT_DIR_NAMES) or any(
+        components[i:i + 2] in WEBROOT_DIR_PAIRS
+        for i in range(len(components) - 1)
+    )
 
 
 def require_non_webroot_output(dest: Path) -> Path:
     resolved = dest.resolve()
-    path_parts = {part.lower() for part in (*dest.parts, *resolved.parts)}
-    if path_parts & WEBROOT_DIR_NAMES:
+    if _looks_like_public_webroot(dest.parts) or _looks_like_public_webroot(resolved.parts):
         raise PreflightError(
             "Output path appears inside a public web root; no candidate written. STOP"
         )
