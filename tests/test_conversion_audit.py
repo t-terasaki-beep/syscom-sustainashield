@@ -7,8 +7,37 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from conversion_audit import Page, audit  # noqa: E402
+from conversion_audit import Page, audit, diagnosis_reference_target  # noqa: E402
 
+
+
+class DiagnosisAliasInventoryTests(unittest.TestCase):
+    def test_relative_internal_alias_in_directory(self):
+        self.assertEqual(diagnosis_reference_target("../shindan.html", "residential/index.html"), "/shindan.html")
+
+    def test_canonical_path_and_query(self):
+        self.assertEqual(diagnosis_reference_target("/photo-diagnosis/?campaign=a#step", "index.html"), "/photo-diagnosis/")
+        self.assertEqual(diagnosis_reference_target("/photo-diagnosis/index.html", "index.html"), "/photo-diagnosis/")
+
+    def test_offsite_or_similar_path_not_classified(self):
+        self.assertIsNone(diagnosis_reference_target("https://example.org/shindan.html", "index.html"))
+        self.assertIsNone(diagnosis_reference_target("/shindan.html-old", "index.html"))
+        self.assertIsNone(diagnosis_reference_target("//bad.example/photo-diagnosis/", "index.html"))
+        self.assertIsNone(diagnosis_reference_target("#step2", "shindan.html"))
+
+    def test_per_page_source_inventory_is_explicit(self):
+        with tempfile.TemporaryDirectory() as dirname:
+            root = Path(dirname)
+            page = root / "landing.html"
+            page.write_text(
+                '<title>T</title><meta name="description" content="d"><h1>H</h1>'
+                '<a href="shindan.html">旧診断</a>'
+                '<a href="/photo-diagnosis/#start">写真診断</a>'
+                '<a href="https://external.test/photo-diagnosis/">外部</a>', encoding="utf-8"
+            )
+            result = audit(root)[0]
+        self.assertEqual([x["target"] for x in result["diagnosis_links"]],
+                         ["/shindan.html", "/photo-diagnosis/"])
 
 class PlaceholderFormTests(unittest.TestCase):
     def parse(self, html):
