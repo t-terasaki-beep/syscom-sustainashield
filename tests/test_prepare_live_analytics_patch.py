@@ -292,6 +292,23 @@ class LocalPreflightOutputTests(unittest.TestCase):
                     self.assertFalse((dest / "index.html").exists())
                     self.assertFalse((dest / "preflight.json").exists())
 
+    def test_static_site_and_nginx_webroots_are_rejected(self):
+        # The old name-only list let /usr/share/nginx/html and dist/ pass.
+        # Use temporary mock roots: never create anything on a live server.
+        with tempfile.TemporaryDirectory() as folder:
+            roots = (
+                Path(folder) / "usr" / "share" / "nginx" / "html",
+                Path(folder) / "srv" / "http",
+                Path(folder) / "dist",
+            )
+            for root in roots:
+                dest = root / "candidate"
+                with self.subTest(root=str(root)), self.assertRaisesRegex(
+                    preflight.PreflightError, "public web root"
+                ):
+                    preflight.write_local_preflight_outputs(dest, b"fixture-only", {})
+                self.assertFalse(dest.exists())
+
     def test_symlink_to_webroot_is_rejected_without_writing(self):
         # Resolve aliases too: a harmless-looking private path might point
         # into an actual web document root.
