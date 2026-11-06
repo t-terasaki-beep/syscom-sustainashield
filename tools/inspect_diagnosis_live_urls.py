@@ -11,6 +11,7 @@ from html.parser import HTMLParser
 import json
 from datetime import datetime, timezone
 from urllib.error import HTTPError, URLError
+from urllib.parse import urljoin
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 BASE = "https://syscom-sustaina-shield.com"
@@ -93,6 +94,33 @@ def inspect_one(path, opener=None):
     return result
 
 
+def assess_redirect(records):
+    """Classify *observed* alias integrity, not the final SEO canonical policy.
+
+    The current 301 is an externally observed fact, not a requested change.
+    Network failure must never be interpreted as a missing or broken redirect.
+    """
+    page, alias = records  # PATHS order is fixed and allowlisted.
+    if page.get("status") is None or alias.get("status") is None:
+        return "UNVERIFIED_FETCH"
+    if alias.get("status") != 301:
+        return "REVIEW_ALIAS_STATUS_CHANGED"
+    # Both relative and absolute Location headers are legal. Resolve but
+    # only accept the exact intended same-origin HTTPS destination: no query,
+    # credentials, fragment, alternate scheme, or external intermediary.
+    if urljoin(alias["url"], alias.get("location") or "") != BASE + "/photo-diagnosis/":
+        return "REVIEW_REDIRECT_TARGET"
+    if (page.get("status") != 200 or page.get("truncated") or page.get("error")
+            or not page.get("sha256")):
+        return "REVIEW_TARGET_RESPONSE"
+    # Canonical tags are not required to assert today's HTTP redirect, but an
+    # explicit contradiction warrants review rather than a green observation.
+    canonicals = page.get("canonical_links") or []
+    if canonicals and canonicals != [BASE + "/photo-diagnosis/"]:
+        return "REVIEW_CONFLICTING_CANONICAL"
+    return "OBSERVED_301_TO_200_TARGET"
+
+
 def snapshot(opener=None):
     records = [inspect_one(path, opener) for path in PATHS]
     same_body = (
@@ -105,6 +133,8 @@ def snapshot(opener=None):
         "audit_type": "live_http_get_only_no_redirects",
         "baseline_reference_date": "2026-11-03",
         "same_body_sha256_if_both_200": same_body,
+        "redirect_integrity_observation": assess_redirect(records),
+        "redirect_is_a_current_http_observation_not_a_canonical_decision": True,
         "external_backlinks_checked": False,
         "search_console_checked": False,
         "canonical_decision": "HOLD_pending_external_links_and_search_console",
@@ -113,4 +143,16 @@ def snapshot(opener=None):
 
 
 if __name__ == "__main__":
-    print(json.dumps(snapshot(), ensure_ascii=False, indent=2))
+    import sys
+
+    report = snapshot()
+    # JSON is emitted first so the always() artifact step can preserve
+    # evidence even when GitHub marks the live check red.
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    state = report["redirect_integrity_observation"]
+    if state == "UNVERIFIED_FETCH":
+        print("::warning title=P1 live URL unverified::GET failed; no redirect/canonical inference", file=sys.stderr)
+        sys.exit(2)
+    if state != "OBSERVED_301_TO_200_TARGET":
+        print(f"::error title=P1 alias changed::{state}; human review required, no automatic SEO changes", file=sys.stderr)
+        sys.exit(1)
