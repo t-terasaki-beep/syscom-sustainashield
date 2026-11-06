@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P2旧屋号の再混入を検知する静的検査（16ページ限定・本番操作なし）。
+"""P2旧屋号・住宅LINEの再混入を検知する静的検査（17ページ限定・本番操作なし）。
 
 PR #19のレビュー候補だけを検査する。全サイトの旧表記ゼロは主張しない。
 株式会社シスコムネットなど法的な法人表示は検査で禁止しない。
@@ -18,6 +18,7 @@ PAGES = (
     "faq.html",
     "flow.html",
     "grid-battery/index.html",
+    "tools/publish/lp-media-set-v1/column/ohisama-compare/index.html",
     "lp/gaichu-block/index.html",
     "lp/index.html",
     "privacy.html",
@@ -50,6 +51,14 @@ def audit(root: Path) -> dict:
             errors.append({"path": relative, "issues": [type(exc).__name__]})
             continue
         issues = check_text(body)
+        if relative == "tools/publish/lp-media-set-v1/column/ohisama-compare/index.html":
+            # Existing generated HTML is a separate delivery artifact from the
+            # corrected build_column.py generator. Check the visible URL and
+            # all three actual LINE link destinations (header/text/CTA).
+            if "631cqlgf" in body:
+                issues.append("おひさま比較記事に住宅LINEの旧IDが残存")
+            if body.count('href="https://line.me/R/ti/p/%40829oslez"') != 3:
+                issues.append("おひさま比較記事のLINEリンク3本が正本@829oslezに統一されていない")
         if issues:
             errors.append({"path": relative, "issues": issues})
     # Source-of-truth for future /column/ output. Never regenerate or publish
