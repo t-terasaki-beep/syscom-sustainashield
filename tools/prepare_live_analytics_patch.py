@@ -306,11 +306,26 @@ def main() -> int:
                         help="Private local output folder; NEVER upload it directly")
     args = parser.parse_args()
 
+    # Reject unsafe output destinations BEFORE any production GET.  This
+    # prevents a mistaken webroot/shared path from even reaching the live
+    # inspection stage; write_local_preflight_outputs() enforces the same
+    # rules again immediately before exclusive file creation.
+    dest = require_non_webroot_output(Path(args.output_dir))
+    if dest.exists():
+        if not dest.is_dir():
+            raise PreflightError("Output destination is not a directory; STOP")
+        if os.name == "posix":
+            stat = dest.stat()
+            if stat.st_uid != os.geteuid() or (stat.st_mode & 0o077):
+                raise PreflightError("Output directory is not operator-private; STOP")
+        if any((dest / name).exists() or (dest / name).is_symlink()
+               for name in ("index.html", "preflight.json")):
+            raise PreflightError("Preflight output exists; refusing overwrite before HTTP GET")
+
     raw, etag = fetch_live()
     changed = build_one_line_patch(raw)
     sibling = fetch_sibling_live()  # Fail closed before writing any candidate files.
     asset = fetch_analytics_asset()  # A missing/altered JS must not yield preflight PASS.
-    dest = Path(args.output_dir).resolve()
     report = {
         "publication_status": "NOT_PUBLISHED",
         "source_url": URL,
