@@ -7,7 +7,7 @@ import posixpath
 from html.parser import HTMLParser
 import json
 import sys
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urljoin
 
 class Page(HTMLParser):
     def __init__(self):
@@ -101,6 +101,31 @@ def is_self_referential_cta(link, page_path):
     return target == document_path(page_path)
 
 
+def diagnosis_reference_target(href, page_path):
+    """Classify only exact same-site photo diagnosis aliases in a static source tree.
+
+    This does NOT prove the published site uses the same links or whether an
+    HTTP redirect/canonical tag exists. Keep both URLs unchanged.
+    """
+    href = (href or "").strip()
+    if not href or href.startswith(("#", "?")):
+        return None
+    try:
+        u = urlsplit(urljoin("https://syscom-sustaina-shield.com/" + page_path, href))
+    except ValueError:
+        return None
+    if u.scheme not in ("http", "https") or u.hostname not in (
+        "syscom-sustaina-shield.com", "www.syscom-sustaina-shield.com"
+    ):
+        return None
+    route = posixpath.normpath(u.path)
+    if route in ("/photo-diagnosis", "/photo-diagnosis/index.html"):
+        return "/photo-diagnosis/"
+    if route == "/shindan.html":
+        return "/shindan.html"
+    return None
+
+
 def audit(root):
     results = []
     for path in sorted(root.rglob("*.html")):
@@ -124,6 +149,11 @@ def audit(root):
                     )
                 )
             ]
+            diagnosis_links = [
+                {"target": target, "href": link["href"], "text": link["text"]}
+                for link in page.links
+                if (target := diagnosis_reference_target(link["href"], page_path)) is not None
+            ]
             usable_forms = page.forms - page.placeholder_forms
             warnings = (
                 (["no_title"] if not page.title_text else [])
@@ -140,7 +170,7 @@ def audit(root):
                 "forms": page.forms, "placeholder_forms": page.placeholder_forms,
                 "placeholder_cta_links": placeholder_links,
                 "self_referential_cta_links": self_links,
-                "cta_links": ctas, "warnings": warnings,
+                "cta_links": ctas, "diagnosis_links": diagnosis_links, "warnings": warnings,
             })
         except (UnicodeError, ValueError) as e:
             results.append({"path": str(path.relative_to(root)), "error": str(e)})
