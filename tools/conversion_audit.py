@@ -51,6 +51,13 @@ class Page(HTMLParser):
         if self.active_link is not None:
             self.active_link["text"] += data.strip()
 
+def is_placeholder_cta_href(link):
+    """Flag obvious non-navigation CTA targets; do not assert a JS handler is broken."""
+    href = (link["href"] or "").strip().lower()
+    is_cta_text = any(word in link["text"] for word in ("相談", "問い合わせ", "見積"))
+    return is_cta_text and href in ("", "#", "#!", "javascript:void(0)", "javascript:void(0);")
+
+
 def audit(root):
     results = []
     for path in sorted(root.rglob("*.html")):
@@ -58,8 +65,35 @@ def audit(root):
         page = Page()
         try:
             page.feed(path.read_text(encoding="utf-8"))
-            ctas = [x for x in page.links if x["href"].startswith(("tel:", "mailto:", "https://line.me/", "https://lin.ee/")) or any(w in x["text"] for w in ("相談", "問い合わせ", "見積"))]
-            results.append({"path": str(path.relative_to(root)), "title": page.title_text, "has_description": bool(page.description), "h1_count": page.headings, "forms": page.forms, "placeholder_forms": page.placeholder_forms, "cta_links": ctas, "warnings": (["no_title"] if not page.title_text else []) + (["no_meta_description"] if not page.description else []) + (["no_h1"] if not page.headings else []) + (["no_obvious_cta"] if not ctas and not page.forms else []) + (["placeholder_form_submit"] if page.placeholder_forms else [])})
+            placeholder_links = [x for x in page.links if is_placeholder_cta_href(x)]
+            ctas = [
+                x for x in page.links
+                if not is_placeholder_cta_href(x)
+                and (
+                    (x["href"] or "").startswith(("tel:", "mailto:", "https://line.me/", "https://lin.ee/"))
+                    or (
+                        bool((x["href"] or "").strip())
+                        and not (x["href"] or "").strip().lower().startswith("javascript:")
+                        and any(w in x["text"] for w in ("相談", "問い合わせ", "見積"))
+                    )
+                )
+            ]
+            usable_forms = page.forms - page.placeholder_forms
+            warnings = (
+                (["no_title"] if not page.title_text else [])
+                + (["no_meta_description"] if not page.description else [])
+                + (["no_h1"] if not page.headings else [])
+                + (["no_obvious_cta"] if not ctas and not usable_forms else [])
+                + (["placeholder_form_submit"] if page.placeholder_forms else [])
+                + (["placeholder_cta_href"] if placeholder_links else [])
+            )
+            results.append({
+                "path": str(path.relative_to(root)), "title": page.title_text,
+                "has_description": bool(page.description), "h1_count": page.headings,
+                "forms": page.forms, "placeholder_forms": page.placeholder_forms,
+                "placeholder_cta_links": placeholder_links,
+                "cta_links": ctas, "warnings": warnings,
+            })
         except (UnicodeError, ValueError) as e:
             results.append({"path": str(path.relative_to(root)), "error": str(e)})
     return results
