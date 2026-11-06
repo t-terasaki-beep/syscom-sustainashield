@@ -107,5 +107,53 @@ class DiagnosisLiveAliasTests(unittest.TestCase):
         self.assertFalse(report["same_body_sha256_if_both_200"])
 
 
+    def test_expected_301_target_is_only_an_observation(self):
+        target = BASE + "/photo-diagnosis/"
+        alias = BASE + "/shindan.html"
+        opener = FakeOpener([
+            FakeResponse(target, body=b"<html><head></head></html>"),
+            HTTPError(alias, 301, "Moved", {"Location": target}, io.BytesIO(b"")),
+        ])
+        report = snapshot(opener)
+        self.assertEqual(report["redirect_integrity_observation"], "OBSERVED_301_TO_200_TARGET")
+        self.assertFalse(report["search_console_checked"])
+        self.assertTrue(report["canonical_decision"].startswith("HOLD"))
+        self.assertEqual(len(opener.calls), 2)
+
+    def test_relative_redirect_is_accepted_but_external_location_is_flagged(self):
+        target = BASE + "/photo-diagnosis/"
+        alias = BASE + "/shindan.html"
+        target_page = FakeResponse(target, body=b"<html></html>")
+        relative = snapshot(FakeOpener([
+            target_page,
+            HTTPError(alias, 301, "Moved", {"Location": "/photo-diagnosis/"}, io.BytesIO(b"")),
+        ]))
+        self.assertEqual(relative["redirect_integrity_observation"], "OBSERVED_301_TO_200_TARGET")
+        external = snapshot(FakeOpener([
+            target_page,
+            HTTPError(alias, 301, "Moved", {"Location": "https://other.example/photo-diagnosis/"}, io.BytesIO(b"")),
+        ]))
+        self.assertEqual(external["redirect_integrity_observation"], "REVIEW_REDIRECT_TARGET")
+
+    def test_network_failure_cannot_be_construed_as_redirect_absence(self):
+        report = snapshot(FakeOpener([
+            FakeResponse(BASE + "/photo-diagnosis/", body=b"<html></html>"),
+            URLError("DNS unavailable"),
+        ]))
+        self.assertEqual(report["redirect_integrity_observation"], "UNVERIFIED_FETCH")
+        self.assertEqual(report["routes"][1]["observation"], "unavailable_not_zero")
+
+    def test_conflicting_canonical_tag_triggers_review(self):
+        target = BASE + "/photo-diagnosis/"
+        alias = BASE + "/shindan.html"
+        page = (b'<html><head><link rel="canonical" href="'
+                + (BASE + "/shindan.html").encode("ascii") + b'"></head></html>')
+        report = snapshot(FakeOpener([
+            FakeResponse(target, body=page),
+            HTTPError(alias, 301, "Moved", {"Location": target}, io.BytesIO(b"")),
+        ]))
+        self.assertEqual(report["redirect_integrity_observation"], "REVIEW_CONFLICTING_CANONICAL")
+
+
 if __name__ == "__main__":
     unittest.main()
