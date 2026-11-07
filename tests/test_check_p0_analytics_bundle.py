@@ -1,7 +1,9 @@
 """Offline P0 backup/candidate/live safety tests. No GET, FTP, or publication."""
 import importlib.util
 from pathlib import Path
+import os
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
@@ -176,6 +178,49 @@ class BackupBundleTests(unittest.TestCase):
         with self.assertRaisesRegex(p0.PreflightError, "Sibling backup tracker"):
             self.check(original, candidate, altered, report, live_sibling,
                        expected_sibling_sha=p0.sha256(altered))
+
+
+class PrivateHandoffInputTests(unittest.TestCase):
+    def test_private_candidate_and_report_are_accepted(self):
+        with tempfile.TemporaryDirectory() as root:
+            candidate = Path(root) / "index.html"
+            manifest = Path(root) / "preflight.json"
+            for file in (candidate, manifest):
+                file.write_text("fixture", encoding="utf-8")
+                if os.name == "posix":
+                    file.chmod(0o600)
+            bundle.require_private_preflight_inputs(candidate, manifest)
+
+    @unittest.skipUnless(os.name == "posix", "POSIX permission check")
+    def test_shared_candidate_and_manifest_are_rejected(self):
+        with tempfile.TemporaryDirectory() as root:
+            candidate = Path(root) / "index.html"
+            manifest = Path(root) / "preflight.json"
+            for file in (candidate, manifest):
+                file.write_text("fixture", encoding="utf-8")
+                file.chmod(0o600)
+            candidate.chmod(0o644)
+            with self.assertRaisesRegex(p0.PreflightError, "operator-private"):
+                bundle.require_private_preflight_inputs(candidate, manifest)
+            candidate.chmod(0o600)
+            Path(root).chmod(0o755)
+            with self.assertRaisesRegex(p0.PreflightError, "operator-private"):
+                bundle.require_private_preflight_inputs(candidate, manifest)
+
+    def test_webroot_candidate_and_symlink_are_rejected(self):
+        with tempfile.TemporaryDirectory() as root:
+            public = Path(root) / "public_html"
+            public.mkdir(mode=0o700)
+            candidate = public / "index.html"
+            candidate.write_text("fixture", encoding="utf-8")
+            if os.name == "posix":
+                candidate.chmod(0o600)
+            with self.assertRaisesRegex(p0.PreflightError, "web root"):
+                bundle.require_private_preflight_inputs(candidate)
+            link = Path(root) / "candidate.html"
+            link.symlink_to(candidate)
+            with self.assertRaisesRegex(p0.PreflightError, "regular file"):
+                bundle.require_private_preflight_inputs(link)
 
 if __name__ == "__main__":
     unittest.main()
