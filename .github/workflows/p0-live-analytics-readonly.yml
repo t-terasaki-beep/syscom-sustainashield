@@ -85,7 +85,6 @@ jobs:
                   "has_h1": b"<h1" in body.lower() and b"</h1>" in body.lower(),
                   "html_closed": body.rstrip().endswith(b"</html>"),
                   "footer_shape": body.endswith(b"</script>\n</body></html>\n"),
-                  "footer_tail_repr": repr(body[-120:]),
                   "alternate_ga4": any(t in body for t in (
                       b"googletagmanager.com/gtag/js",
                       b"googletagmanager.com/gtm.js",
