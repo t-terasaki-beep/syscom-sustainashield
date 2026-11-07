@@ -1,0 +1,264 @@
+name: P0 live analytics status (read-only)
+
+# One-off verification on this draft branch; no cron, no deploy, no secrets.
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/p0-live-analytics-readonly.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read current production and sibling (GET only)
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from datetime import datetime, timezone
+          import os
+          import re
+          import sys
+          import urllib.request
+
+          site = "https://syscom-sustaina-shield.com"
+          target = site + "/column/chiba-suigai-hinanjo-dengen/"
+          sibling = site + "/column/shoene2024-data-leak-alert/"
+          expected_etag = "6262-65f3790c0687e"
+          expected_size = 25186
+          expected_sha = "aa03d76ae747abb7ff841b8db49d00cf001f720b6e0cb10ed8ad634c5f1abd81"
+          # Baseline: GET-only run 41514953232 (2026-11-03 04:59 JST).
+          # Validate the sibling bytes, not just HTTP 200 + one analytics tag.
+          expected_sibling_etag = "5d57-65f3744b854f4"
+          expected_sibling_size = 23895
+          expected_sibling_sha = "2a7af2f43473f03c58ffca47b284b4fdc9b9ca97779e4b2486f237746672bbd6"
+          # GET-only production baseline: Actions run 41884024682, 2026-11-05 03:08 JST.
+          # A changed asset must be manually re-baselined; GA4 ID alone is insufficient.
+          expected_asset_size = 8607
+          expected_asset_sha256 = "d31313584ab615a35581de2d8ccd9e4380cb95f14133b174269bca4d761f9ed3"
+          script_ref = b"ss-analytics.js"
+          exact_script_tag = b'<script src="/assets/ss-analytics.js" defer></script>'
+
+          def inspect(url):
+              req = urllib.request.Request(url, headers={
+                  "Cache-Control": "no-cache",
+                  "Pragma": "no-cache",
+                  "Accept-Encoding": "identity",
+                  "User-Agent": "SustainaShield-ReadOnly-Check/1.0",
+              })
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  status, actual_url = response.status, response.geturl()
+                  etag = response.headers.get("ETag")
+                  content_type = response.headers.get("Content-Type")
+                  body = response.read(1024 * 1024 + 1)
+              if len(body) > 1024 * 1024:
+                  raise ValueError("Unexpectedly large HTML")
+              html_mime = (content_type or "").split(";", 1)[0].strip().lower()
+              return {
+                  "url": url,
+                  "http": status,
+                  "exact_url": actual_url == url,
+                  "etag": etag,
+                  "html_content_type": html_mime,
+                  "valid_html_content_type": html_mime in {"text/html", "application/xhtml+xml"},
+                  "bytes": len(body),
+                  "sha256": hashlib.sha256(body).hexdigest(),
+                  "analytics_references": body.count(script_ref),
+                  # A single reference is not proof of a correct one-line patch.
+                  # Remove the *exact* authorized tag and verify that every
+                  # remaining byte matches the observed pre-publication HTML.
+                  "verified_expected_patch": (
+                      len(body) == expected_size + len(exact_script_tag) and
+                      body.count(script_ref) == 1 and
+                      body.count(exact_script_tag) == 1 and
+                      body.endswith(exact_script_tag + b"</body></html>\n") and
+                      hashlib.sha256(body.replace(exact_script_tag, b"", 1)).hexdigest() == expected_sha
+                  ),
+                  "has_h1": b"<h1" in body.lower() and b"</h1>" in body.lower(),
+                  "html_closed": body.rstrip().endswith(b"</html>"),
+                  "footer_shape": body.endswith(b"</script>\n</body></html>\n"),
+                  "alternate_ga4": any(t in body for t in (
+                      b"googletagmanager.com/gtag/js",
+                      b"googletagmanager.com/gtm.js",
+                      b"gtag('config'",
+                      b'gtag("config"',
+                      b"G-ELZG7B45NH",
+                  )),
+                  # Digest only: derived in memory from exact live bytes.
+                  # No patched HTML is saved, uploaded, or published.
+                  "_candidate_patch_sha256": (
+                      hashlib.sha256(
+                          body[:-len(b"</body></html>\n")] +
+                          exact_script_tag +
+                          body[-len(b"</body></html>\n"):]
+                      ).hexdigest()
+                      if (url == target and len(body) == expected_size and
+                          hashlib.sha256(body).hexdigest() == expected_sha and
+                          body.endswith(b"</script>\n</body></html>\n") and
+                          body.count(script_ref) == 0)
+                      else None
+                  ),
+              }
+
+          # Check the live JS response, not just the script tag in HTML.
+          # This is a GET-only delivery check, NOT a GA4 event receipt check.
+          def inspect_analytics_asset():
+              url = site + "/assets/ss-analytics.js"
+              req = urllib.request.Request(url, headers={
+                  "Cache-Control": "no-cache",
+                  "Pragma": "no-cache",
+                  "Accept-Encoding": "identity",
+                  "User-Agent": "SustainaShield-ReadOnly-Check/1.0",
+              })
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  status, actual_url = response.status, response.geturl()
+                  content_type = response.headers.get("Content-Type")
+                  body = response.read(65537)
+              mime = (content_type or "").split(";", 1)[0].strip().lower()
+              script_types = {
+                  "text/javascript", "application/javascript",
+                  "text/ecmascript", "application/ecmascript",
+                  "application/x-javascript",
+              }
+              valid = (
+                  status == 200 and actual_url == url
+                  and len(body) == expected_asset_size
+                  and hashlib.sha256(body).hexdigest() == expected_asset_sha256
+                  and mime in script_types
+                  and not body.lstrip().lower().startswith((b"<!doctype html", b"<html"))
+                  and b"G-ELZG7B45NH" in body
+              )
+              return {
+                  "http": status, "exact_url": actual_url == url,
+                  "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest(),
+                  "mime": mime, "ga4_id_present": b"G-ELZG7B45NH" in body,
+                  "size_matches_observed_baseline": len(body) == expected_asset_size,
+                  "sha256_matches_observed_baseline": hashlib.sha256(body).hexdigest() == expected_asset_sha256,
+                  "valid_browser_script_response": valid,
+                  "ga4_event_receipt_verified": False,
+              }
+
+          try:
+              t = inspect(target)
+              s = inspect(sibling)
+              asset = inspect_analytics_asset()
+          except Exception as e:
+              failure = {"observed_utc": datetime.now(timezone.utc).isoformat(),
+                         "verdict": "UNKNOWN_FETCH_FAILED", "error_type": type(e).__name__}
+              print(json.dumps(failure, ensure_ascii=False))
+              if os.environ.get("RUNNER_TEMP"):
+                  with open(os.path.join(os.environ["RUNNER_TEMP"], "p0-live-analytics-evidence.json"),
+                            "w", encoding="utf-8") as fp:
+                      json.dump(failure, fp, ensure_ascii=False, indent=2)
+              sys.exit(2)
+
+          # Do not accept bare/weak/trailing-junk ETags. The helper used by
+          # the separate P0 patch preflight already enforces strong validators;
+          # this read-only CI must not report READY under weaker checks.
+          def strong_etag_matches(value, expected):
+              return (
+                  isinstance(value, str)
+                  and re.fullmatch(r'"[^"]+"', value.strip()) is not None
+                  and value.strip()[1:-1] == expected
+              )
+
+          def strong_etag_changed(value, original):
+              # A patched page must have a *new*, valid strong ETag. A stale
+              # validator (or a weak/malformed one) cannot prove publication.
+              return (
+                  isinstance(value, str)
+                  and re.fullmatch(r'"[^"]+"', value.strip()) is not None
+                  and value.strip()[1:-1] != original
+              )
+
+          sibling_unchanged = (s["http"] == 200 and s["exact_url"] and
+                               s["valid_html_content_type"] and
+                               strong_etag_matches(s["etag"], expected_sibling_etag) and
+                               s["bytes"] == expected_sibling_size and
+                               s["sha256"] == expected_sibling_sha and
+                               s["analytics_references"] == 1 and s["html_closed"])
+
+          asset_ok = asset["valid_browser_script_response"]
+          safe = (asset_ok and t["http"] == 200 and t["exact_url"] and
+                  t["valid_html_content_type"] and
+                  strong_etag_matches(t["etag"], expected_etag) and
+                  t["bytes"] == expected_size and
+                  t["sha256"] == expected_sha and
+                  t["analytics_references"] == 0 and not t["alternate_ga4"] and
+                  t["has_h1"] and t["footer_shape"] and sibling_unchanged)
+          if safe:
+              verdict = "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW"
+              # Compare this digest with the published bytes AFTER authorized upload.
+              # It is not evidence of publication or GA4 event receipt.
+              t["expected_one_line_patch_sha256"] = t.pop("_candidate_patch_sha256")
+              if not t["expected_one_line_patch_sha256"]:
+                  raise ValueError("Cannot derive patch digest from approved baseline")
+          elif (asset_ok and t["http"] == 200 and t["exact_url"] and t["has_h1"] and
+                t["valid_html_content_type"] and
+                strong_etag_changed(t["etag"], expected_etag) and
+                t["verified_expected_patch"] and not t["alternate_ga4"] and
+                sibling_unchanged):
+              verdict = "ALREADY_TAGGED_CHECK_EVENT_DELIVERY"
+          else:
+              verdict = "STOP_REBASELINE_OR_MANUAL_REVIEW"
+          # A stopped preflight must not suggest a publishable patch digest.
+          t.pop("_candidate_patch_sha256", None)
+          s.pop("_candidate_patch_sha256", None)
+          report = {"observed_utc": datetime.now(timezone.utc).isoformat(),
+                    "verdict": verdict, "target": t, "sibling": s,
+                    "analytics_asset": asset,
+                    "sibling_byte_identical_to_baseline": sibling_unchanged,
+                    "published_by_this_workflow": False,
+                    "ga4_event_receipt_verified": False}
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          # Preserve exact read-only evidence for the authorized publisher.
+          # Store only headers/digests/status; never copy production HTML or credentials.
+          if os.environ.get("RUNNER_TEMP"):
+              with open(os.path.join(os.environ["RUNNER_TEMP"], "p0-live-analytics-evidence.json"),
+                        "w", encoding="utf-8") as fp:
+                  json.dump(report, fp, ensure_ascii=False, indent=2)
+          # Green read-only CI is not a published fix. Surface the outstanding
+          # work in Actions annotations and the job summary, not only raw JSON.
+          if verdict == "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW":
+              print("::warning title=P0 analytics still missing::Live page has zero tags. Separate authorized publish and GA4 event verification are still required.")
+              human_status = "UNRESOLVED — live tag missing (0)"
+          elif verdict == "ALREADY_TAGGED_CHECK_EVENT_DELIVERY":
+              print("::notice title=P0 tag present::One-line HTML patch matches baseline; GA4 event delivery remains unverified.")
+              human_status = "TAG_PRESENT — GA4 event not yet verified"
+          else:
+              print("::error title=P0 preflight stopped::Production HTML, sibling, or analytics asset differed. Do not publish the prepared patch.")
+              human_status = "STOP — manual re-baseline required"
+          summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary:
+              with open(summary, "a", encoding="utf-8") as output:
+                  output.write("## P0 production analytics — read-only verification\n\n")
+                  output.write(f"**{human_status}**\n\n")
+                  output.write(f"- Target HTTP: {t['http']}; ETag: `{t['etag']}`\n")
+                  output.write(f"- Target script references: {t['analytics_references']}\n")
+                  if verdict == "READY_FOR_SEPARATE_AUTHORIZED_PUBLISH_WORKFLOW":
+                      output.write(f"- Expected SHA-256 after separately authorized one-line patch (NOT published): `{t['expected_one_line_patch_sha256']}`\n")
+                  output.write(f"- Sibling unchanged (ETag/size/SHA): {sibling_unchanged}\n")
+                  output.write(f"- Analytics JS: HTTP {asset['http']}, MIME {asset['mime']}, GA4 ID present {asset['ga4_id_present']}, script response valid {asset_ok}\n")
+                  output.write(f"- Analytics JS baseline SHA-256 match: {asset['sha256_matches_observed_baseline']}; expected bytes: {expected_asset_size}\n")
+                  output.write("- No publish performed. A passing Actions check does **not** establish recovery.\n")
+                  output.write("- Final gate: publish lock + backup + immediate SHA/ETag recheck + authorized one-file upload + GA4 event receipt.\n")
+          if verdict == "STOP_REBASELINE_OR_MANUAL_REVIEW":
+              sys.exit(1)
+          PY
+
+      - name: Retain P0 GET-only evidence (no page body)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-live-analytics-evidence
+          path: ${{ runner.temp }}/p0-live-analytics-evidence.json
+          if-no-files-found: ignore
+          retention-days: 14

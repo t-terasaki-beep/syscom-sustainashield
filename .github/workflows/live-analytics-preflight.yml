@@ -1,0 +1,25 @@
+name: Live analytics patch preflight (offline tests)
+on:
+  pull_request:
+    paths:
+      - 'tools/prepare_live_analytics_patch.py'
+      - 'tools/check_p0_analytics_bundle.py'
+      - 'tests/test_check_p0_analytics_bundle.py'
+      - 'tools/verify_live_analytics_postdeploy.py'
+      - 'tests/test_prepare_live_analytics_patch.py'
+      - 'tests/test_verify_live_analytics_postdeploy.py'
+      - '.github/workflows/live-analytics-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-safety-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline no-upload safety tests (prepare + bundle + verify)
+        run: python -m unittest discover -s tests -p 'test_*analytics*.py' -v
