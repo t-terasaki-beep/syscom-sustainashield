@@ -38,7 +38,9 @@ class HeadEvidence(HTMLParser):
         pairs = dict(attrs)
         if tag == "link" and "canonical" in (pairs.get("rel") or "").lower().split():
             self.canonical.append(pairs.get("href") or "")
-        if tag == "meta" and (pairs.get("name") or "").lower() == "robots":
+        # Google may apply a googlebot-specific directive even when the
+        # generic robots meta is index,follow. Both must be examined.
+        if tag == "meta" and (pairs.get("name") or "").strip().lower() in ("robots", "googlebot"):
             self.robots.append(pairs.get("content") or "")
 
 
