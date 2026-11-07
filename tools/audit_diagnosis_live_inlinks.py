@@ -65,7 +65,12 @@ def count_alias_links(source_url, body):
     counts = {p: 0 for p in TARGETS}
     # Resolve relative links against document.baseURI, not necessarily the
     # page URL. Otherwise an off-site <base> can create false internal links.
-    document_base = urljoin(source_url, parser.base_href) if parser.base_href is not None else source_url
+    try:
+        document_base = urljoin(source_url, parser.base_href) if parser.base_href is not None else source_url
+    except ValueError as exc:
+        # Invalid <base> makes relative link attribution unreliable.
+        # Caller must mark this page unscanned, not count it as zero links.
+        raise ValueError("invalid_document_base_href") from exc
     for href in parser.hrefs:
         try:
             target = urljoin(document_base, href)
@@ -144,8 +149,13 @@ def scan(opener=None):
             if problem == "non_200_not_followed":
                 report["redirected_or_non200_pages"] += 1
             continue
+        try:
+            counts = count_alias_links(url, body)
+        except ValueError:
+            report["unscanned"].append({"url": url, "http": status, "reason": "invalid_document_base_href"})
+            continue
         report["scanned_html_pages"] += 1
-        for path, n in count_alias_links(url, body).items():
+        for path, n in counts.items():
             if n:
                 report["targets"][path]["occurrences"] += n
                 report["targets"][path]["referring_pages"].append({"url": url, "count": n})
