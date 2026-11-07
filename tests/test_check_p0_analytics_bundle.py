@@ -242,7 +242,7 @@ class PrivateHandoffInputTests(unittest.TestCase):
                     "--preflight-json", str(paths[3])]
             for backup in (paths[0], paths[2]):
                 backup.chmod(0o644)
-                with self.subTest(backup=backup.name), mock.patch.object(sys, "argv", argv), \\
+                with self.subTest(backup=backup.name), mock.patch.object(sys, "argv", argv), \
                         mock.patch.object(p0, "fetch_live", side_effect=AssertionError("GET must not run")):
                     with self.assertRaisesRegex(p0.PreflightError, "operator-private"):
                         bundle.main()
@@ -264,7 +264,7 @@ class PrivateHandoffInputTests(unittest.TestCase):
                     "--candidate-html", str(paths[1]),
                     "--sibling-backup", str(paths[2]),
                     "--preflight-json", str(paths[3])]
-            with mock.patch.object(sys, "argv", argv), \\
+            with mock.patch.object(sys, "argv", argv), \
                     mock.patch.object(p0, "fetch_live", side_effect=AssertionError("GET must not run")):
                 with self.assertRaisesRegex(p0.PreflightError, "regular file"):
                     bundle.main()
