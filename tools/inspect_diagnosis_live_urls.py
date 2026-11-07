@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 from html.parser import HTMLParser
 import json
+import re
 from datetime import datetime, timezone
 from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin
@@ -94,6 +95,17 @@ def inspect_one(path, opener=None):
     return result
 
 
+def has_noindex_directive(value):
+    """Identify robots noindex/none, including bot-prefixed HTTP values.
+
+    A nofollow or noindexing substring is not itself noindex.
+    This flag does not decide the SEO canonical policy.
+    """
+    return bool(value and re.search(
+        r"(?i)(?:^|[,\\s:;])(?:noindex|none)(?=$|[,\\s;])", value
+    ))
+
+
 def assess_redirect(records):
     """Classify *observed* alias integrity, not the final SEO canonical policy.
 
@@ -118,6 +130,11 @@ def assess_redirect(records):
     canonicals = page.get("canonical_links") or []
     if canonicals and canonicals != [BASE + "/photo-diagnosis/"]:
         return "REVIEW_CONFLICTING_CANONICAL"
+    # A 301 to a 200 page is not healthy search visibility when the destination
+    # explicitly blocks indexing. Flag for review, never change SEO settings.
+    if (has_noindex_directive(page.get("x_robots_tag")) or
+            any(has_noindex_directive(x) for x in page.get("meta_robots") or [])):
+        return "REVIEW_TARGET_NOINDEX"
     return "OBSERVED_301_TO_200_TARGET"
 
 
