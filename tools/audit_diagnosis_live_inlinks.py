@@ -32,9 +32,17 @@ class Anchors(HTMLParser):
     def __init__(self):
         super().__init__()
         self.hrefs = []
+        self.base_href = None
 
     def handle_starttag(self, tag, attrs):
-        if tag.lower() == "a":
+        tag = tag.lower()
+        if tag == "base" and self.base_href is None:
+            # The first <base href> changes how browser-relative anchor URLs
+            # resolve, even when it occurs after an anchor in the source.
+            href = dict(attrs).get("href")
+            if href is not None:
+                self.base_href = href
+        elif tag == "a":
             href = dict(attrs).get("href")
             if href:
                 self.hrefs.append(href)
@@ -55,9 +63,12 @@ def count_alias_links(source_url, body):
     parser = Anchors()
     parser.feed(body.decode("utf-8", errors="replace"))
     counts = {p: 0 for p in TARGETS}
+    # Resolve relative links against document.baseURI, not necessarily the
+    # page URL. Otherwise an off-site <base> can create false internal links.
+    document_base = urljoin(source_url, parser.base_href) if parser.base_href is not None else source_url
     for href in parser.hrefs:
         try:
-            target = urljoin(source_url, href)
+            target = urljoin(document_base, href)
             parts = urlsplit(target)
             # Anchor queries/fragments are still links to the same document.
             clean = parts._replace(query="", fragment="").geturl()
