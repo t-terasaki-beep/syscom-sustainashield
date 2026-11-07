@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P2旧屋号・住宅LINEの再混入を検知する静的検査（17ページ限定・本番操作なし）。
+"""P2旧屋号・住宅LINEの再混入を検知する静的検査（20ページ限定・本番操作なし）。
 
 PR #19のレビュー候補だけを検査する。全サイトの旧表記ゼロは主張しない。
 株式会社シスコムネットなど法的な法人表示は検査で禁止しない。
@@ -18,6 +18,8 @@ PAGES = (
     "faq.html",
     "flow.html",
     "grid-battery/index.html",
+    "tools/publish/lp-media-set-v1/column/index.html",
+    "tools/publish/lp-media-set-v1/videos/index.html",
     "tools/publish/lp-media-set-v1/column/heat-and-solar/index.html",
     "tools/publish/lp-media-set-v1/column/ohisama-compare/index.html",
     "lp/gaichu-block/index.html",
@@ -52,6 +54,17 @@ def audit(root: Path) -> dict:
             errors.append({"path": relative, "issues": [type(exc).__name__]})
             continue
         issues = check_text(body)
+        if relative in (
+            "tools/publish/lp-media-set-v1/column/index.html",
+            "tools/publish/lp-media-set-v1/videos/index.html",
+        ):
+            # Review-only built assets. A future deploy must separately prove
+            # that production matches its actual file; this audit does not.
+            # Link destination is a single residential account (not corporate).
+            if "631cqlgf" in body:
+                issues.append("コラム・動画の住宅LINEに旧IDが残存")
+            if body.count('href="https://line.me/R/ti/p/%40829oslez"') != 1:
+                issues.append("コラム・動画の住宅LINEリンクは正本@829oslezの1本が必要")
         if relative == "tools/publish/lp-media-set-v1/column/heat-and-solar/index.html":
             # Review-only generated source: do not equate this with the live page.
             # Header, text link and in-article CTA should all use residential LINE.
