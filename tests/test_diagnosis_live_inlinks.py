@@ -100,6 +100,19 @@ class LiveInlinkTests(unittest.TestCase):
                 b'<a href="shindan.html">internal</a>')
         self.assertEqual(count_alias_links(src, html)["/shindan.html"], 1)
 
+    def test_invalid_document_base_is_unscanned_not_zero_links(self):
+        src = BASE + "/"
+        opener = FakeOpener({
+            SITEMAP_URL: FakeResponse(SITEMAP_URL, sitemap(src), mime="application/xml"),
+            src: FakeResponse(src, b'<base href="https://[invalid"><a href="/shindan.html">x</a>'),
+        })
+        result = scan(opener)
+        self.assertEqual(result["verdict"], "PARTIAL_LINK_INVENTORY_NO_CANONICAL_DECISION")
+        self.assertEqual(result["scanned_html_pages"], 0)
+        self.assertEqual(result["unscanned_count"], 1)
+        self.assertEqual(result["unscanned"][0]["reason"], "invalid_document_base_href")
+        self.assertEqual(result["targets"]["/shindan.html"]["occurrences"], 0)
+
     def test_redirect_is_not_followed_or_claimed_to_be_a_backlink_free_page(self):
         alias = BASE + "/shindan.html"
         opener = FakeOpener({
