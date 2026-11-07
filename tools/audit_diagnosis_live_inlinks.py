@@ -68,7 +68,7 @@ def count_alias_links(source_url, body):
     return counts
 
 
-def fetch(opener, url, limit):
+def fetch(opener, url, limit, accepted_mimes):
     """Return (status, body, reason); never follow a 3xx or expose response HTML."""
     req = Request(url, headers={"Cache-Control": "no-cache", "Accept-Encoding": "identity",
                                 "User-Agent": "SustainaShield-P1-InternalLinks/1.0"}, method="GET")
@@ -84,7 +84,7 @@ def fetch(opener, url, limit):
             if status != 200:
                 return status, None, "non_200_not_followed"
             mime = (response.headers.get("Content-Type") or "").split(";", 1)[0].strip().lower()
-            if mime not in ("text/html", "application/xhtml+xml", "application/xml", "text/xml"):
+            if mime not in accepted_mimes:
                 return status, None, "unexpected_mime"
             body = response.read(limit + 1)
             if len(body) > limit:
@@ -105,7 +105,7 @@ def scan(opener=None):
         "targets": {p: {"occurrences": 0, "referring_pages": []} for p in TARGETS},
         "unscanned": [],
     }
-    status, raw, problem = fetch(opener, SITEMAP_URL, MAX_SITEMAP_BYTES)
+    status, raw, problem = fetch(opener, SITEMAP_URL, MAX_SITEMAP_BYTES, ("application/xml", "text/xml", "text/plain"))
     report["sitemap_http"] = status
     if problem:
         report["verdict"] = "UNVERIFIED_SITEMAP_" + problem.upper()
@@ -127,7 +127,7 @@ def scan(opener=None):
     report["scanned_html_pages"] = 0
     report["redirected_or_non200_pages"] = 0
     for url in listed:
-        status, body, problem = fetch(opener, url, MAX_HTML_BYTES)
+        status, body, problem = fetch(opener, url, MAX_HTML_BYTES, ("text/html", "application/xhtml+xml"))
         if problem:
             report["unscanned"].append({"url": url, "http": status, "reason": problem})
             if problem == "non_200_not_followed":
