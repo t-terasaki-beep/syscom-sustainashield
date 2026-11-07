@@ -174,6 +174,27 @@ class DiagnosisLiveAliasTests(unittest.TestCase):
                                  "REVIEW_TARGET_NOINDEX")
                 self.assertTrue(report["canonical_decision"].startswith("HOLD"))
 
+    def test_googlebot_specific_meta_noindex_requires_review(self):
+        target, alias = BASE + "/photo-diagnosis/", BASE + "/shindan.html"
+        page = (b'<meta name="robots" content="index,follow">'
+                b'<meta name="GoOgLeBoT" content="noindex,follow">')
+        report = snapshot(FakeOpener([
+            FakeResponse(target, body=page),
+            HTTPError(alias, 301, "Moved", {"Location": target}, io.BytesIO(b"")),
+        ]))
+        self.assertEqual(report["redirect_integrity_observation"], "REVIEW_TARGET_NOINDEX")
+        self.assertIn("noindex,follow", report["routes"][0]["meta_robots"])
+
+    def test_googlebot_image_noindex_does_not_block_html_page(self):
+        target, alias = BASE + "/photo-diagnosis/", BASE + "/shindan.html"
+        page = (b'<meta name="robots" content="index,follow">'
+                b'<meta name="googlebot-image" content="noindex">')
+        report = snapshot(FakeOpener([
+            FakeResponse(target, body=page),
+            HTTPError(alias, 301, "Moved", {"Location": target}, io.BytesIO(b"")),
+        ]))
+        self.assertEqual(report["redirect_integrity_observation"], "OBSERVED_301_TO_200_TARGET")
+
     def test_nofollow_and_noindexing_substrings_are_not_noindex(self):
         target, alias = BASE + "/photo-diagnosis/", BASE + "/shindan.html"
         page = b'<meta name="robots" content="index,nofollow">'
