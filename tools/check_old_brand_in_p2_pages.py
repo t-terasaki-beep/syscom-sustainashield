@@ -18,6 +18,7 @@ PAGES = (
     "faq.html",
     "flow.html",
     "grid-battery/index.html",
+    "tools/publish/lp-media-set-v1/column/heat-and-solar/index.html",
     "tools/publish/lp-media-set-v1/column/ohisama-compare/index.html",
     "lp/gaichu-block/index.html",
     "lp/index.html",
@@ -51,6 +52,15 @@ def audit(root: Path) -> dict:
             errors.append({"path": relative, "issues": [type(exc).__name__]})
             continue
         issues = check_text(body)
+        if relative == "tools/publish/lp-media-set-v1/column/heat-and-solar/index.html":
+            # Review-only generated source: do not equate this with the live page.
+            # Header, text link and in-article CTA should all use residential LINE.
+            if "631cqlgf" in body:
+                issues.append("屋根遮熱と太陽光コラムに住宅LINEの旧IDが残存")
+            if body.count('href="https://line.me/R/ti/p/%40829oslez"') != 3:
+                issues.append("屋根遮熱と太陽光コラムのLINEリンク3本が正本@829oslezに統一されていない")
+            if 'https://line.me/R/ti/p/%40829oslez</a>' not in body:
+                issues.append("屋根遮熱と太陽光コラムの表示LINE URLが正本と不一致")
         if relative == "tools/publish/lp-media-set-v1/column/ohisama-compare/index.html":
             # Existing generated HTML is a separate delivery artifact from the
             # corrected build_column.py generator. Check the visible URL and
