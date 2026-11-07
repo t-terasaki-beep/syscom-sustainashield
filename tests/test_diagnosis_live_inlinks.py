@@ -71,6 +71,35 @@ class LiveInlinkTests(unittest.TestCase):
         self.assertEqual(len(opener.calls), 3)
         self.assertTrue(all(method == "GET" for _, method in opener.calls))
 
+    def test_first_base_href_controls_relative_inlinks(self):
+        # Browser document.baseURI follows the first href-bearing <base>.
+        # A relative link is not necessarily relative to its sitemap URL.
+        src = BASE + "/articles/overview/"
+        html = (b'<a href="shindan.html">alias</a>'
+                b'<base href="/"><a href="photo-diagnosis/#one">new</a>'
+                b'<base href="https://outside.example/">ignored</base>')
+        counts = count_alias_links(src, html)
+        self.assertEqual(counts["/shindan.html"], 1)
+        self.assertEqual(counts["/photo-diagnosis/"], 1)
+
+    def test_offsite_base_does_not_create_false_internal_links(self):
+        # Root-relative hrefs also resolve against the <base> origin.
+        src = BASE + "/"
+        html = (b'<base href="https://outside.example/sub/">'
+                b'<a href="/shindan.html">alias outside</a>'
+                b'<a href="photo-diagnosis/">diagnosis outside</a>'
+                b'<a href="https://syscom-sustaina-shield.com/photo-diagnosis/">absolute internal</a>')
+        counts = count_alias_links(src, html)
+        self.assertEqual(counts["/shindan.html"], 0)
+        self.assertEqual(counts["/photo-diagnosis/"], 1)
+
+    def test_empty_first_base_is_effective_and_later_base_ignored(self):
+        # An empty first base href means the page URL; later bases are ignored.
+        src = BASE + "/"
+        html = (b'<base href=""><base href="https://outside.example/">' 
+                b'<a href="shindan.html">internal</a>')
+        self.assertEqual(count_alias_links(src, html)["/shindan.html"], 1)
+
     def test_redirect_is_not_followed_or_claimed_to_be_a_backlink_free_page(self):
         alias = BASE + "/shindan.html"
         opener = FakeOpener({
