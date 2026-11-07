@@ -102,7 +102,7 @@ def has_noindex_directive(value):
     This flag does not decide the SEO canonical policy.
     """
     return bool(value and re.search(
-        r"(?i)(?:^|[,\\s:;])(?:noindex|none)(?=$|[,\\s;])", value
+        r"(?i)(?:^|[,\s:;])(?:noindex|none)(?=$|[,\s;])", value
     ))
 
 
