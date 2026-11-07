@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 import prepare_live_analytics_patch as p0
@@ -109,6 +110,29 @@ def check_bundle(
     }
 
 
+
+def require_private_preflight_inputs(*paths: Path) -> None:
+    """Reject publicly exposed or shared handoff files BEFORE any live GET.
+
+    The full live HTML candidate and provenance JSON belong in the operator's
+    private staging area, not a webroot or an accessible shared directory.
+    This is not a replacement for the authorized publish lock or backups.
+    """
+    for path in paths:
+        # Reject file symlinks even when their resolved target is private;
+        # the file could be switched behind the operator's back.
+        if path.is_symlink() or not path.is_file():
+            raise p0.PreflightError("Preflight handoff must be an existing regular file; STOP")
+        p0.require_non_webroot_output(path)
+        if os.name == "posix":
+            parent = path.parent.resolve().stat()
+            info = path.stat()
+            if (parent.st_uid != os.geteuid() or parent.st_mode & 0o077
+                    or info.st_uid != os.geteuid() or info.st_mode & 0o077):
+                raise p0.PreflightError(
+                    "Preflight handoff files/directories must be operator-private; STOP"
+                )
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--original-backup", required=True, type=Path)
@@ -116,6 +140,9 @@ def main() -> int:
     parser.add_argument("--sibling-backup", required=True, type=Path)
     parser.add_argument("--preflight-json", required=True, type=Path)
     args = parser.parse_args()
+    # Inspect candidate and manifest before any production GET: a shared or
+    # web-served full HTML candidate must never pass this publication gate.
+    require_private_preflight_inputs(args.candidate_html, args.preflight_json)
     # GET again immediately before authorized manual publication. No write or FTP.
     live_html, live_etag = p0.fetch_live()
     live_sibling = p0.fetch_sibling_live()
