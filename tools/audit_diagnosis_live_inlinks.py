@@ -118,7 +118,10 @@ def scan(opener=None):
         "external_backlinks_checked": False, "search_console_checked": False,
         "canonical_policy": "HOLD_no_redirect_or_canonical_change",
         "production_modified": False, "http_method": "GET",
-        "targets": {p: {"occurrences": 0, "referring_pages": []} for p in TARGETS},
+        "targets": {p: {"occurrences": 0, "referring_pages": [],
+                        "self_link_occurrences": 0,
+                        "inbound_from_other_pages": 0,
+                        "inbound_referring_pages": []} for p in TARGETS},
         "unscanned": [],
     }
     status, raw, problem = fetch(opener, SITEMAP_URL, MAX_SITEMAP_BYTES, ("application/xml", "text/xml", "text/plain"))
@@ -157,8 +160,17 @@ def scan(opener=None):
         report["scanned_html_pages"] += 1
         for path, n in counts.items():
             if n:
-                report["targets"][path]["occurrences"] += n
-                report["targets"][path]["referring_pages"].append({"url": url, "count": n})
+                target = report["targets"][path]
+                target["occurrences"] += n
+                target["referring_pages"].append({"url": url, "count": n})
+                # A self-link on the diagnosis page is not an inbound
+                # navigation opportunity from another page. Keep the original
+                # total for compatibility, and expose the split explicitly.
+                if urlsplit(url).path == path:
+                    target["self_link_occurrences"] += n
+                else:
+                    target["inbound_from_other_pages"] += n
+                    target["inbound_referring_pages"].append({"url": url, "count": n})
     report["unscanned_count"] = len(report["unscanned"])
     report["verdict"] = ("PARTIAL_LINK_INVENTORY_NO_CANONICAL_DECISION"
                          if report["unscanned"] else "COMPLETE_SITEMAP_HTML_INVENTORY_NO_CANONICAL_DECISION")
