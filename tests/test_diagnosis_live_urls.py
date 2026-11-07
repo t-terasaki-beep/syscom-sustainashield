@@ -155,5 +155,36 @@ class DiagnosisLiveAliasTests(unittest.TestCase):
         self.assertEqual(report["redirect_integrity_observation"], "REVIEW_CONFLICTING_CANONICAL")
 
 
+    def test_target_noindex_in_meta_or_header_requires_review(self):
+        target, alias = BASE + "/photo-diagnosis/", BASE + "/shindan.html"
+        cases = [
+            ("meta", b'<meta name="robots" content="noindex,follow">', {}),
+            ("x-robots", b'<html></html>',
+             {"Content-Type": "text/html", "X-Robots-Tag": "googlebot: noindex"}),
+            ("none", b'<html></html>',
+             {"Content-Type": "text/html", "X-Robots-Tag": "none"}),
+        ]
+        for label, html, headers in cases:
+            with self.subTest(case=label):
+                report = snapshot(FakeOpener([
+                    FakeResponse(target, body=html, headers=headers),
+                    HTTPError(alias, 301, "Moved", {"Location": target}, io.BytesIO(b"")),
+                ]))
+                self.assertEqual(report["redirect_integrity_observation"],
+                                 "REVIEW_TARGET_NOINDEX")
+                self.assertTrue(report["canonical_decision"].startswith("HOLD"))
+
+    def test_nofollow_and_noindexing_substrings_are_not_noindex(self):
+        target, alias = BASE + "/photo-diagnosis/", BASE + "/shindan.html"
+        page = b'<meta name="robots" content="index,nofollow">'
+        report = snapshot(FakeOpener([
+            FakeResponse(target, body=page, headers={
+                "Content-Type": "text/html", "X-Robots-Tag": "noindexing"
+            }),
+            HTTPError(alias, 301, "Moved", {"Location": target}, io.BytesIO(b"")),
+        ]))
+        self.assertEqual(report["redirect_integrity_observation"], "OBSERVED_301_TO_200_TARGET")
+
+
 if __name__ == "__main__":
     unittest.main()
