@@ -10,6 +10,8 @@ on:
       - tools/inspect_diagnosis_live_urls.py
       - tests/test_diagnosis_link_summary.py
       - tests/test_diagnosis_live_urls.py
+      - tools/audit_diagnosis_sitemap.py
+      - tests/test_diagnosis_sitemap.py
       - tests/test_conversion_audit.py
       - contact.html
       - .github/workflows/conversion-audit-offline.yml
@@ -20,6 +22,8 @@ on:
       - tools/inspect_diagnosis_live_urls.py
       - tests/test_diagnosis_link_summary.py
       - tests/test_diagnosis_live_urls.py
+      - tools/audit_diagnosis_sitemap.py
+      - tests/test_diagnosis_sitemap.py
       - tests/test_conversion_audit.py
       - contact.html
       - .github/workflows/conversion-audit-offline.yml
@@ -41,6 +45,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_conversion_audit.py' -v
           python -m unittest discover -s tests -p 'test_diagnosis_link_summary.py' -v
           python -m unittest discover -s tests -p 'test_diagnosis_live_urls.py' -v
+          python -m unittest discover -s tests -p 'test_diagnosis_sitemap.py' -v
       - name: Inventory diagnosis alias links in GitHub HTML (not live site)
         run: python tools/summarize_diagnosis_links.py . > diagnosis-alias-inventory.json
       - name: Keep read-only link inventory as evidence
@@ -58,5 +63,16 @@ jobs:
         with:
           name: diagnosis-live-http-evidence
           path: diagnosis-live-http-evidence.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: GET-only current sitemap alias inventory (no SEO changes)
+        if: always()
+        run: python tools/audit_diagnosis_sitemap.py > diagnosis-sitemap-evidence.json
+      - name: Retain sitemap HTTP and alias evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnosis-sitemap-evidence
+          path: diagnosis-sitemap-evidence.json
           if-no-files-found: error
           retention-days: 7
