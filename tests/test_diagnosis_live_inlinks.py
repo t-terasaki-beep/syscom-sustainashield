@@ -113,6 +113,28 @@ class LiveInlinkTests(unittest.TestCase):
         self.assertEqual(result["unscanned"][0]["reason"], "invalid_document_base_href")
         self.assertEqual(result["targets"]["/shindan.html"]["occurrences"], 0)
 
+    def test_self_links_are_separate_from_other_page_inbound(self):
+        # A diagnosis page linking to itself should not inflate inbound
+        # navigation from the rest of the site.
+        target, other = BASE + "/photo-diagnosis/", BASE + "/guide/"
+        opener = FakeOpener({
+            SITEMAP_URL: FakeResponse(SITEMAP_URL, sitemap(target, other), mime="application/xml"),
+            target: FakeResponse(target, b'<a href="/photo-diagnosis/">self1</a>'
+                                b'<a href="/photo-diagnosis/#step">self2</a>'),
+            other: FakeResponse(other, b'<a href="/photo-diagnosis/">from another page</a>'
+                              b'<a href="/photo-diagnosis/?ref=guide">from guide CTA</a>'),
+        })
+        result = scan(opener)
+        rec = result["targets"]["/photo-diagnosis/"]
+        self.assertEqual(rec["occurrences"], 4)
+        self.assertEqual(rec["self_link_occurrences"], 2)
+        self.assertEqual(rec["inbound_from_other_pages"], 2)
+        self.assertEqual(rec["inbound_referring_pages"], [{"url": other, "count": 2}])
+        self.assertEqual(len(rec["referring_pages"]), 2)
+        self.assertEqual(result["targets"]["/shindan.html"]["inbound_from_other_pages"], 0)
+        self.assertEqual(result["verdict"], "COMPLETE_SITEMAP_HTML_INVENTORY_NO_CANONICAL_DECISION")
+        self.assertFalse(result["external_backlinks_checked"])
+
     def test_redirect_is_not_followed_or_claimed_to_be_a_backlink_free_page(self):
         alias = BASE + "/shindan.html"
         opener = FakeOpener({
