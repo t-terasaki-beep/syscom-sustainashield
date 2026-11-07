@@ -142,7 +142,13 @@ def main() -> int:
     args = parser.parse_args()
     # Inspect candidate and manifest before any production GET: a shared or
     # web-served full HTML candidate must never pass this publication gate.
-    require_private_preflight_inputs(args.candidate_html, args.preflight_json)
+    # Both deployment-channel backups are production HTML too. Verify all four
+    # handoff files are operator-private and not symlinks/web-served before GET.
+    # Previously only the candidate and manifest were checked here.
+    require_private_preflight_inputs(
+        args.original_backup, args.candidate_html,
+        args.sibling_backup, args.preflight_json,
+    )
     # GET again immediately before authorized manual publication. No write or FTP.
     live_html, live_etag = p0.fetch_live()
     live_sibling = p0.fetch_sibling_live()
