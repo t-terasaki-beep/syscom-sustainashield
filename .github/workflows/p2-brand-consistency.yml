@@ -9,6 +9,7 @@ on:
       - 'faq.html'
       - 'flow.html'
       - 'grid-battery/index.html'
+      - 'tools/publish/lp-media-set-v1/column/heat-and-solar/index.html'
       - 'tools/publish/lp-media-set-v1/column/ohisama-compare/index.html'
       - 'lp/gaichu-block/index.html'
       - 'lp/index.html'
