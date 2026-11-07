@@ -5,6 +5,7 @@ import os
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 import prepare_live_analytics_patch as p0
@@ -221,6 +222,52 @@ class PrivateHandoffInputTests(unittest.TestCase):
             link.symlink_to(candidate)
             with self.assertRaisesRegex(p0.PreflightError, "regular file"):
                 bundle.require_private_preflight_inputs(link)
+
+
+    @unittest.skipUnless(os.name == "posix", "POSIX permission check")
+    def test_main_refuses_shared_deployment_backups_before_any_http(self):
+        # Candidate/manifest are safe, but both copies from the deployment
+        # channel are also production HTML and must never come from shared dirs.
+        with tempfile.TemporaryDirectory() as root:
+            paths = [Path(root) / name for name in (
+                "target-original-backup.html", "prepared-index.html",
+                "sibling-original-backup.html", "preflight.json"
+            )]
+            for path in paths:
+                path.write_text("fixture", encoding="utf-8")
+                path.chmod(0o600)
+            argv = ["bundle", "--original-backup", str(paths[0]),
+                    "--candidate-html", str(paths[1]),
+                    "--sibling-backup", str(paths[2]),
+                    "--preflight-json", str(paths[3])]
+            for backup in (paths[0], paths[2]):
+                backup.chmod(0o644)
+                with self.subTest(backup=backup.name), mock.patch.object(sys, "argv", argv), \\
+                        mock.patch.object(p0, "fetch_live", side_effect=AssertionError("GET must not run")):
+                    with self.assertRaisesRegex(p0.PreflightError, "operator-private"):
+                        bundle.main()
+                backup.chmod(0o600)
+
+    def test_main_refuses_symlinked_deployment_backup_before_any_http(self):
+        with tempfile.TemporaryDirectory() as root:
+            paths = [Path(root) / name for name in (
+                "target-original-backup.html", "prepared-index.html",
+                "sibling-original-backup.html", "preflight.json"
+            )]
+            for path in paths:
+                path.write_text("fixture", encoding="utf-8")
+                if os.name == "posix":
+                    path.chmod(0o600)
+            paths[2].unlink()
+            paths[2].symlink_to(paths[0])
+            argv = ["bundle", "--original-backup", str(paths[0]),
+                    "--candidate-html", str(paths[1]),
+                    "--sibling-backup", str(paths[2]),
+                    "--preflight-json", str(paths[3])]
+            with mock.patch.object(sys, "argv", argv), \\
+                    mock.patch.object(p0, "fetch_live", side_effect=AssertionError("GET must not run")):
+                with self.assertRaisesRegex(p0.PreflightError, "regular file"):
+                    bundle.main()
 
 if __name__ == "__main__":
     unittest.main()
